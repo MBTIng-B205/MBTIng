@@ -15,4 +15,9 @@ class MbtiSogaetingApplicationTests {
 		System.out.println("hello");
 	}
 
+	@Test
+	void testtmp12() {
+		System.out.println("hello test");
+	}
+
 }
