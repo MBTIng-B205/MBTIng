@@ -10,4 +10,9 @@ class MbtiSogaetingApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	void testtmp() {
+		System.out.println("hello");
+	}
+
 }
