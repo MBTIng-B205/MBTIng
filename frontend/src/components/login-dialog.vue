@@ -1,11 +1,33 @@
 <template>
-  <el-dialog custom-class="login-dialog" title="로그인" v-model="state.dialogVisible" @close="handleClose">
-    <el-form :model="state.form" :rules="state.rules" ref="loginForm" :label-position="state.form.align">
-      <el-form-item prop="id" label="아이디" :label-width="state.formLabelWidth" >
+  <el-dialog
+    custom-class="login-dialog"
+    title="로그인"
+    v-model="state.dialogVisible"
+    @close="handleClose"
+  >
+    <el-form
+      :model="state.form"
+      :rules="state.rules"
+      ref="loginForm"
+      :label-position="state.form.align"
+    >
+      <el-form-item
+        prop="id"
+        label="아이디"
+        :label-width="state.formLabelWidth"
+      >
         <el-input v-model="state.form.id" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item prop="password" label="비밀번호" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
+      <el-form-item
+        prop="password"
+        label="비밀번호"
+        :label-width="state.formLabelWidth"
+      >
+        <el-input
+          v-model="state.form.password"
+          autocomplete="off"
+          show-password
+        ></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -49,23 +71,23 @@
 }
 </style>
 <script>
-import { reactive, computed, ref, onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { reactive, computed, ref, onMounted } from "vue";
+import { useStore } from "vuex";
 
 export default {
-  name: 'login-dialog',
+  name: "login-dialog",
 
   props: {
     open: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   setup(props, { emit }) {
-    const store = useStore()
+    const store = useStore();
     // 마운드 이후 바인딩 될 예정 - 컨텍스트에 노출시켜야함. <return>
-    const loginForm = ref(null)
+    const loginForm = ref(null);
 
     /*
       // Element UI Validator
@@ -74,51 +96,53 @@ export default {
     */
     const state = reactive({
       form: {
-        id: '',
-        password: '',
-        align: 'left'
+        id: "",
+        password: "",
+        align: "left",
       },
       rules: {
-        id: [
-          { required: true, message: 'Please input ID', trigger: 'blur' }
-        ],
+        id: [{ required: true, message: "Please input ID", trigger: "blur" }],
         password: [
-          { required: true, message: 'Please input password', trigger: 'blur' }
-        ]
+          { required: true, message: "Please input password", trigger: "blur" },
+        ],
       },
       dialogVisible: computed(() => props.open),
-      formLabelWidth: '120px'
-    })
+      formLabelWidth: "120px",
+    });
 
     onMounted(() => {
       // console.log(loginForm.value)
-    })
+    });
 
     const clickLogin = function () {
       // 로그인 클릭 시 validate 체크 후 그 결과 값에 따라, 로그인 API 호출 또는 경고창 표시
       loginForm.value.validate((valid) => {
         if (valid) {
-          console.log('submit')
-          store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
-          .then(function (result) {
-            alert('accessToken: ' + result.data.accessToken)
-          })
-          .catch(function (err) {
-            alert(err)
-          })
+          console.log("submit");
+          store
+            .dispatch("root/requestLogin", {
+              id: state.form.id,
+              password: state.form.password,
+            })
+            .then(function (result) {
+              alert("accessToken: " + result.data.accessToken);
+            })
+            .catch(function (err) {
+              alert(err);
+            });
         } else {
-          alert('Validate error!')
+          alert("Validate error!");
         }
       });
-    }
+    };
 
     const handleClose = function () {
-      state.form.id = ''
-      state.form.password = ''
-      emit('closeLoginDialog')
-    }
+      state.form.id = "";
+      state.form.password = "";
+      emit("closeLoginDialog");
+    };
 
-    return { loginForm, state, clickLogin, handleClose }
-  }
-}
+    return { loginForm, state, clickLogin, handleClose };
+  },
+};
 </script>

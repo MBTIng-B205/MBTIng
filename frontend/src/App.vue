@@ -1,20 +1,31 @@
 <template>
-  <!-- main 으로 시작 -->
-  <Main/>
+  <el-button @click="onOpenLoginDialog">Login</el-button>
+  <login-dialog
+    :open="loginDialogOpen"
+    @closeLoginDialog="onCloseLoginDialog"
+  />
 </template>
 
 <script>
-import Main from './views/main/main.vue'
+import LoginDialog from "./components/login-dialog";
 
 export default {
-  name: 'App',
-
   components: {
-    Main,
+    LoginDialog,
+  },
+  data() {
+    return {
+      loginDialogOpen: false,
+    };
   },
 
-  data: () => ({
-    //
-  }),
-}
+  methods: {
+    onOpenLoginDialog() {
+      this.loginDialogOpen = true;
+    },
+    onCloseLoginDialog() {
+      this.loginDialogOpen = false;
+    },
+  },
+};
 </script>
