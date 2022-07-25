@@ -1,13 +1,13 @@
-package com.ssafy;
+package com.ssafy.mbting;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MbtiSogaetingApplication {
+public class MbtingApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MbtiSogaetingApplication.class, args);
+		SpringApplication.run(MbtingApplication.class, args);
 	}
 
 }
