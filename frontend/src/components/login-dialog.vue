@@ -118,7 +118,7 @@ export default {
       // 로그인 클릭 시 validate 체크 후 그 결과 값에 따라, 로그인 API 호출 또는 경고창 표시
       loginForm.value.validate((valid) => {
         if (valid) {
-          console.log("submit");
+          console.log("submit", state.form.id);
           store
             .dispatch("root/requestLogin", {
               id: state.form.id,
