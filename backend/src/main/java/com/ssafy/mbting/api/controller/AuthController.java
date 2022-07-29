@@ -25,7 +25,7 @@ import java.util.Map;
 //auth/login
 public class AuthController {
 
-	public Logger logger = LoggerFactory.getLogger(AuthController.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
     MemberService memberService;

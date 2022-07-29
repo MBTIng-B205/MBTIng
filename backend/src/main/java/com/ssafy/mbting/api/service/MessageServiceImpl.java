@@ -18,7 +18,7 @@ import javax.transaction.Transactional;
 @Transactional
 public class MessageServiceImpl implements MessageService{
 
-    public Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
