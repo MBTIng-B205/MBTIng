@@ -3,6 +3,7 @@ package com.ssafy.mbting.api.controller;
 import com.ssafy.mbting.api.response.MemberLoginResponse;
 import com.ssafy.mbting.common.util.KakaoAPI;
 import com.ssafy.mbting.db.entity.Member;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.Map;
 /**
  * 인증 관련 API 요청 처리를 위한 컨트롤러 정의.
  */
-//@Api(value = "인증 API", tags = {"Auth."})
+@Api(value = "인증 API", tags = {"Auth."})
 @RestController
 @RequestMapping("/api")
 //auth/login
