@@ -1,27 +1,47 @@
 package com.ssafy.mbting.api.controller;
 
 import com.ssafy.mbting.api.request.MemberRegisterRequest;
+import com.ssafy.mbting.api.request.MemberUpdateRequest;
 import com.ssafy.mbting.api.response.MemberRegisterResponse;
 import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.auth.MemberDetails;
 import com.ssafy.mbting.db.entity.Member;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
  */
 //@Api(value = "유저 API", tags = {"User"})
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/v1/users")
 public class MemberController {
 	
 	@Autowired
 	MemberService memberService;
-	
+
+	@Autowired
+	ResourceLoader resLoader;
+
+
 	@PostMapping()
 //	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
 //    @ApiResponses({
@@ -36,7 +56,7 @@ public class MemberController {
 			MemberRegisterRequest registerInfo) {
 		
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
-		Member member = memberService.createUser(registerInfo);
+		Member member = memberService.createMember(registerInfo);
 
 		return ResponseEntity.ok().body(MemberRegisterResponse.builder()
 				.member(MemberResponse.of(member))
@@ -51,7 +71,7 @@ public class MemberController {
 //        @ApiResponse(code = 404, message = "사용자 없음"),
 //        @ApiResponse(code = 500, message = "서버 오류")
 //    })
-	public ResponseEntity<MemberResponse> getUserInfo(
+	public ResponseEntity<MemberResponse> getMemberInfo(
 //			@ApiIgnore
 			Authentication authentication) {
 		/**
@@ -64,5 +84,52 @@ public class MemberController {
 			return ResponseEntity.badRequest().build();
 
 		return ResponseEntity.ok().body(MemberResponse.of(userDetails.getMember()));
+	}
+
+	@PutMapping()
+	public ResponseEntity<?> updateMember(
+			@RequestBody MemberUpdateRequest updateInfo) {
+
+		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
+		Member member = memberService.updateMember(updateInfo);
+
+		return ResponseEntity.ok().body(MemberRegisterResponse.builder()
+				.member(MemberResponse.of(member))
+				.build());
+	}
+
+	@PostMapping("userprofile/{userid}")
+	public ResponseEntity<?> userProfile(@PathVariable("userid") String userid, @RequestParam("upfile") MultipartFile file) {
+		Member member = memberService.getUserByEmail(userid);
+		try {
+			if(!file.isEmpty()) {
+				Resource res = resLoader.getResource("classpath:static/upload");
+				String canonicalPath = res.getFile().getCanonicalPath();
+				String today = new SimpleDateFormat("yyMMdd").format(new Date());
+				String saveFolder = canonicalPath + File.separator + today;
+				File folder = new File(saveFolder);
+				System.out.println("folder.toString() = " + folder.toString());
+				if (!folder.exists())
+					folder.mkdirs();
+				String originalFileName = file.getOriginalFilename();
+				String extension  = originalFileName.substring(originalFileName.lastIndexOf("."), originalFileName.length());
+				UUID uuid = UUID.randomUUID();
+				String filename = uuid.toString()+extension;
+
+				file.transferTo(new File(folder,filename));
+				member.setProfileUrl("http://localhost:8080/static/upload/"+today+"/"+filename);
+				memberService.updateMember(MemberUpdateRequest.of(member));
+
+			}
+		}catch (Exception e) {
+			//여기 수정 필요
+			e.printStackTrace();
+			ResponseEntity.accepted().body(MemberRegisterResponse.builder()
+					.member(MemberResponse.of(member))
+					.build());
+		}
+		return ResponseEntity.ok().body(MemberRegisterResponse.builder()
+				.member(MemberResponse.of(member))
+				.build());
 	}
 }

@@ -32,6 +32,7 @@ public class MessageTest {
         mb1.setNickname("홍길동");
         mb2.setNickname("유관순");
 
+
         mbr.save(mb1);
         mbr.save(mb2);
 
