@@ -1,10 +1,12 @@
 package com.ssafy.mbting.api.service;
 
 import com.ssafy.mbting.api.request.MemberRegisterRequest;
+import com.ssafy.mbting.api.request.MemberUpdateRequest;
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -16,7 +18,7 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberRepository memberRepository;
 
 	@Override
-	public Member createUser(MemberRegisterRequest userRegisterInfo) {
+	public Member createMember(MemberRegisterRequest userRegisterInfo) {
 		Member member = Member.of(userRegisterInfo);
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		return memberRepository.save(member);
@@ -28,4 +30,17 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.findByEmail(email);
 
 	}
+
+
+	@Transactional
+	@Override
+	public Member updateMember(MemberUpdateRequest userRegisterInfo) {
+		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
+		updatemember.setInterests(userRegisterInfo.getInterests());
+		updatemember.setSido(userRegisterInfo.getSido());
+		updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
+		return updatemember;
+	}
+
+
 }

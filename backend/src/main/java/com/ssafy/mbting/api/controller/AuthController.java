@@ -1,8 +1,10 @@
 package com.ssafy.mbting.api.controller;
 
 import com.ssafy.mbting.api.response.MemberLoginResponse;
+import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.common.util.KakaoAPI;
 import com.ssafy.mbting.db.entity.Member;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,9 @@ import java.util.Map;
 /**
  * 인증 관련 API 요청 처리를 위한 컨트롤러 정의.
  */
-//@Api(value = "인증 API", tags = {"Auth."})
+@Api(value = "인증 API", tags = {"Auth."})
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api")
 //auth/login
 public class AuthController {
@@ -47,14 +50,24 @@ public class AuthController {
 
 		String token = JwtTokenUtil.getToken((String) userInfo.get("email"));
 
+		MemberResponse mres = new MemberResponse();
+		mres.setEmail((String)userInfo.get("email"));
+		mres.setProfileUrl((String)userInfo.get("profile_image"));
+		mres.setNickname((String)userInfo.get("nickname"));
+
+
 		if(userInfo.get("email") != null) {
 
 			String msg = "login success";
+
+
 			Member member = memberService.getUserByEmail((String) userInfo.get("email"));
 			if(member == null){
+
 				return ResponseEntity.accepted().body(MemberLoginResponse.builder()
 						.visited(false)
 						.jwt(token)
+								.member(mres)
 						.build());
 			}
 			logger.debug("여기서걸림");
@@ -68,6 +81,7 @@ public class AuthController {
 		return ResponseEntity.accepted().body(MemberLoginResponse.builder()
 				.visited(true)
 				.jwt(token)
+				.member(mres)
 				.build());
 	}
 }
