@@ -88,18 +88,20 @@ public class KakaoAPI {
 				result += line;
 			}
 			logger.debug("response body = " + result);
-			
+
 			JsonParser parser = new JsonParser();
 			JsonElement element = parser.parse(result);
 			
 			JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
 			JsonObject kakaoAccount = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-			
+
 			String nickname = properties.getAsJsonObject().get("nickname").getAsString();
 			String email = kakaoAccount.getAsJsonObject().get("email").getAsString();
-			
+			String profile_image = properties.getAsJsonObject().get("profile_image").getAsString();
+
 			userInfo.put("nickname", nickname);
 			userInfo.put("email", email);
+			userInfo.put("profile_image", profile_image);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
