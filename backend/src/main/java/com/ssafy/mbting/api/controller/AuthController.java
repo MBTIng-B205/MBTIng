@@ -2,9 +2,12 @@ package com.ssafy.mbting.api.controller;
 
 import com.ssafy.mbting.api.response.MemberLoginResponse;
 import com.ssafy.mbting.api.response.MemberResponse;
+import com.ssafy.mbting.common.model.response.BaseResponse;
+import com.ssafy.mbting.common.util.BaseResponseUtil;
 import com.ssafy.mbting.common.util.KakaoAPI;
 import com.ssafy.mbting.db.entity.Member;
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +28,14 @@ import java.util.Map;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api")
+@RequiredArgsConstructor
 //auth/login
 public class AuthController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final BaseResponseUtil baseResponseUtil;
 
-	@Autowired
-    MemberService memberService;
+    private final MemberService memberService;
 	KakaoAPI kakaoApi = new KakaoAPI();
 	@GetMapping("/login")
 	public ResponseEntity<?> login(@RequestParam("code") String code) {
@@ -64,11 +68,11 @@ public class AuthController {
 			Member member = memberService.getUserByEmail((String) userInfo.get("email"));
 			if(member == null){
 
-				return ResponseEntity.accepted().body(MemberLoginResponse.builder()
-						.visited(false)
-						.jwt(token)
+				return baseResponseUtil.success(MemberLoginResponse.builder()
+								.visited(false)
+								.jwt(token)
 								.member(mres)
-						.build());
+								.build());
 			}
 			logger.debug("여기서걸림");
 			logger.debug("{}", userInfo);
@@ -76,9 +80,9 @@ public class AuthController {
 		}else {
 			logger.debug("이메일이 안 왔다");
 			logger.debug("우선순위 낮은 우리의 숙제~~~~~~");
-			return ResponseEntity.unprocessableEntity().build();
+			return baseResponseUtil.fail("no email");
 		}
-		return ResponseEntity.accepted().body(MemberLoginResponse.builder()
+		return baseResponseUtil.success(MemberLoginResponse.builder()
 				.visited(true)
 				.jwt(token)
 				.member(mres)
