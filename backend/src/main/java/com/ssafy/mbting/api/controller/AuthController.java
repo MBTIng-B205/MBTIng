@@ -50,7 +50,7 @@ public class AuthController {
 		// 2번 인증코드로 토큰 전달
 		HashMap<String, Object> userInfo = kakaoApi.getUserInfo(accessToken);
 
-		logger.debug("login info: " + userInfo.toString());
+e		logger.debug("\n\nlogin info: {}\n", userInfo.toString());
 
 		String token = JwtTokenUtil.getToken((String) userInfo.get("email"));
 
