@@ -7,23 +7,17 @@ import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.auth.MemberDetails;
 import com.ssafy.mbting.db.entity.Member;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -98,9 +92,9 @@ public class MemberController {
 				.build());
 	}
 
-	@PostMapping("userprofile/{userid}")
-	public ResponseEntity<?> userProfile(@PathVariable("userid") String userid, @RequestParam("upfile") MultipartFile file) {
-		Member member = memberService.getUserByEmail(userid);
+	@PostMapping("userprofile/{email}")
+	public ResponseEntity<?> userProfile(@PathVariable("email") String email, @RequestParam("upfile") MultipartFile file) {
+		Member member = memberService.getUserByEmail(email);
 		try {
 			if(!file.isEmpty()) {
 				Resource res = resLoader.getResource("classpath:static/upload");
