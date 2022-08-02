@@ -1,4 +1,4 @@
-package com.ssafy;
+package com.ssafy.mbting;
 
 import com.ssafy.mbting.api.request.MessageSendRequest;
 import com.ssafy.mbting.api.service.MessageService;
