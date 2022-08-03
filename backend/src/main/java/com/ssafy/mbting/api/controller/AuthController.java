@@ -67,6 +67,7 @@ public class AuthController {
 
 			Member member = memberService.getUserByEmail((String) userInfo.get("email"));
 			if(member == null){
+				logger.debug("\n\nfjesfjsifjsduifjsie\n");
 
 				return baseResponseUtil.success(MemberLoginResponse.builder()
 								.visited(false)
