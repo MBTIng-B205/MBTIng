@@ -1,6 +1,7 @@
 package com.ssafy.mbting.api.controller;
 
 import com.ssafy.mbting.api.response.FriendResponse;
+import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.api.service.FriendService;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.util.BaseResponseUtil;
@@ -25,9 +26,17 @@ public class FriendController {
 
     // 친구 리스트 조회
     @GetMapping("/{email}")
-    public ResponseEntity<?> list(@PathVariable("email") String email) {
+    public ResponseEntity<?> list(@PathVariable("email") String email,
+                                  @RequestParam(required = false) String nickname,
+                                  @RequestParam(required = false) String mbti) {
         Member member = memberService.getUserByEmail(email);
-
+        if(nickname != null) {
+            return baseResponseUtil.success(FriendResponse.builder()
+                    .friends(friendService.getFriendByNickname(member, nickname)));
+        } else if (mbti != null) {
+            return baseResponseUtil.success(FriendResponse.builder()
+                    .friends(friendService.getFriendListByMbti(member, mbti)));
+        }
         return baseResponseUtil.success(FriendResponse.builder()
                 .friends(friendService.getFriendList(member))
                 .build());
