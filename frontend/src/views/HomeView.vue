@@ -5,18 +5,10 @@
       <img src="@/assets/logo.png" alt="logo" />
     </div>
 
-    <img
-      class="loginbtn"
-      @click="login"
-      src="@/assets/kakao_login.png"
-      alt="login"
-    />
-
-    <el-dropdown>
+    <el-dropdown v-if="state.memberinfo">
       <img
         class="el-dropdown-link"
         id="my_img"
-        v-if="state.memberinfo"
         :src="state.memberinfo.profileUrl"
       />
       <template #dropdown>
@@ -28,12 +20,23 @@
             피플
           </el-dropdown-item>
           <el-dropdown-item @click="logout" :icon="Right"
-            ><a href="">로그아웃</a>
+            >로그아웃
           </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
+
+    <img
+      v-else
+      class="loginbtn"
+      @click="login"
+      src="@/assets/kakao_login.png"
+      alt="login"
+    />
   </div>
+
+  <mypage-dialog :open="mypageDialog" @closeMyPage="handleClose" />
+
   <!-- background -->
   <div class="bg">
     <div class="bg0"></div>
@@ -66,9 +69,17 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { Avatar, Comment, Right } from "@element-plus/icons-vue";
 import { computed, reactive } from "@vue/runtime-core";
+import { ref } from "vue";
 // import axios from "axios";
+import MypageDialog from "@/components/mypage-dialog";
+
 export default {
+  components: {
+    MypageDialog,
+  },
+
   setup() {
+    const mypageDialog = ref(false);
     const router = useRouter();
     const store = useStore();
     const state = reactive({
@@ -85,7 +96,13 @@ export default {
       router.push({ name: "friend" });
     };
     const goMyPage = function () {
-      router.push({ name: "MyPage" });
+      console.log(mypageDialog.value);
+      mypageDialog.value = true;
+      console.log(mypageDialog.value);
+    };
+
+    const handleClose = function () {
+      mypageDialog.value = false;
     };
 
     // const submit = () => {
@@ -104,9 +121,9 @@ export default {
     };
 
     const logout = () => {
-      store.commit({ type: "setAccount", payload: 0 });
-      console.log(store);
-      router.push({ path: "/" });
+      window.location.replace(
+        "https://kauth.kakao.com/oauth/logout?client_id=ebb8bb50d4cb227cf989335c827681e5&logout_redirect_uri=http://localhost:80/logoutview"
+      );
     };
 
     return {
@@ -115,6 +132,8 @@ export default {
       meetingStart,
       goPeople,
       goMyPage,
+      handleClose,
+      mypageDialog,
       Avatar,
       Comment,
       Right,
@@ -124,7 +143,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .loginbtn {
   height: 40px;
   width: 100px;
@@ -209,5 +228,11 @@ export default {
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
+}
+
+.profile {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
 }
 </style>

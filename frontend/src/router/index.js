@@ -9,6 +9,7 @@ import MBTIResult from "@/views/MBTIResult";
 import MeetingWait from "@/views/MeetingWait";
 import MeetingMatch from "@/views/MeetingMatch";
 import MyPage from "@/views/MyPage";
+import LogoutView from "@/views/LogoutView";
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     path: "/loginview",
     name: "LoginView",
     component: LoginView,
+  },
+  {
+    path: "/logoutview",
+    name: "LogoutView",
+    component: LogoutView,
   },
   {
     path: "/mypage",
