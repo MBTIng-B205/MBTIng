@@ -9,17 +9,13 @@ export default {
   name: "App",
 
   components: {},
-
-  data: () => ({
-    //
-  }),
 };
 </script>
 
 <style>
-.background {
+/* .background {
   height: 864px;
   width: 100%;
   background-image: url("@/assets/BG_Heart_Bar.gif");
-}
+} */
 </style>

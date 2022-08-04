@@ -3,68 +3,90 @@
     <el-col>
       <h1>ProfileSetting</h1>
     </el-col>
-    <el-col flex-direction="column">
-      <img
-        src="https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
-        alt="profile"
-        :span="10"
-        width="100"
-      />
-    </el-col>
-    <el-form label-width="120px">
-      <el-form-item label="MBTI">
-        <el-input
-          v-model="form.mbti"
-          :value="$route.params.mbti"
-          readonly
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="Nickname">
-        <el-input v-model="form.nickname"></el-input>
-      </el-form-item>
-      <el-form-item label="Gender">
-        <el-select v-model="form.gender" placeholder="Select">
-          <el-option label="Male" value="male"></el-option>
-          <el-option label="Female" value="female"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Birthday">
-        <el-col :span="24">
-          <el-date-picker
-            type="date"
-            placeholder="Pick a date"
-            v-model="form.birthday"
-            style="width: 100%"
-          ></el-date-picker>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="Place">
-        <el-select v-model="form.place" placeholder="Select">
-          <el-option label="Seoul" value="seoul"></el-option>
-          <el-option label="Daejeon" value="daejeon"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" size="Medium" @click="onSubmit"
-          >확인</el-button
-        >
-      </el-form-item>
-    </el-form>
+    <form>
+      <el-col flex-direction="column">
+        <img
+          :src="form.memberinfo.profileUrl"
+          alt="profile"
+          :span="10"
+          width="100"
+        />
+      </el-col>
+      <el-form label-width="120px">
+        <el-form-item label="MBTI">
+          <el-input v-model="form.mbti" readonly></el-input>
+        </el-form-item>
+        <el-form-item label="Nickname">
+          <el-input v-model="form.nickname"></el-input>
+        </el-form-item>
+        <el-form-item label="Gender">
+          <el-select v-model="form.gender" placeholder="Select">
+            <el-option label="Male" value="true"></el-option>
+            <el-option label="Female" value="false"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Birthday">
+          <el-col :span="24">
+            <el-date-picker
+              type="date"
+              placeholder="Pick a date"
+              v-model="form.birth"
+              style="width: 100%"
+            ></el-date-picker>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="Place">
+          <el-select v-model="form.sido" placeholder="Select">
+            <el-option label="Seoul" value="seoul"></el-option>
+            <el-option label="Daejeon" value="daejeon"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="Medium" @click="signup"
+            >확인</el-button
+          >
+        </el-form-item>
+      </el-form>
+    </form>
   </el-row>
 </template>
 
 <script>
+import { computed, reactive } from "vue";
+// import axios from "axios";
+import { useStore } from "vuex";
+// import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+
 export default {
-  data() {
-    return {
-      form: {
-        mbti: "",
-        nickname: "",
-        gender: "",
-        place: "",
-        birthday: "",
-      },
+  setup() {
+    const router = useRouter();
+    const store = useStore();
+    const tmpmemberinfo = computed(() => store.getters["accounts/getMember"]);
+    const form = reactive({
+      mbti: tmpmemberinfo.value.mbti,
+      nickname: tmpmemberinfo.value.nickname,
+      gender: {},
+      birth: {},
+      sido: {},
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+    });
+    console.log(form);
+
+    const signup = function () {
+      form.memberinfo.nickname = form.nickname;
+      form.memberinfo.gender = form.gender;
+      form.memberinfo.birth = form.birth.toISOString().slice(0, 10);
+      form.memberinfo.sido = form.sido;
+      //form.memberinfo.nickname = form.nickname;
+      store.commit("accounts/SET_MEMBER_INFO", form.memberinfo);
+      //date => date.toISOString().slice(0, 10);
+      store.dispatch("accounts/signup");
+      console.log(form.memberinfo);
+      router.push({ name: "HomeView" });
     };
+
+    return { signup, form };
   },
 };
 </script>

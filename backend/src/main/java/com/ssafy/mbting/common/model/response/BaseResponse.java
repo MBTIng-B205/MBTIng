@@ -1,17 +1,19 @@
 package com.ssafy.mbting.common.model.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @Getter
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class BaseResponse {
+    @Builder.Default
     Boolean success = null;
+    @Builder.Default
     String message = null;
+    @Builder.Default
     Object body = null;
 
 }
