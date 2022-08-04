@@ -73,8 +73,10 @@ public class FriendServiceImpl implements FriendService{
     }
 
     @Override
-    public void deleteFriend(Member fromMember, Member toMember) {
+    @Transactional
+    public boolean deleteFriend(Member fromMember, Member toMember) {
         friendRepository.delete(Friend.of(fromMember, toMember));
+        return true;
     }
 
     @Override
