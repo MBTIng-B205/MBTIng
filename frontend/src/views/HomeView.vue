@@ -2,7 +2,7 @@
   <!-- navbar -->
   <div class="navbar">
     <div class="logo">
-      <img src="@/assets/logo.png" alt="logo" />
+      <img @click="goHome" class="logo" src="@/assets/logo.png" />
     </div>
 
     <el-dropdown v-if="state.memberinfo">
@@ -121,6 +121,9 @@ export default {
       //router.push({ name: "MyPage" });
       mypageDialog.value = true;
     };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
     const handleClose = function () {
       mypageDialog.value = false;
     };
@@ -159,6 +162,7 @@ export default {
       meetingStart,
       goPeople,
       goMyPage,
+      goHome,
       mypageDialog,
       handleClose,
       Avatar,

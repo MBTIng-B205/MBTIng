@@ -1,6 +1,6 @@
 <template>
   <el-header style="background-color: #fff4b8; height: 100px">
-    <img class="logo" src="@/assets/logo.png" />
+    <img @click="goHome" class="logo" src="@/assets/logo.png" />
     <img class="profile" src="@/assets/profile.png"
   /></el-header>
   <el-container>
@@ -33,8 +33,15 @@
 </template>
 
 <script>
+import { useRouter } from "vue-router";
 export default {
-  components: {},
+  setup() {
+    const router = useRouter();
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
+    return { goHome };
+  },
 };
 </script>
 
