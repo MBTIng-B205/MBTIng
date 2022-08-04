@@ -54,3 +54,7 @@ tasks.named('bootRun') {
 	systemProperty 'com.mbting.kakao.client_id', findProperty('kakao.client_id') ?: 'ebb8bb50d4cb227cf989335c827681e5'
 	systemProperty 'com.mbting.kakao.redirect_uri', findProperty('kakao.redirect_uri') ?: 'http://localhost:80/loginview'
 }
+
+test.onlyIf {
+	project.hasProperty("doTest")
+}
