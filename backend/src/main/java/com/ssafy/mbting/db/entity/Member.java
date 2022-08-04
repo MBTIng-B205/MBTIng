@@ -24,6 +24,7 @@ import java.util.List;
 public class Member extends BaseEntity{
     @Column(unique = true)
     private String email;
+    @Column(unique = true)
     private String nickname;
     private boolean gender;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -32,11 +33,13 @@ public class Member extends BaseEntity{
     private String mbti;
     private String profileUrl;
 
-
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<Interest> interests = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "toId")
     private List<Message> messages = new ArrayList<>();
+    @Builder.Default
     @OneToMany(mappedBy = "toId")
     private List<Friend> friends = new ArrayList<>();
 

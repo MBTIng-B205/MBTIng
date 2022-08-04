@@ -2,7 +2,7 @@
   <div>
     <el-container id="upperContainer">
       <el-aside width="50%" class="profilepage"
-        ><img src="@/assets/profile.png" alt="profile" id="pic" />
+        ><img src="@/assets/profile_pic.png" alt="profile" id="pic" />
       </el-aside>
       <el-main class="profilepage">
         <el-form :model="form">
@@ -16,8 +16,8 @@
       </el-main>
     </el-container>
     <el-container id="lowerContainer">
-      <el-aside width="50%" class="profilepage" id="lowerAsid"
-        ><h2>Gender</h2>
+      <el-aside width="50%" class="profilepage" id="lowerAsid">
+        <h2>Gender</h2>
         <h2>Birthday</h2>
         <h2>Place</h2>
       </el-aside>
@@ -48,7 +48,7 @@
     </el-container>
     <el-container id="footerContainer">
       <el-button>수정</el-button>
-      <el-button @click="goPeople">나가기</el-button>
+      <el-button @click="goHome">나가기</el-button>
     </el-container>
   </div>
 </template>
@@ -93,13 +93,13 @@ export default {
   position: relative;
   align-items: flex-start;
   justify-content: space-evenly;
-  align-content: flex-end;
   flex-direction: column;
 }
 .profilepage {
   background-color: #fff4b8;
   margin: 0px;
   padding: 0px;
+  align-content: space-around;
 }
 #upperContainer {
   padding-bottom: 0px;
@@ -121,6 +121,7 @@ export default {
 }
 #lowerAside {
   text-align: right;
+  align-content: flex-end;
 }
 #pic {
   width: 130px;
