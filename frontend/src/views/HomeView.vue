@@ -1,70 +1,5 @@
 <template>
-  <!-- navbar -->
-  <div class="navbar">
-    <div class="logo">
-      <img @click="goHome" class="logo" src="@/assets/logo.png" />
-    </div>
-
-    <el-dropdown v-if="state.memberinfo">
-      <img
-        class="el-dropdown-link"
-        id="my_img"
-        :src="state.memberinfo.profileUrl"
-      />
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item @click="goMyPage" :icon="Avatar"
-            >마이페이지</el-dropdown-item
-          >
-          <el-dropdown-item @click="goPeople" :icon="Comment">
-            피플
-          </el-dropdown-item>
-          <el-dropdown-item @click="logout" :icon="Right"
-            >로그아웃
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
-
-    <img
-      v-else
-      class="loginbtn"
-      @click="login"
-      src="@/assets/kakao_login.png"
-      alt="login"
-    />
-  </div>
-
-  <el-dialog v-model="mypageDialog" @close="handleClose">
-    <img class="profile" :src="state.memberinfo.profileUrl" />
-    <el-form :model="state.memberinfo">
-      <el-form-item>
-        <el-input v-model="state.memberinfo.mbti" />
-      </el-form-item>
-      <el-form-item>
-        <el-input v-model="state.memberinfo.nickname" />
-      </el-form-item>
-      <el-form-item>
-        <el-radio-group v-model="state.memberinfo.gender">
-          <el-radio :label="true">Male</el-radio>
-          <el-radio :label="false">Female</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item>
-        <el-date-picker v-model="state.memberinfo.birth" type="date" />
-      </el-form-item>
-      <el-form-item>
-        <el-select v-model="state.memberinfo.sido">
-          <el-option label="서울" value="서울" />
-          <el-option label="대전" value="대전" />
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <el-footer>
-      <el-button @click="updateInfo">수정</el-button>
-      <el-button @click="deleteMember" type="danger">탈퇴</el-button>
-    </el-footer>
-  </el-dialog>
+  <main-header />
   <!-- background -->
   <div class="bg">
     <div class="bg0"></div>
@@ -99,7 +34,11 @@ import { Avatar, Comment, Right } from "@element-plus/icons-vue";
 import { computed, reactive } from "@vue/runtime-core";
 import { ref } from "vue";
 // import axios from "axios";
+import MainHeader from "@/components/main-header.vue";
 export default {
+  components: {
+    MainHeader,
+  },
   setup() {
     const mypageDialog = ref(false);
     const router = useRouter();
@@ -120,9 +59,6 @@ export default {
     const goMyPage = function () {
       //router.push({ name: "MyPage" });
       mypageDialog.value = true;
-    };
-    const goHome = function () {
-      router.push({ name: "HomeView" });
     };
     const handleClose = function () {
       mypageDialog.value = false;
@@ -162,7 +98,6 @@ export default {
       meetingStart,
       goPeople,
       goMyPage,
-      goHome,
       mypageDialog,
       handleClose,
       Avatar,
