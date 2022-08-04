@@ -6,7 +6,10 @@ import com.ssafy.mbting.api.response.MemberRegisterResponse;
 import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.auth.MemberDetails;
+import com.ssafy.mbting.common.model.response.BaseResponse;
+import com.ssafy.mbting.common.util.BaseResponseUtil;
 import com.ssafy.mbting.db.entity.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -26,16 +29,13 @@ import java.util.UUID;
 //@Api(value = "유저 API", tags = {"User"})
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class MemberController {
-	
-	@Autowired
-	MemberService memberService;
 
-	@Autowired
-	ResourceLoader resLoader;
-
-
+	private final MemberService memberService;
+	private final ResourceLoader resLoader;
+	private final BaseResponseUtil baseResponseUtil;
 	@PostMapping()
 //	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
 //    @ApiResponses({
@@ -125,5 +125,11 @@ public class MemberController {
 		return ResponseEntity.ok().body(MemberRegisterResponse.builder()
 				.member(MemberResponse.of(member))
 				.build());
+	}
+
+	@DeleteMapping("/")
+	public ResponseEntity<?> delete(@RequestParam(value = "email") String email){
+
+		return baseResponseUtil.success(memberService.deleteMember(email));
 	}
 }
