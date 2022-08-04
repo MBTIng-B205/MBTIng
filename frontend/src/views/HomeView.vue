@@ -35,8 +35,36 @@
     />
   </div>
 
-  <mypage-dialog :open="mypageDialog" @closeMyPage="handleClose" />
-
+  <el-dialog v-model="mypageDialog" @close="handleClose">
+    <img class="profile" :src="state.memberinfo.profileUrl" />
+    <el-form :model="state.memberinfo">
+      <el-form-item>
+        <el-input v-model="state.memberinfo.mbti" />
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="state.memberinfo.nickname" />
+      </el-form-item>
+      <el-form-item>
+        <el-radio-group v-model="state.memberinfo.gender">
+          <el-radio :label="true">Male</el-radio>
+          <el-radio :label="false">Female</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item>
+        <el-date-picker v-model="state.memberinfo.birth" type="date" />
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="state.memberinfo.sido">
+          <el-option label="서울" value="서울" />
+          <el-option label="대전" value="대전" />
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <el-footer>
+      <el-button @click="updateInfo">수정</el-button>
+      <el-button @click="deleteMember" type="danger">탈퇴</el-button>
+    </el-footer>
+  </el-dialog>
   <!-- background -->
   <div class="bg">
     <div class="bg0"></div>
@@ -71,13 +99,7 @@ import { Avatar, Comment, Right } from "@element-plus/icons-vue";
 import { computed, reactive } from "@vue/runtime-core";
 import { ref } from "vue";
 // import axios from "axios";
-import MypageDialog from "@/components/mypage-dialog";
-
 export default {
-  components: {
-    MypageDialog,
-  },
-
   setup() {
     const mypageDialog = ref(false);
     const router = useRouter();
@@ -96,13 +118,18 @@ export default {
       router.push({ name: "friend" });
     };
     const goMyPage = function () {
-      console.log(mypageDialog.value);
+      //router.push({ name: "MyPage" });
       mypageDialog.value = true;
-      console.log(mypageDialog.value);
     };
-
     const handleClose = function () {
       mypageDialog.value = false;
+    };
+    const updateInfo = function () {
+      // 회원정보 수정
+    };
+
+    const deleteMember = function () {
+      // 회원 탈퇴
     };
 
     // const submit = () => {
@@ -132,12 +159,14 @@ export default {
       meetingStart,
       goPeople,
       goMyPage,
-      handleClose,
       mypageDialog,
+      handleClose,
       Avatar,
       Comment,
       Right,
       state,
+      updateInfo,
+      deleteMember,
     };
   },
 };
