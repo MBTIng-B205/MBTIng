@@ -64,12 +64,28 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { useStore } from "vuex";
+import { ref, reactive, onMounted, computed } from "vue";
 import { CircleCloseFilled, UserFilled } from "@element-plus/icons-vue";
 export default {
   setup() {
     const key = ref("");
     const search = ref("");
+    const store = useStore();
+    const state = reactive({
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+      friends: [],
+    });
+
+    onMounted(() => {
+      store
+        .dispatch("friends/getFriendsList", state.memberinfo.email)
+        .then(function (result) {
+          console.log(result);
+          state.friends = result.data.body;
+        });
+    });
+
     const friends = [
       {
         nickname: "만두왕",
