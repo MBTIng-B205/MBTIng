@@ -68,5 +68,29 @@ export const accounts = {
       axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
       return axios.get(`${base.baseUrl}/users/me`);
     },
+    updateMemberinfo({ state }) {
+      const params = {
+        email: state.member.email,
+        nickname: state.member.nickname,
+        sido: state.member.sido,
+        mbti: state.member.mbti,
+        profileUrl: state.member.profileUrl,
+      };
+      let jwt = sessionStorage.getItem("access-token");
+      console.log(jwt);
+      console.log("updateparams", params);
+      return axios.put(`${base.baseUrl}/users`, params, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    deleteMemberinfo({ state }) {
+      // const params = {
+      //   email: state.member.email,
+      // };
+      console.log(state.member.email);
+      return axios.delete(`${base.baseUrl}/users/?email=${state.member.email}`);
+    },
   },
 };
