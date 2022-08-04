@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class MessageResponse {
+    long id;
     String content;
     //member 리스폰즈를 건드림
     MemberResponse receiver;
@@ -23,6 +24,7 @@ public class MessageResponse {
 
     public static MessageResponse of(Message message, Member receiver, Member sender) {
         return MessageResponse.builder()
+                .id(message.getId())
                 .content(message.getContent())
                 .receiver(MemberResponse.of(receiver))
                 .sender(MemberResponse.of(sender))
