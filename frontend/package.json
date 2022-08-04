@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve --port 80",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "vue-cli-service serve --port 80 --mode production"
+    "run": "vue-cli-service serve --port 80 --mode production"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.6",
