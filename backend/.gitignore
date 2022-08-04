@@ -8,6 +8,7 @@ build/
 logs/
 /run.sh
 /jar/
+/nohup.out
 
 ### STS ###
 .apt_generated
