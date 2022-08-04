@@ -34,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Transactional
 	@Override
-	public Member updateMember(MemberUpdateRequest userRegisterInfo) {
+	public Member updateMember(MemberUpdateRequest userRegisterInfo ) {
 		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
 		updatemember.setInterests(userRegisterInfo.getInterests());
 		updatemember.setSido(userRegisterInfo.getSido());
