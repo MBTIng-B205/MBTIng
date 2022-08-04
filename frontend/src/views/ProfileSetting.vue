@@ -41,8 +41,8 @@
             ></el-date-picker>
           </el-col>
         </el-form-item>
-        <el-form-item label="지역">
-          <el-select v-model="form.sido" placeholder="please select your zone">
+        <el-form-item label="지역" placeholder="please select your zone">
+          <el-select v-model="form.sido">
             <el-option label="서울" value="서울" />
             <el-option label="인천" value="인천" />
             <el-option label="경기" value="경기" />
@@ -111,9 +111,9 @@ export default {
     };
 
     const nameTest = function () {
-      const state = reactive({});
+      const state = computed(() => store.getters["accounts/getMember"]);
       console.log("멤버인포", state);
-      if (form.nickname === state.memberinfo.nickname) {
+      if (form.nickname === state.value.nickname) {
         alert("중복된 닉네임입니다.");
       } else {
         alert("사용가능한 닉네임입니다.");
