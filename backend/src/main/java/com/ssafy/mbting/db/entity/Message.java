@@ -1,6 +1,8 @@
 package com.ssafy.mbting.db.entity;
 
+import com.ssafy.mbting.api.response.MessageResponse;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,20 +19,11 @@ public class Message extends BaseEntity {
     @JoinColumn(name="to_id")
     private Member toId;
     private String content;
+    LocalDateTime sendTime;
     @NotNull
-    private LocalDateTime sendTime;
-    @Column(columnDefinition = "TINYINT(1)")
+    private Boolean readByTo = false;
     @NotNull
-    private boolean readByTo;
-    @Column(columnDefinition = "TINYINT(1)")
+    private Boolean deletedByTo = false;
     @NotNull
-    private boolean deletedByTo;
-    @Column(columnDefinition = "TINYINT(1)")
-    @NotNull
-    private boolean deletedByFrom;
-
-    @PrePersist
-    public void sendTime() {
-        this.sendTime = LocalDateTime.now();
-    }
+    private Boolean deletedByFrom = false;
 }

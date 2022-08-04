@@ -74,7 +74,9 @@ public class FriendServiceImpl implements FriendService{
 
     @Override
     public void deleteFriend(Member fromMember, Member toMember) {
-        friendRepository.delete(Friend.of(fromMember, toMember));
+        Friend friend = friendRepository.findByFromIdAndToId(fromMember, toMember);
+        fromMember.getFriends().remove(friend);
+        friendRepository.delete(friend);
     }
 
     @Override
