@@ -11,7 +11,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageNavigation {
-    int page;
-    int size;
+    Integer page;
+    Integer size;
     SearchUtil searchUtil;
 }
