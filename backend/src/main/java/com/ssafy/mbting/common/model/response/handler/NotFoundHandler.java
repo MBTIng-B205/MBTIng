@@ -1,4 +1,4 @@
-package com.ssafy.mbting.common.exception.handler;
+package com.ssafy.mbting.common.model.response.handler;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;

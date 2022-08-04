@@ -1,12 +1,8 @@
 package com.ssafy.mbting.api.controller;
 
-import com.ssafy.mbting.api.request.MemberRegisterRequest;
 import com.ssafy.mbting.api.request.ReportRegisterRequest;
 import com.ssafy.mbting.api.response.*;
-import com.ssafy.mbting.api.service.MessageService;
 import com.ssafy.mbting.api.service.ReportService;
-import com.ssafy.mbting.db.entity.Member;
-import com.ssafy.mbting.db.entity.Message;
 import com.ssafy.mbting.db.entity.Report;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
