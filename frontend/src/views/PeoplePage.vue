@@ -66,8 +66,8 @@ body {
 }
 
 .logo {
-  width: 200px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 }
 
 .profile {
