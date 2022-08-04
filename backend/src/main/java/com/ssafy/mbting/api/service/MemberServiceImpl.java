@@ -53,5 +53,13 @@ public class MemberServiceImpl implements MemberService {
 		return true;
 	}
 
+	@Override
+	public boolean nicknameValid(String nickname) {
+		if(memberRepository.countAllByNickname(nickname) != 0){
+			return false;
+		}
+		return true;
+	}
+
 
 }

@@ -92,6 +92,11 @@ public class MemberController {
 				.build());
 	}
 
+	@GetMapping("/")
+	public ResponseEntity<?> validCheck(@RequestParam(value = "nickname") String nickname){
+		return baseResponseUtil.success(memberService.nicknameValid(nickname));
+	}
+
 	@PostMapping("userprofile/{email}")
 	public ResponseEntity<?> userProfile(@PathVariable("email") String email, @RequestParam("upfile") MultipartFile file) {
 		Member member = memberService.getUserByEmail(email);
