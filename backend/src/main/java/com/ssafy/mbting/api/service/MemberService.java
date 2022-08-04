@@ -14,4 +14,6 @@ public interface MemberService {
 
 	@Transactional
 	Member updateMember(MemberUpdateRequest userRegisterInfo);
+
+	boolean deleteMember(String email);
 }
