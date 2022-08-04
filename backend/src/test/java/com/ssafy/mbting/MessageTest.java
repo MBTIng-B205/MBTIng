@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import javax.transaction.Transactional;
 
@@ -24,6 +26,9 @@ public class MessageTest {
 
     @Autowired
     MessageRepository msgr;
+
+    @Autowired
+    MessageService msgs;
 
     @Test
     void repositoryTest() {
@@ -43,9 +48,6 @@ public class MessageTest {
 
         msgr.save(msg1);
     }
-
-    @Autowired
-    MessageService msgs;
 
     @Test
     void sendTest() {
@@ -83,6 +85,15 @@ public class MessageTest {
         Long msgid = msgr.save(msg1).getId();
 
         Message message = msgs.readMessage(msgid, true);
-        logger.debug("isReadByTo: " + message.isReadByTo());
+        logger.debug("getReadByTo: " + message.getReadByTo());
     }
+/*
+    @Test
+    void pageTest() {
+        Page<Message> msgs = msgr.findAllByFrom(mbr.findById(1L).get(),
+                PageRequest.of(0, 10));
+        logger.info("\n\n{}\n", msgs);
+    }
+*/
+
 }
