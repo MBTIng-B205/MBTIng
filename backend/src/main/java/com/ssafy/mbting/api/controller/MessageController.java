@@ -69,7 +69,7 @@ public class MessageController {
                 }
             }
             catch (Exception e){
-                return ResponseEntity.badRequest().build();
+                return baseResponseUtil.fail("delete 실패");
             }
         }
         return baseResponseUtil.success();
