@@ -56,7 +56,7 @@ export const accounts = {
       let jwt = sessionStorage.getItem("access-token");
       console.log(jwt);
       console.log(params);
-      return axios.post(`${base.baseUrl}/v1/users`, params, {
+      return axios.post(`${base.baseUrl}/users`, params, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -66,7 +66,7 @@ export const accounts = {
       let jwt = sessionStorage.getItem("access-token");
       console.log("jwt", jwt);
       axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
-      return axios.get(`${base.baseUrl}/v1/users/me`);
+      return axios.get(`${base.baseUrl}/users/me`);
     },
   },
 };
