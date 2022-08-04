@@ -28,6 +28,7 @@ public class MemberUpdateRequest {
     private String sido;
     private String mbti;
     private String profileUrl;
+    @Builder.Default
     private List<Interest> interests = new ArrayList<>();
 
 
