@@ -168,6 +168,7 @@ export default {
 
 <style>
 .loginbtn {
+  margin: 20px;
   height: 40px;
   width: 100px;
   cursor: pointer;

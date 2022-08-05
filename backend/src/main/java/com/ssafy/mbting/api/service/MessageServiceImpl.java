@@ -1,6 +1,7 @@
 package com.ssafy.mbting.api.service;
 
 import com.ssafy.mbting.api.request.MessageSendRequest;
+import com.ssafy.mbting.common.util.PageNavigation;
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.entity.Message;
 import com.ssafy.mbting.db.repository.MemberRepository;
@@ -8,6 +9,8 @@ import com.ssafy.mbting.db.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +41,22 @@ public class MessageServiceImpl implements MessageService{
         m2.setEmail("rlwl202@gmail.com");
         logger.info("\n\n홍길동 : {}\n", memberRepository.save(m1).getId());
         logger.info("\n\n유관순 : {}\n", memberRepository.save(m2).getId());
+
+        for (int i = 0; i < 100; i++) {
+            Message msg = new Message();
+            msg.setFromId(m1);
+            msg.setToId(m2);
+            msg.setContent("이것은 메시지 " + i + "번입니다.");
+            messageRepository.save(msg);
+        }
+
+        for (int i = 0; i < 100; i++) {
+            Message msg = new Message();
+            msg.setToId(m1);
+            msg.setFromId(m2);
+            msg.setContent("이것은 " + i + "번입니다!!!!!");
+            messageRepository.save(msg);
+        }
     }
 
     @Override
@@ -75,5 +94,37 @@ public class MessageServiceImpl implements MessageService{
         Message message = messageRepository.findById(messageId).get();
         message.setDeletedByTo(true);
         return message;
+    }
+    //보낸 쪽지함
+    @Override
+    public Page<Message> getMessagesFromMember(String email, PageNavigation pageNavigation) {
+        PageRequest pageRequest = PageRequest.of(pageNavigation.getPage(), pageNavigation.getSize());
+        Page<Message> all;
+        if(pageNavigation.getSearchUtil().getKey().equals("content")){
+            all = messageRepository.findByFromIdAndContentContainingAndDeletedByFrom(memberRepository.findByEmail(email),pageNavigation.getSearchUtil().getWord(),false,pageRequest);
+        }
+        else if(pageNavigation.getSearchUtil().getKey().equals("nickname")){
+            all = messageRepository.findByFromIdAndToIdAndDeletedByFrom(memberRepository.findByEmail(email),memberRepository.findByNickname(pageNavigation.getSearchUtil().getWord()),false,pageRequest);
+        }
+        else {
+             all = messageRepository.findAllByFrom(memberRepository.findByEmail(email), pageRequest);
+        }
+        return all;
+    }
+    //받은 쪽지함
+    @Override
+    public Page<Message> getMessagesToMember(String email, PageNavigation pageNavigation) {
+        PageRequest pageRequest = PageRequest.of(pageNavigation.getPage(), pageNavigation.getSize());
+        Page<Message> all;
+        if(pageNavigation.getSearchUtil().getKey().equals("content")){
+            all = messageRepository.findByToIdAndContentContainingAndDeletedByTo(memberRepository.findByEmail(email),pageNavigation.getSearchUtil().getWord(),false,pageRequest);
+        }
+        else if(pageNavigation.getSearchUtil().getKey().equals("nickname")){
+            all = messageRepository.findByToIdAndFromIdAndDeletedByTo(memberRepository.findByEmail(email),memberRepository.findByNickname(pageNavigation.getSearchUtil().getWord()),false,pageRequest);
+        }
+        else {
+            all = messageRepository.findAllByTo(memberRepository.findByEmail(email), pageRequest);
+        }
+        return all;
     }
 }
