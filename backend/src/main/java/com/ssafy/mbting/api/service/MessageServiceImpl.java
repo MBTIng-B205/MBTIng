@@ -2,7 +2,6 @@ package com.ssafy.mbting.api.service;
 
 import com.ssafy.mbting.api.request.MessageSendRequest;
 import com.ssafy.mbting.common.util.PageNavigation;
-import com.ssafy.mbting.config.AutoDdlStrategy;
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.entity.Message;
 import com.ssafy.mbting.db.repository.MemberRepository;
@@ -10,6 +9,7 @@ import com.ssafy.mbting.db.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -23,14 +23,15 @@ import javax.transaction.Transactional;
 public class MessageServiceImpl implements MessageService{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final AutoDdlStrategy autoDdlStrategy;
+    @Value("${com.mbting.ddl_auto}")
+    private String ddlAuto;
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
 
 
     @PostConstruct
     public void init() {
-        if (autoDdlStrategy == AutoDdlStrategy.CREATE) {
+        if ("create".equalsIgnoreCase(ddlAuto)) {
             Member m1 = new Member();
             m1.setNickname("홍길동");
             m1.setGender(true);

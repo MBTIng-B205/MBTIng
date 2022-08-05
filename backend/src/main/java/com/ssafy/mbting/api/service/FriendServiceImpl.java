@@ -1,7 +1,6 @@
 package com.ssafy.mbting.api.service;
 
 import com.ssafy.mbting.api.response.MemberResponse;
-import com.ssafy.mbting.config.AutoDdlStrategy;
 import com.ssafy.mbting.db.entity.Friend;
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.repository.FriendRepository;
@@ -9,6 +8,7 @@ import com.ssafy.mbting.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -21,13 +21,14 @@ import java.util.List;
 @Transactional
 public class FriendServiceImpl implements FriendService{
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final AutoDdlStrategy autoDdlStrategy;
+    @Value("${com.mbting.ddl_auto}")
+    private String ddlAuto;
     private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
 
     @PostConstruct
     public void init() {
-        if (autoDdlStrategy == AutoDdlStrategy.CREATE) {
+        if ("create".equalsIgnoreCase(ddlAuto)) {
             for (int i = 0; i < 10; i++){
                 Member m1 = new Member();
                 m1.setNickname("손님" + i);
