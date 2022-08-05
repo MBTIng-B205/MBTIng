@@ -13,11 +13,23 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class KakaoAPI {
 
-	public Logger logger = LoggerFactory.getLogger(KakaoAPI.class);
-	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	private final String CLIENT_ID;
+	private final String REDIRECT_URI;
+
+	public KakaoAPI(@Value("${com.mbting.kakao.client_id}") String CLIENT_ID,
+					@Value("${com.mbting.kakao.redirect_uri}") String REDIRECT_URI) {
+		this.CLIENT_ID = CLIENT_ID;
+		this.REDIRECT_URI = REDIRECT_URI;
+	}
+
 	public String getAccessToken(String code) {
 		String accessToken = "";
 		String refreshToken = "";
@@ -31,10 +43,10 @@ public class KakaoAPI {
 			
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
 			StringBuilder sb = new StringBuilder();
-			sb.append("grant_type=authorization_code");
-			sb.append("&client_id=ebb8bb50d4cb227cf989335c827681e5");
-			sb.append("&redirect_uri=http://localhost:80/loginview");
-			sb.append("&code="+code);
+			sb.append("grant_type=authorization_code")
+					.append("&client_id=" + CLIENT_ID)
+					.append("&redirect_uri=" + REDIRECT_URI)
+					.append("&code="+code);
 			
 			bw.write(sb.toString());
 			bw.flush();
