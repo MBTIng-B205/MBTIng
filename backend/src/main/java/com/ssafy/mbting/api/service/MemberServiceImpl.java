@@ -35,13 +35,9 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member updateMember(MemberUpdateRequest userRegisterInfo ) {
 		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
-<<<<<<< Updated upstream
-		updatemember.setInterests(userRegisterInfo.getInterests());
-=======
 		//updatemember.setInterests(userRegisterInfo.getInterests());
 		updatemember.setNickname(userRegisterInfo.getNickname());
 		updatemember.setMbti(userRegisterInfo.getMbti());
->>>>>>> Stashed changes
 		updatemember.setSido(userRegisterInfo.getSido());
 		//updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
 		return updatemember;
