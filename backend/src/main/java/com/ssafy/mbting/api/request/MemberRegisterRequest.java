@@ -1,5 +1,6 @@
 package com.ssafy.mbting.api.request;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,5 +23,6 @@ public class MemberRegisterRequest {
 	private String sido;
 	private String mbti;
 	private String profileUrl;
+	@Builder.Default
 	private List<String> interests = new ArrayList<>();
 }
