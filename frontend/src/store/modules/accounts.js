@@ -62,9 +62,13 @@ export const accounts = {
       return axios.get(`${base.baseUrl}/users/me`);
     },
 
-    nameTest() {
-      axios.get(`${base.baseUrl}/users/me`).then((res) => {
-        console.log(res.data);
+    getUserName({ state }, { nickname }) {
+      console.log("state", state);
+      console.log("nick", nickname);
+      return axios.get(`${base.baseUrl}/users/`, {
+        params: {
+          nickname: nickname,
+        },
       });
     },
   },

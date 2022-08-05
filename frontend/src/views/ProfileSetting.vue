@@ -10,8 +10,7 @@
         <img
           :src="form.memberinfo.profileUrl"
           alt="profile"
-          width="100"
-          style="border-radius: 50%"
+          style="border-radius: 50%; width: 100px; height: 100px"
         />
       </el-col>
       <el-form :model="form" label-width="150px">
@@ -24,7 +23,7 @@
         </el-form-item>
         <el-form-item label="닉네임">
           <el-input v-model="form.nickname" style="width: 220px"></el-input>
-          <el-button @click="nameTest">닉네임중복검사</el-button>
+          <el-button @click="nameCheck">닉네임중복검사</el-button>
         </el-form-item>
         <el-form-item label="성별">
           <el-radio-group v-model="form.gender">
@@ -41,24 +40,14 @@
             ></el-date-picker>
           </el-col>
         </el-form-item>
-        <el-form-item label="지역" placeholder="please select your zone">
-          <el-select v-model="form.sido">
-            <el-option label="서울" value="서울" />
-            <el-option label="인천" value="인천" />
-            <el-option label="경기" value="경기" />
-            <el-option label="강원" value="강원" />
-            <el-option label="대전" value="대전" />
-            <el-option label="대구" value="대구" />
-            <el-option label="광주" value="광주" />
-            <el-option label="울산" value="울산" />
-            <el-option label="부산" value="부산" />
-            <el-option label="충남" value="충남" />
-            <el-option label="충북" value="충북" />
-            <el-option label="전북" value="전북" />
-            <el-option label="전남" value="전남" />
-            <el-option label="경북" value="경북" />
-            <el-option label="경남" value="경남" />
-            <el-option label="제주" value="제주" />
+        <el-form-item label="지역">
+          <el-select v-model="form.sido" placeholder="왜안되죠?">
+            <el-option
+              v-for="item in option"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -83,6 +72,78 @@ export default {
     const router = useRouter();
     const store = useStore();
     const tmpmemberinfo = computed(() => store.getters["accounts/getMember"]);
+
+    const option = [
+      {
+        value: "서울",
+        label: "서울",
+      },
+      {
+        value: "인천",
+        label: "인천",
+      },
+      {
+        value: "경기",
+        label: "경기",
+      },
+      {
+        value: "강원",
+        label: "강원",
+      },
+      {
+        value: "부산",
+        label: "부산",
+      },
+      {
+        value: "대전",
+        label: "대전",
+      },
+      {
+        value: "울산",
+        label: "울산",
+      },
+      {
+        value: "충북",
+        label: "충북",
+      },
+      {
+        value: "충남",
+        label: "충남",
+      },
+      {
+        value: "세종",
+        label: "세종",
+      },
+      {
+        value: "대구",
+        label: "대구",
+      },
+      {
+        value: "경북",
+        label: "경북",
+      },
+      {
+        value: "경남",
+        label: "경남",
+      },
+      {
+        value: "광주",
+        label: "광주",
+      },
+      {
+        value: "전북",
+        label: "전북",
+      },
+      {
+        value: "전남",
+        label: "전남",
+      },
+      {
+        value: "제주",
+        label: "제주",
+      },
+    ];
+
     const form = reactive({
       mbti: tmpmemberinfo.value.mbti,
       nickname: tmpmemberinfo.value.nickname,
@@ -91,8 +152,24 @@ export default {
       sido: {},
       memberinfo: computed(() => store.getters["accounts/getMember"]),
     });
-    console.log(form);
+    // console.log(form);
+
     let flag = false;
+    const nameCheck = function () {
+      const nickname = form.nickname;
+      console.log("이거는프로필 닉네임", nickname);
+      store.dispatch("accounts/getUserName", { nickname }).then(function (res) {
+        console.log("res", res);
+        if (res.data.body === true) {
+          alert("사용가능한 닉네임 입니다.");
+          flag = true;
+        } else {
+          alert("중복 된 닉네임입니다.");
+          flag = false;
+        }
+      });
+    };
+
     const signup = function () {
       if (flag === false) {
         alert("닉네임 중복검사를 눌러주세요");
@@ -105,23 +182,12 @@ export default {
         store.commit("accounts/SET_MEMBER_INFO", form.memberinfo);
         //date => date.toISOString().slice(0, 10);
         store.dispatch("accounts/signup");
-        console.log(form.memberinfo);
+        // console.log(form.memberinfo);
         router.push({ name: "HomeView" });
       }
     };
 
-    const nameTest = function () {
-      const state = computed(() => store.getters["accounts/getMember"]);
-      console.log("멤버인포", state);
-      if (form.nickname === state.value.nickname) {
-        alert("중복된 닉네임입니다.");
-      } else {
-        alert("사용가능한 닉네임입니다.");
-        flag = true;
-      }
-    };
-
-    return { signup, nameTest, form };
+    return { signup, nameCheck, option, form };
   },
 };
 </script>
