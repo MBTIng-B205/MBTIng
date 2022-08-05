@@ -46,26 +46,30 @@
           <el-form-item label="MBTI">
             <el-input style="width: 200px" v-model="state.memberinfo.mbti" />
           </el-form-item>
-          <el-form-item label="Nickname">
+          <el-form-item label="닉네임">
             <el-input
               style="width: 200px"
               v-model="state.memberinfo.nickname"
             />
             <el-button>중복확인</el-button>
           </el-form-item>
-          <el-form-item label="Gender">
+          <el-form-item label="성별">
             <el-radio-group v-model="state.memberinfo.gender">
-              <el-radio :label="true">Male</el-radio>
-              <el-radio :label="false">Female</el-radio>
+              <el-radio :label="true">남자</el-radio>
+              <el-radio :label="false">여자</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="Birthday">
+          <el-form-item label="생년월일">
             <el-date-picker v-model="state.memberinfo.birth" type="date" />
           </el-form-item>
-          <el-form-item label="Place">
+          <el-form-item label="지역">
             <el-select v-model="state.memberinfo.sido">
-              <el-option label="서울" value="서울" />
-              <el-option label="대전" value="대전" />
+              <el-option
+                v-for="item in option"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
         </el-form>
@@ -92,11 +96,80 @@ export default {
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       mypageDialog: false,
     });
+    const option = [
+      {
+        value: "서울",
+        label: "서울",
+      },
+      {
+        value: "인천",
+        label: "인천",
+      },
+      {
+        value: "경기",
+        label: "경기",
+      },
+      {
+        value: "강원",
+        label: "강원",
+      },
+      {
+        value: "부산",
+        label: "부산",
+      },
+      {
+        value: "대전",
+        label: "대전",
+      },
+      {
+        value: "울산",
+        label: "울산",
+      },
+      {
+        value: "충북",
+        label: "충북",
+      },
+      {
+        value: "충남",
+        label: "충남",
+      },
+      {
+        value: "세종",
+        label: "세종",
+      },
+      {
+        value: "대구",
+        label: "대구",
+      },
+      {
+        value: "경북",
+        label: "경북",
+      },
+      {
+        value: "경남",
+        label: "경남",
+      },
+      {
+        value: "광주",
+        label: "광주",
+      },
+      {
+        value: "전북",
+        label: "전북",
+      },
+      {
+        value: "전남",
+        label: "전남",
+      },
+      {
+        value: "제주",
+        label: "제주",
+      },
+    ];
     const goHome = function () {
       router.push({ name: "HomeView" });
     };
-
-    //console.log(state.memberinfo);
+    console.log(state.memberinfo);
     const goPeople = function () {
       router.push({ name: "friend" });
     };
@@ -108,28 +181,49 @@ export default {
       state.mypageDialog = false;
     };
     const updateInfo = function () {
-      // 회원정보 수정
+      store
+        .dispatch("accounts/updateMemberinfo")
+        .then(function (result) {
+          store.commit("accounts/SET_MEMBER_INFO", result.data);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     };
 
     const deleteMember = function () {
       // 회원 탈퇴
+      store
+        .dispatch("accounts/deleteMemberinfo")
+        .then(function (result) {
+          console.log(result);
+          sessionStorage.removeItem("access-token");
+          store.commit("accounts/SET_MEMBER_INFO", null);
+          console.log(store.state.member);
+          state.mypageDialog = false;
+          router.push({ name: "HomeView" });
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     };
 
     const login = () => {
       // 카카오톡 로그인 화면 전환
       window.location.replace(
-        "https://kauth.kakao.com/oauth/authorize?client_id=ebb8bb50d4cb227cf989335c827681e5&redirect_uri=http://localhost:80/loginview&response_type=code"
+        `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code`
       );
     };
 
     const logout = () => {
       window.location.replace(
-        "https://kauth.kakao.com/oauth/logout?client_id=ebb8bb50d4cb227cf989335c827681e5&logout_redirect_uri=http://localhost:80/logoutview"
+        `https://kauth.kakao.com/oauth/logout?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&logout_redirect_uri=${process.env.VUE_APP_KAKAO_LOGOUT_REDIRECT_URI}`
       );
     };
 
     return {
       state,
+      option,
       goHome,
       goPeople,
       goMyPage,
@@ -148,6 +242,7 @@ export default {
 
 <style>
 .loginbtn {
+  margin: 20px;
   height: 40px;
   width: 100px;
   cursor: pointer;

@@ -39,6 +39,8 @@ dependencies {
 	// swagger
 	implementation("io.springfox:springfox-swagger-ui:3.0.0")
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
+	// socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
@@ -46,5 +48,16 @@ tasks.named('test') {
 }
 
 tasks.named('bootRun') {
+	systemProperty 'com.mbting.db.url', findProperty('db.url') ?: 'jdbc:mysql://localhost:3306/mbtisgt?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true'
+	systemProperty 'com.mbting.db.username', findProperty('db.username') ?: 'ssafy'
 	systemProperty 'com.mbting.db.password', findProperty('db.password') ?: 'ssafy'
+	systemProperty 'com.mbting.ddl_auto', findProperty('ddl_auto') ?: 'create'
+	systemProperty 'com.mbting.log_file_name', findProperty('log_file_name') ?: 'mbting-dev-log'
+	systemProperty 'com.mbting.jwt.secret', findProperty('jwt.secret') ?: 'dyAeHubOOc8KaOfYB6XEQoEj22zRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa'
+	systemProperty 'com.mbting.kakao.client_id', findProperty('kakao.client_id') ?: 'ebb8bb50d4cb227cf989335c827681e5'
+	systemProperty 'com.mbting.kakao.redirect_uri', findProperty('kakao.redirect_uri') ?: 'http://localhost:80/loginview'
+}
+
+test.onlyIf {
+	project.hasProperty("doTest")
 }

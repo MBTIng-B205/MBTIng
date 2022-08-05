@@ -15,14 +15,17 @@
         </el-col>
       </el-row>
     </el-header>
-    <el-row style="flex-direction: row; justify-content: space-between">
-      <el-col :span="8" v-for="friend in friends" :key="friend">
-        <el-card>
+    <el-row
+      v-if="state.friends.length != 0 && !state.searchFlag"
+      style="flex-direction: row; justify-content: space-between"
+    >
+      <el-col :span="8" v-for="friend in state.friends" :key="friend">
+        <el-card @click="onfriendsProfile(friend)">
           <el-popconfirm
             confirm-button-text="삭제"
             cancel-button-text="취소"
             title="친구를 삭제하시겠습니까?"
-            @confirm="deleteFriend"
+            @confirm="deleteFriend(friend)"
           >
             <template #reference>
               <el-button class="delete" :icon="CircleCloseFilled"></el-button>
@@ -34,13 +37,13 @@
             <p>{{ friend.mbti }}</p>
           </div>
           <el-button
-            @click="
+            @click.stop="
               dialogVisible = true;
               check(friend);
             "
             >쪽지 보내기</el-button
           >
-          <el-dialog v-model="dialogVisible" @close="handleClose">
+          <el-dialog v-model="dialogVisible" @close="messageClose">
             <el-header style="text-align: left; padding-top: 10px">
               <span class="to"> TO. </span>
               <span class="toFriend"> {{ toFriend }}</span>
@@ -60,85 +63,104 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <el-row v-else-if="state.search">검색한 친구가 없습니다!</el-row>
+    <el-row v-else> 친구를 추가해보세요! </el-row>
+
+    <el-dialog v-model="state.friendProfileDialog" @close="friendProfileClose">
+      <div style="text-align: center">
+        <el-row>
+          <img class="profile" :src="state.friend.profileUrl" />
+        </el-row>
+        <el-row>
+          <el-form
+            :model="state.friend"
+            :label-position="right"
+            label-width="100px"
+            style="margin-top: 30px; margin-bottom: 30px; align-items: center"
+          >
+            <el-form-item label="MBTI">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.mbti"
+                readonly
+              />
+            </el-form-item>
+            <el-form-item label="Nickname">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.nickname"
+                readonly
+              />
+            </el-form-item>
+            <el-form-item label="Gender">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.gender"
+                readonly
+              />
+            </el-form-item>
+            <el-form-item label="Birthday">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.birth"
+                readonly
+              />
+            </el-form-item>
+            <el-form-item label="Place">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.sido"
+                readonly
+              />
+            </el-form-item>
+          </el-form>
+        </el-row>
+      </div>
+    </el-dialog>
   </el-container>
 </template>
 
 <script>
-import { ref } from "vue";
+import { useStore } from "vuex";
+import { ref, reactive, onMounted, computed } from "vue";
 import { CircleCloseFilled, UserFilled } from "@element-plus/icons-vue";
 export default {
   setup() {
     const key = ref("");
     const search = ref("");
-    const friends = [
-      {
-        nickname: "만두왕",
-        mbti: "INFJ",
-      },
-      {
-        nickname: "카트왕",
-        mbti: "ISFJ",
-      },
-      {
-        nickname: "테트리스왕",
-        mbti: "INTP",
-      },
-      {
-        nickname: "마라탕",
-        mbti: "ESTP",
-      },
-      {
-        nickname: "만두왕",
-        mbti: "INFJ",
-      },
-      {
-        nickname: "카트왕",
-        mbti: "ISFJ",
-      },
-      {
-        nickname: "테트리스왕",
-        mbti: "INTP",
-      },
-      {
-        nickname: "마라탕",
-        mbti: "ESTP",
-      },
-      {
-        nickname: "만두왕",
-        mbti: "INFJ",
-      },
-      {
-        nickname: "카트왕",
-        mbti: "ISFJ",
-      },
-      {
-        nickname: "테트리스왕",
-        mbti: "INTP",
-      },
-      {
-        nickname: "마라탕",
-        mbti: "ESTP",
-      },
-      {
-        nickname: "만두왕",
-        mbti: "INFJ",
-      },
-      {
-        nickname: "카트왕",
-        mbti: "ISFJ",
-      },
-      {
-        nickname: "테트리스왕",
-        mbti: "INTP",
-      },
-      {
-        nickname: "마라탕",
-        mbti: "ESTP",
-      },
-    ];
+    const store = useStore();
+    const state = reactive({
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+      searchFlag: false,
+      friendProfileDialog: false,
+      friends: [],
+      friend: {},
+    });
+
+    onMounted(() => {
+      store
+        .dispatch("friends/getFriendsList", state.memberinfo.email)
+        .then(function (result) {
+          console.log("result", result);
+          state.friends = result.data.body.friends;
+          console.log("friends", state.friends);
+        });
+    });
+
     const toFriend = ref("");
     const dialogVisible = ref(false);
     const message = ref("");
+
+    const onFriendProfile = function (friend) {
+      console.log(friend);
+      state.friend = friend;
+      state.friendProfileDialog = true;
+    };
+
+    const friendProfileClose = function () {
+      state.friendProfileDialog = false;
+    };
 
     const onSearch = function () {
       if (key.value == "") {
@@ -146,13 +168,52 @@ export default {
       } else if (search.value == "") {
         alert("검색어를 입력하세요");
       } else {
-        console.log("search", key.value + " " + search.value);
+        state.searchFlag = true;
+        if (key.value == "nickname") {
+          store
+            .dispatch("friends/getFriendByName", {
+              nickname: search.value,
+              email: state.memberinfo.email,
+            })
+            .then(function (result) {
+              console.log("result", result);
+              state.friends = result.data.body.friends;
+              console.log("friends-nickname", state.friends);
+            });
+        } else {
+          store
+            .dispatch("friends/getFriendByMbti", {
+              mbti: search.value,
+              email: state.memberinfo.email,
+            })
+            .then(function (result) {
+              console.log("result", result);
+              state.friends = result.data.body.friends;
+              console.log("friends-mbti", state.friends);
+            });
+        }
       }
     };
 
-    const deleteFriend = function () {
+    const deleteFriend = function (friend) {
       // 친구 삭제 기능
-      alert("삭제");
+      console.log(friend);
+      store
+        .dispatch("friends/deleteFriend", {
+          from: state.memberinfo.email,
+          to: friend.email,
+        })
+        .then(function (result) {
+          console.log("deleteResult", result);
+          store
+            .dispatch("friends/getFriendsList", state.memberinfo.email)
+            .then(function (result) {
+              console.log("result", result);
+              state.friends = result.data.body.friends;
+              console.log("friends", state.friends);
+              console.log("friend", state.friends[0]);
+            });
+        });
     };
 
     const clickSend = function () {
@@ -178,11 +239,11 @@ export default {
       } else {
         // 쪽지 보내기
         alert(message.value);
-        handleClose();
+        messageClose();
       }
     };
 
-    const handleClose = function () {
+    const messageClose = function () {
       dialogVisible.value = false;
       message.value = "";
       toFriend.value = "";
@@ -194,7 +255,7 @@ export default {
     };
 
     return {
-      friends,
+      state,
       search,
       key,
       dialogVisible,
@@ -202,10 +263,12 @@ export default {
       toFriend,
       CircleCloseFilled,
       UserFilled,
+      onFriendProfile,
+      friendProfileClose,
       onSearch,
       deleteFriend,
       clickSend,
-      handleClose,
+      messageClose,
       check,
     };
   },
