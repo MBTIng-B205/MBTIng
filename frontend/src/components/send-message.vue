@@ -170,6 +170,9 @@ export default {
               state.messageList = result.data.body.messages;
               console.log("delete-messageList", state.messageList);
             });
+        })
+        .catch(function (error) {
+          alert(error);
         });
     };
 

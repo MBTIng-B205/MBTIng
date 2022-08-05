@@ -2,6 +2,9 @@ package com.ssafy.mbting.api.request;
 
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,4 +14,5 @@ public class MessageDeleteRequest {
         SENDER, RECEIVER
     }
     private DeletedBy deletedBy;
+    private List<Long> deletelist= new ArrayList<>();
 }

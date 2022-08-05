@@ -46,9 +46,13 @@ export const messages = {
     deleteSendList({ state }, { list }) {
       console.log(state);
       console.log(list);
+      let del = [];
+      for (let i = 0; i < list.length; i++) {
+        del.push(list[i]);
+      }
       const params = {
         deletedBy: "SENDER",
-        deletelist: [201],
+        deletelist: del,
       };
       console.log("delete", params);
       return axios.delete(
