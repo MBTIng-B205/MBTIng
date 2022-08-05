@@ -37,8 +37,11 @@ public class MemberServiceImpl implements MemberService {
 	public Member updateMember(MemberUpdateRequest userRegisterInfo ) {
 		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
 		//updatemember.setInterests(userRegisterInfo.getInterests());
+
+		updatemember.setNickname(userRegisterInfo.getNickname());
+		updatemember.setMbti(userRegisterInfo.getMbti());
 		updatemember.setSido(userRegisterInfo.getSido());
-		updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
+		//updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
 		return updatemember;
 	}
 

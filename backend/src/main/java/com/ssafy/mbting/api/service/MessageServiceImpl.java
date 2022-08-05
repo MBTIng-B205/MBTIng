@@ -66,8 +66,8 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public Message sendMessage(MessageSendRequest messageSendRequest) {
-        Member memberFrom = memberRepository.findById(messageSendRequest.getSenderId()).get();
-        Member memberTo = memberRepository.findById(messageSendRequest.getReceiverId()).get();
+        Member memberFrom = memberRepository.findByEmail(messageSendRequest.getSenderId());
+        Member memberTo = memberRepository.findByEmail(messageSendRequest.getReceiverId());
         Message message = new Message();
         message.setFromId(memberFrom);
         message.setToId(memberTo);
@@ -101,12 +101,15 @@ public class MessageServiceImpl implements MessageService{
         PageRequest pageRequest = PageRequest.of(pageNavigation.getPage(), pageNavigation.getSize());
         Page<Message> all;
         if(pageNavigation.getSearchUtil().getKey().equals("content")){
+            logger.debug("\n\n\n content \n\n\n");
             all = messageRepository.findByFromIdAndContentContainingAndDeletedByFrom(memberRepository.findByEmail(email),pageNavigation.getSearchUtil().getWord(),false,pageRequest);
         }
         else if(pageNavigation.getSearchUtil().getKey().equals("nickname")){
+            logger.debug("\n\n\n nickname \n\n\n");
             all = messageRepository.findByFromIdAndToIdAndDeletedByFrom(memberRepository.findByEmail(email),memberRepository.findByNickname(pageNavigation.getSearchUtil().getWord()),false,pageRequest);
         }
         else {
+            logger.debug("\n\n\n no keyword \n\n\n");
              all = messageRepository.findAllByFrom(memberRepository.findByEmail(email), pageRequest);
         }
         return all;
