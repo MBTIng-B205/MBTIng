@@ -28,7 +28,10 @@
         <tr>
           <th>
             <label class="form-checkbox"
-              ><input type="checkbox" v-model="selectAll" @click="onSelect"
+              ><input
+                type="checkbox"
+                v-model="state.selectAll"
+                @click="onSelect"
             /></label>
           </th>
           <th>받은사람</th>
@@ -37,25 +40,30 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="cell" v-for="i in tableData" :key="i" @click="onMsg(i)">
+        <tr
+          class="cell"
+          v-for="message in state.messageList"
+          :key="message"
+          @click="onMsg(message)"
+        >
           <td>
             <label class="form-checkbox">
               <input
                 type="checkbox"
-                :value="i.id"
-                v-model="selected"
+                :value="message.id"
+                v-model="state.selected"
                 @click.stop
               />
-              <i class="form-icon"></i>
+              <message class="form-icon"></message>
             </label>
           </td>
-          <td class="tableName">{{ i.nickname }}</td>
-          <td class="tableMsg">{{ i.msg }}</td>
-          <td>{{ i.date }}</td>
+          <td class="tableName">{{ message.receiver.nickname }}</td>
+          <td class="tableMsg">{{ message.content }}</td>
+          <td>{{ message.sendTime }}</td>
         </tr>
       </tbody>
     </table>
-    <el-dialog v-model="dialogVisible" @close="handleClose">
+    <el-dialog v-model="state.messageDialog" @close="handleClose">
       <el-header style="text-align: left; padding-top: 10px">
         <span class="to"> TO. </span>
         <span class="toFriend"> {{ toFriend }}</span>
@@ -72,85 +80,51 @@
         background
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
-        :page-size="10"
-        :total="msgcnt"
+        :page-size="8"
+        :total="state.msgcnt"
       />
     </div>
   </el-container>
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { useStore } from "vuex";
+import { ref, reactive, computed, onMounted } from "vue";
 
 export default {
   setup() {
     const key = ref("");
     const search = ref("");
-    const msgcnt = ref(50);
-    const selected = ref([]);
-    const selectAll = computed(
-      () => selected.value.length === tableData.length
-    );
-    const toFriend = ref("");
-    const toDate = ref("");
-    const message = ref("");
-    const dialogVisible = ref(false);
-    const tableData = [
-      {
-        id: 1,
-        nickname: "aqqqq",
-        msg: "111ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        date: "2022-07-31",
-      },
-      {
-        id: 2,
-        nickname: "b",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 3,
-        nickname: "c",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 4,
-        nickname: "d",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 5,
-        nickname: "e",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 6,
-        nickname: "f",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 7,
-        nickname: "g",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 8,
-        nickname: "h",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 9,
-        nickname: "i",
-        msg: "111",
-        date: "2022-07-31",
-      },
-    ];
+    const store = useStore();
+    const state = reactive({
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+      searchFlag: false,
+      messageList: [],
+      msgcnt: computed(() => state.messageList.length),
+      messageId: "",
+      messageDialog: false,
+      selected: [],
+      selectAll: computed(
+        () => state.selected.length === state.messageList.length
+      ),
+    });
+
+    onMounted(() => {
+      store
+        .dispatch("messages/getSendList", {
+          email: state.memberinfo.email,
+          page: 0,
+          key: "",
+          word: "",
+          size: 10,
+        })
+        .then(function (result) {
+          console.log("result", result);
+          state.messageList = result.data.body.messages;
+          console.log("messageList", state.messageList);
+        });
+    });
+
     const onSearch = function () {
       if (key.value == "") {
         alert("검색키를 선택하세요");
@@ -162,52 +136,66 @@ export default {
     };
 
     const onSelect = function () {
-      console.log(selectAll.value);
-      if (!selectAll.value) {
-        selected.value = [];
-        for (let index in tableData) {
-          selected.value.push(tableData[index].id);
+      console.log(state.selectAll.value);
+      if (!state.selectAll.value) {
+        state.selected.value = [];
+        for (let index in state.messageList) {
+          state.selected.value.push(state.messageList[index].id);
         }
       } else {
-        selected.value = [];
+        state.selected.value = [];
       }
     };
 
     const onDelete = function () {
-      console.log(selected.value);
+      console.log("selected", state.selected);
+      store
+        .dispatch("messages/deleteSendList", {
+          list: state.selected,
+        })
+        .then(function (result) {
+          console.log("result", result);
+
+          store
+            .dispatch("messages/getSendList", {
+              email: state.memberinfo.email,
+              page: 0,
+              key: key.value,
+              word: search.value,
+              size: 10,
+            })
+            .then(function (result) {
+              console.log("result", result);
+              state.messageList = result.data.body.messages;
+              console.log("delete-messageList", state.messageList);
+            });
+        });
     };
 
     const onMsg = function (i) {
       console.log(i);
-      toFriend.value = i.nickname;
-      toDate.value = i.date;
-      message.value = i.msg;
-      dialogVisible.value = true;
+      state.messageId = i.id;
+      state.messageDialog.value = true;
     };
 
     const handleClose = function () {
-      dialogVisible.value = false;
-      message.value = "";
-      toFriend.value = "";
-      toDate.value = "";
+      state.messageDialog.value = false;
+    };
+
+    const handleCurrentChange = function (val) {
+      console.log("page", val);
     };
 
     return {
       key,
-      selected,
-      selectAll,
       search,
-      msgcnt,
-      dialogVisible,
-      toFriend,
-      toDate,
-      message,
-      tableData,
+      state,
       onSearch,
       onSelect,
       onDelete,
       onMsg,
       handleClose,
+      handleCurrentChange,
     };
   },
 };
