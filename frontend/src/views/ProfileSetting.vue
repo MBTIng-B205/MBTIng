@@ -23,12 +23,12 @@
         </el-form-item>
         <el-form-item label="닉네임">
           <el-input v-model="form.nickname" style="width: 220px"></el-input>
-          <el-button @click="nameCheck">닉네임중복검사</el-button>
+          <el-button @click="nameCheck">중복확인</el-button>
         </el-form-item>
         <el-form-item label="성별">
           <el-radio-group v-model="form.gender">
-            <el-radio label="남자" value="true" />
-            <el-radio label="여자" value="false" />
+            <el-radio :label="true">남자</el-radio>
+            <el-radio :label="false">여자</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="생년월일">
@@ -40,8 +40,8 @@
             ></el-date-picker>
           </el-col>
         </el-form-item>
-        <el-form-item label="지역">
-          <el-select v-model="form.sido" placeholder="왜안되죠?">
+        <el-form-item label="사는지역">
+          <el-select v-model="form.sido" placeholder="거주 지역을 선택하세요">
             <el-option
               v-for="item in option"
               :key="item.value"
@@ -149,7 +149,7 @@ export default {
       nickname: tmpmemberinfo.value.nickname,
       gender: {},
       birth: {},
-      sido: {},
+      sido: "",
       memberinfo: computed(() => store.getters["accounts/getMember"]),
     });
     // console.log(form);

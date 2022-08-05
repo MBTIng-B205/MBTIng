@@ -43,6 +43,7 @@ export const accounts = {
         sido: state.member.sido,
         mbti: state.member.mbti,
         profileUrl: state.member.profileUrl,
+        interests: ["a", "b"],
       };
 
       let jwt = sessionStorage.getItem("access-token");

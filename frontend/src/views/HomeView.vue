@@ -63,13 +63,6 @@ export default {
     const handleClose = function () {
       mypageDialog.value = false;
     };
-    const updateInfo = function () {
-      // 회원정보 수정
-    };
-
-    const deleteMember = function () {
-      // 회원 탈퇴
-    };
 
     // const submit = () => {
     //   axios.post(url= "/api/", state.form).then(res) => {
@@ -104,8 +97,6 @@ export default {
       Comment,
       Right,
       state,
-      updateInfo,
-      deleteMember,
     };
   },
 };

@@ -16,11 +16,11 @@
       </el-row>
     </el-header>
     <el-row
-      v-if="state.friends.length != 0"
+      v-if="state.friends.length != 0 && !state.searchFlag"
       style="flex-direction: row; justify-content: space-between"
     >
       <el-col :span="8" v-for="friend in state.friends" :key="friend">
-        <el-card>
+        <el-card @click="onfriendsProfile(friend)">
           <el-popconfirm
             confirm-button-text="삭제"
             cancel-button-text="취소"
@@ -37,13 +37,13 @@
             <p>{{ friend.mbti }}</p>
           </div>
           <el-button
-            @click="
+            @click.stop="
               dialogVisible = true;
               check(friend);
             "
             >쪽지 보내기</el-button
           >
-          <el-dialog v-model="dialogVisible" @close="handleClose">
+          <el-dialog v-model="dialogVisible" @close="messageClose">
             <el-header style="text-align: left; padding-top: 10px">
               <span class="to"> TO. </span>
               <span class="toFriend"> {{ toFriend }}</span>
@@ -63,7 +63,61 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <el-row v-else-if="state.search">검색한 친구가 없습니다!</el-row>
     <el-row v-else> 친구를 추가해보세요! </el-row>
+
+    <el-dialog v-model="state.friendProfileDialog" @close="friendProfileClose">
+      <div style="text-align: center">
+        <el-row>
+          <img class="profile" :src="state.friend.profileUrl" />
+        </el-row>
+        <el-row>
+          <el-form
+            :model="state.friend"
+            :label-position="right"
+            label-width="100px"
+            style="margin-top: 30px; margin-bottom: 30px; align-items: center"
+          >
+            <el-form-item label="MBTI">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.mbti"
+                readonly
+              />
+            </el-form-item>
+            <el-form-item label="닉네임">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.nickname"
+                readonly
+              />
+            </el-form-item>
+            <el-form-item label="성별">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.gender"
+                readonly
+              />
+            </el-form-item>
+            <el-form-item label="생년월일">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.birth"
+                readonly
+              />
+            </el-form-item>
+            <el-form-item label="사는지역">
+              <el-input
+                style="width: 200px"
+                v-model="state.friend.sido"
+                readonly
+              />
+            </el-form-item>
+          </el-form>
+        </el-row>
+      </div>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -78,7 +132,10 @@ export default {
     const store = useStore();
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
+      searchFlag: false,
+      friendProfileDialog: false,
       friends: [],
+      friend: {},
     });
 
     onMounted(() => {
@@ -88,7 +145,6 @@ export default {
           console.log("result", result);
           state.friends = result.data.body.friends;
           console.log("friends", state.friends);
-          console.log("friend", state.friends[0]);
         });
     });
 
@@ -96,12 +152,23 @@ export default {
     const dialogVisible = ref(false);
     const message = ref("");
 
+    const onFriendProfile = function (friend) {
+      console.log(friend);
+      state.friend = friend;
+      state.friendProfileDialog = true;
+    };
+
+    const friendProfileClose = function () {
+      state.friendProfileDialog = false;
+    };
+
     const onSearch = function () {
       if (key.value == "") {
         alert("검색키를 선택하세요");
       } else if (search.value == "") {
         alert("검색어를 입력하세요");
       } else {
+        state.searchFlag = true;
         if (key.value == "nickname") {
           store
             .dispatch("friends/getFriendByName", {
@@ -151,32 +218,14 @@ export default {
 
     const clickSend = function () {
       console.log("clickSend", message);
-      let time = new Date();
-      let year = String(time.getFullYear());
-      let month = time.getMonth() + 1;
-      let day = String(
-        time.getDate() < 10 ? "0" + time.getDate() : time.getDate()
-      );
-      let hour = String(
-        time.getHours() < 10 ? "0" + time.getHours() : time.getHours()
-      );
-      let min = String(
-        time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
-      );
-      console.log(
-        time,
-        year + "-" + month + "-" + day + " " + hour + ":" + min
-      );
       if (message.value == "") {
         alert("보낼 내용을 입력하세요!");
       } else {
-        // 쪽지 보내기
-        alert(message.value);
-        handleClose();
+        messageClose();
       }
     };
 
-    const handleClose = function () {
+    const messageClose = function () {
       dialogVisible.value = false;
       message.value = "";
       toFriend.value = "";
@@ -196,10 +245,12 @@ export default {
       toFriend,
       CircleCloseFilled,
       UserFilled,
+      onFriendProfile,
+      friendProfileClose,
       onSearch,
       deleteFriend,
       clickSend,
-      handleClose,
+      messageClose,
       check,
     };
   },
