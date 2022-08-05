@@ -11,7 +11,7 @@ public interface FriendService {
 
     Friend createFriend(Member fromMember, Member toMember);
 
-    boolean deleteFriend(Member fromMember, Member toMember);
+    void deleteFriend(Member fromMember, Member toMember);
 
     List<MemberResponse> getFriendByNickname(Member member, String nickname);
 

@@ -18,15 +18,11 @@ export const accounts = {
       state.token = token;
     },
     SET_MEMBER_INFO: (state, memberInfo) => {
-      console.log(memberInfo);
       state.member = memberInfo;
-      console.log(state.member);
     },
   },
   getters: {
     getMember(state) {
-      console.log("getters ------------------");
-      console.log(state);
       return state.member;
     },
   },
@@ -38,10 +34,6 @@ export const accounts = {
       return axios.get(`${base.baseUrl}/login?code=${code}`);
     },
 
-    // saveToken({ commit }, token) {
-    //   commit("SET_TOKEN", token);
-    //   SessionStorage.setItem("token", token);
-    // },
     signup({ state }) {
       const params = {
         email: state.member.email,
@@ -62,11 +54,22 @@ export const accounts = {
         },
       });
     },
+
     getMemberinfo() {
       let jwt = sessionStorage.getItem("access-token");
       console.log("jwt", jwt);
       axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
       return axios.get(`${base.baseUrl}/users/me`);
+    },
+
+    getUserName({ state }, { nickname }) {
+      console.log("state", state);
+      console.log("nick", nickname);
+      return axios.get(`${base.baseUrl}/users/`, {
+        params: {
+          nickname: nickname,
+        },
+      });
     },
   },
 };
