@@ -27,4 +27,6 @@ public class Message extends BaseEntity {
     private Boolean deletedByTo = false;
     @NotNull
     private Boolean deletedByFrom = false;
+    @NotNull
+    private Boolean friendflag = false;
 }

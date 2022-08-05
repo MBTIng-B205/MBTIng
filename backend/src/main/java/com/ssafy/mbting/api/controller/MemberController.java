@@ -114,12 +114,11 @@ public class MemberController {
 				file.transferTo(new File(folder,filename));
 				member.setProfileUrl("http://localhost:8080/static/upload/"+today+"/"+filename);
 				memberService.updateMember(MemberUpdateRequest.of(member));
-
 			}
 		}catch (Exception e) {
 			//여기 수정 필요
 			e.printStackTrace();
-			ResponseEntity.accepted().body(MemberRegisterResponse.builder()
+			return ResponseEntity.accepted().body(MemberRegisterResponse.builder()
 					.member(MemberResponse.of(member))
 					.build());
 		}

@@ -17,9 +17,10 @@ public class MessageResponse {
     //member 리스폰즈를 건드림
     MemberResponse receiver;
     MemberResponse sender;
-    boolean read;
-    boolean deletedByReceiver;
-    boolean deletedBySender;
+    Boolean read;
+    Boolean deletedByReceiver;
+    Boolean deletedBySender;
+    Boolean friendflag;
     LocalDateTime sendTime;
 
     public static MessageResponse of(Message message, Member receiver, Member sender) {
@@ -32,6 +33,7 @@ public class MessageResponse {
                 .deletedByReceiver(message.getDeletedByTo())
                 .deletedBySender(message.getDeletedByFrom())
                 .sendTime(message.getSendTime())
+                .friendflag(message.getFriendflag())
                 .build();
     }
 }
