@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageSendRequest {
-    private Long senderId;
-    private Long receiverId;
+    private String senderId;
+    private String receiverId;
     private String content;
 }
