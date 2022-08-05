@@ -1,8 +1,6 @@
 <template>
-  <el-header style="background-color: #fff4b8; height: 100px">
-    <img class="logo" src="@/assets/logo.png" />
-    <img class="profile" src="@/assets/profile.png"
-  /></el-header>
+  <main-header />
+
   <el-container>
     <el-aside width="240px" height="100%"
       ><el-menu>
@@ -33,8 +31,21 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
+import { computed, reactive } from "@vue/runtime-core";
+import MainHeader from "@/components/main-header.vue";
 export default {
-  components: {},
+  components: { MainHeader },
+  setup() {
+    const store = useStore();
+    const state = reactive({
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+    });
+
+    return {
+      state,
+    };
+  },
 };
 </script>
 
@@ -44,6 +55,7 @@ html,
 body {
   height: 100vh;
 }
+
 .el-container {
   margin: 0;
   height: 100vh;
@@ -65,20 +77,6 @@ body {
   overflow-x: hidden;
 }
 
-.logo {
-  width: 80px;
-  height: 80px;
-}
-
-.profile {
-  float: right;
-  margin-right: 50px;
-  width: 100px;
-  height: 100px;
-  border: 1px solid black;
-  border-radius: 100%;
-  background-color: white;
-}
 .link {
   text-decoration: none;
 }

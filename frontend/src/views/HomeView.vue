@@ -1,42 +1,5 @@
 <template>
-  <!-- navbar -->
-  <div class="navbar">
-    <div class="logo">
-      <img src="@/assets/logo.png" alt="logo" />
-    </div>
-
-    <el-dropdown v-if="state.memberinfo">
-      <img
-        class="el-dropdown-link"
-        id="my_img"
-        :src="state.memberinfo.profileUrl"
-      />
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item @click="goMyPage" :icon="Avatar"
-            >마이페이지</el-dropdown-item
-          >
-          <el-dropdown-item @click="goPeople" :icon="Comment">
-            피플
-          </el-dropdown-item>
-          <el-dropdown-item @click="logout" :icon="Right"
-            >로그아웃
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
-
-    <img
-      v-else
-      class="loginbtn"
-      @click="login"
-      src="@/assets/kakao_login.png"
-      alt="login"
-    />
-  </div>
-
-  <mypage-dialog :open="mypageDialog" @closeMyPage="handleClose" />
-
+  <main-header />
   <!-- background -->
   <div class="bg">
     <div class="bg0"></div>
@@ -71,13 +34,11 @@ import { Avatar, Comment, Right } from "@element-plus/icons-vue";
 import { computed, reactive } from "@vue/runtime-core";
 import { ref } from "vue";
 // import axios from "axios";
-import MypageDialog from "@/components/mypage-dialog";
-
+import MainHeader from "@/components/main-header.vue";
 export default {
   components: {
-    MypageDialog,
+    MainHeader,
   },
-
   setup() {
     const mypageDialog = ref(false);
     const router = useRouter();
@@ -96,13 +57,18 @@ export default {
       router.push({ name: "friend" });
     };
     const goMyPage = function () {
-      console.log(mypageDialog.value);
+      //router.push({ name: "MyPage" });
       mypageDialog.value = true;
-      console.log(mypageDialog.value);
     };
-
     const handleClose = function () {
       mypageDialog.value = false;
+    };
+    const updateInfo = function () {
+      // 회원정보 수정
+    };
+
+    const deleteMember = function () {
+      // 회원 탈퇴
     };
 
     // const submit = () => {
@@ -132,12 +98,14 @@ export default {
       meetingStart,
       goPeople,
       goMyPage,
-      handleClose,
       mypageDialog,
+      handleClose,
       Avatar,
       Comment,
       Right,
       state,
+      updateInfo,
+      deleteMember,
     };
   },
 };

@@ -24,6 +24,7 @@ import java.util.List;
 public class Member extends BaseEntity{
     @Column(unique = true)
     private String email;
+    @Column(unique = true)
     private String nickname;
     private boolean gender;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

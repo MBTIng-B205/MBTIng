@@ -31,15 +31,34 @@ public class MemberServiceImpl implements MemberService {
 
 	}
 
-
 	@Transactional
 	@Override
-	public Member updateMember(MemberUpdateRequest userRegisterInfo) {
+	public Member updateMember(MemberUpdateRequest userRegisterInfo ) {
 		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
 		updatemember.setInterests(userRegisterInfo.getInterests());
 		updatemember.setSido(userRegisterInfo.getSido());
 		updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
 		return updatemember;
+	}
+
+	@Override
+	@Transactional
+	public boolean deleteMember(String email) {
+		Member member = memberRepository.findByEmail(email);
+		try{
+			memberRepository.delete(member);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean nicknameValid(String nickname) {
+		if(memberRepository.countAllByNickname(nickname) != 0){
+			return false;
+		}
+		return true;
 	}
 
 

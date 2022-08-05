@@ -6,7 +6,10 @@ import com.ssafy.mbting.api.response.MemberRegisterResponse;
 import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.auth.MemberDetails;
+import com.ssafy.mbting.common.model.response.BaseResponse;
+import com.ssafy.mbting.common.util.BaseResponseUtil;
 import com.ssafy.mbting.db.entity.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -26,24 +29,14 @@ import java.util.UUID;
 //@Api(value = "유저 API", tags = {"User"})
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class MemberController {
-	
-	@Autowired
-	MemberService memberService;
 
-	@Autowired
-	ResourceLoader resLoader;
-
-
+	private final MemberService memberService;
+	private final ResourceLoader resLoader;
+	private final BaseResponseUtil baseResponseUtil;
 	@PostMapping()
-//	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
-//    @ApiResponses({
-//        @ApiResponse(code = 200, message = "성공"),
-//        @ApiResponse(code = 401, message = "인증 실패"),
-//        @ApiResponse(code = 404, message = "사용자 없음"),
-//        @ApiResponse(code = 500, message = "서버 오류")
-//    })
 	public ResponseEntity<?> register(
 			@RequestBody
 //			@ApiParam(value="회원가입 정보", required = true)
@@ -58,15 +51,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/me")
-//	@ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
-//    @ApiResponses({
-//        @ApiResponse(code = 200, message = "성공"),
-//        @ApiResponse(code = 401, message = "인증 실패"),
-//        @ApiResponse(code = 404, message = "사용자 없음"),
-//        @ApiResponse(code = 500, message = "서버 오류")
-//    })
 	public ResponseEntity<MemberResponse> getMemberInfo(
-//			@ApiIgnore
 			Authentication authentication) {
 		/**
 		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
@@ -90,6 +75,11 @@ public class MemberController {
 		return ResponseEntity.ok().body(MemberRegisterResponse.builder()
 				.member(MemberResponse.of(member))
 				.build());
+	}
+
+	@GetMapping("/")
+	public ResponseEntity<?> validCheck(@RequestParam(value = "nickname") String nickname){
+		return baseResponseUtil.success(memberService.nicknameValid(nickname));
 	}
 
 	@PostMapping("userprofile/{email}")
@@ -125,5 +115,11 @@ public class MemberController {
 		return ResponseEntity.ok().body(MemberRegisterResponse.builder()
 				.member(MemberResponse.of(member))
 				.build());
+	}
+
+	@DeleteMapping("/")
+	public ResponseEntity<?> delete(@RequestParam(value = "email") String email){
+
+		return baseResponseUtil.success(memberService.deleteMember(email));
 	}
 }

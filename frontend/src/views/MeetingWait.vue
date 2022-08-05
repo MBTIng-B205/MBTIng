@@ -1,7 +1,7 @@
 <template>
   <el-container style="background-color: #fff4b8">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img @click="goHome" class="logo" src="@/assets/logo.png" />
       <el-button
         style="float: right; vertical-align: middle"
         type="danger"
@@ -43,9 +43,11 @@
 
 <script>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 export default {
   setup() {
     const loading = ref(true);
+    const router = useRouter();
     const svg = `
         <path class="path" d="
           M 30 15
@@ -61,7 +63,10 @@ export default {
         info: "INFJ는 문제가 생겼을 때 본인이 적극적으로 해결하려고 하는 성향이 강합니다.",
       },
     ];
-    return { loading, svg, Info };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
+    return { loading, svg, Info, goHome };
   },
 };
 </script>
