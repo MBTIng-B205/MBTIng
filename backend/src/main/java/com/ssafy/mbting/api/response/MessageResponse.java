@@ -1,5 +1,6 @@
 package com.ssafy.mbting.api.response;
 
+import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.entity.Message;
 import lombok.*;
 
@@ -11,30 +12,25 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class MessageResponse {
+    long id;
     String content;
-    Long receiverId;
-    Long senderId;
-    String receiverNickName;
-    String senderNickName;
-    String receiverProfileUrl;
-    String senderProfileUrl;
+    //member 리스폰즈를 건드림
+    MemberResponse receiver;
+    MemberResponse sender;
     boolean read;
     boolean deletedByReceiver;
     boolean deletedBySender;
     LocalDateTime sendTime;
 
-    public static MessageResponse of(Message message) {
+    public static MessageResponse of(Message message, Member receiver, Member sender) {
         return MessageResponse.builder()
+                .id(message.getId())
                 .content(message.getContent())
-                .receiverId(message.getToId().getId())
-                .senderId(message.getFromId().getId())
-                .receiverNickName(message.getToId().getNickname())
-                .senderNickName(message.getFromId().getNickname())
-                .receiverProfileUrl(message.getToId().getProfileUrl())
-                .senderProfileUrl(message.getFromId().getProfileUrl())
-                .read(message.isReadByTo())
-                .deletedByReceiver(message.isDeletedByTo())
-                .deletedBySender(message.isDeletedByFrom())
+                .receiver(MemberResponse.of(receiver))
+                .sender(MemberResponse.of(sender))
+                .read(message.getReadByTo())
+                .deletedByReceiver(message.getDeletedByTo())
+                .deletedBySender(message.getDeletedByFrom())
                 .sendTime(message.getSendTime())
                 .build();
     }

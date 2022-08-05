@@ -15,14 +15,17 @@
         </el-col>
       </el-row>
     </el-header>
-    <el-row style="flex-direction: row; justify-content: space-between">
-      <el-col :span="8" v-for="friend in friends" :key="friend">
+    <el-row
+      v-if="state.friends.length != 0"
+      style="flex-direction: row; justify-content: space-between"
+    >
+      <el-col :span="8" v-for="friend in state.friends" :key="friend">
         <el-card>
           <el-popconfirm
             confirm-button-text="삭제"
             cancel-button-text="취소"
             title="친구를 삭제하시겠습니까?"
-            @confirm="deleteFriend"
+            @confirm="deleteFriend(friend)"
           >
             <template #reference>
               <el-button class="delete" :icon="CircleCloseFilled"></el-button>
@@ -60,82 +63,35 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-row v-else> 친구를 추가해보세요! </el-row>
   </el-container>
 </template>
 
 <script>
-import { ref } from "vue";
+import { useStore } from "vuex";
+import { ref, reactive, onMounted, computed } from "vue";
 import { CircleCloseFilled, UserFilled } from "@element-plus/icons-vue";
 export default {
   setup() {
     const key = ref("");
     const search = ref("");
-    const friends = [
-      {
-        nickname: "만두왕",
-        mbti: "INFJ",
-      },
-      {
-        nickname: "카트왕",
-        mbti: "ISFJ",
-      },
-      {
-        nickname: "테트리스왕",
-        mbti: "INTP",
-      },
-      {
-        nickname: "마라탕",
-        mbti: "ESTP",
-      },
-      {
-        nickname: "만두왕",
-        mbti: "INFJ",
-      },
-      {
-        nickname: "카트왕",
-        mbti: "ISFJ",
-      },
-      {
-        nickname: "테트리스왕",
-        mbti: "INTP",
-      },
-      {
-        nickname: "마라탕",
-        mbti: "ESTP",
-      },
-      {
-        nickname: "만두왕",
-        mbti: "INFJ",
-      },
-      {
-        nickname: "카트왕",
-        mbti: "ISFJ",
-      },
-      {
-        nickname: "테트리스왕",
-        mbti: "INTP",
-      },
-      {
-        nickname: "마라탕",
-        mbti: "ESTP",
-      },
-      {
-        nickname: "만두왕",
-        mbti: "INFJ",
-      },
-      {
-        nickname: "카트왕",
-        mbti: "ISFJ",
-      },
-      {
-        nickname: "테트리스왕",
-        mbti: "INTP",
-      },
-      {
-        nickname: "마라탕",
-        mbti: "ESTP",
-      },
-    ];
+    const store = useStore();
+    const state = reactive({
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+      friends: [],
+    });
+
+    onMounted(() => {
+      store
+        .dispatch("friends/getFriendsList", state.memberinfo.email)
+        .then(function (result) {
+          console.log("result", result);
+          state.friends = result.data.body.friends;
+          console.log("friends", state.friends);
+          console.log("friend", state.friends[0]);
+        });
+    });
+
     const toFriend = ref("");
     const dialogVisible = ref(false);
     const message = ref("");
@@ -146,13 +102,51 @@ export default {
       } else if (search.value == "") {
         alert("검색어를 입력하세요");
       } else {
-        console.log("search", key.value + " " + search.value);
+        if (key.value == "nickname") {
+          store
+            .dispatch("friends/getFriendByName", {
+              nickname: search.value,
+              email: state.memberinfo.email,
+            })
+            .then(function (result) {
+              console.log("result", result);
+              state.friends = result.data.body.friends;
+              console.log("friends-nickname", state.friends);
+            });
+        } else {
+          store
+            .dispatch("friends/getFriendByMbti", {
+              mbti: search.value,
+              email: state.memberinfo.email,
+            })
+            .then(function (result) {
+              console.log("result", result);
+              state.friends = result.data.body.friends;
+              console.log("friends-mbti", state.friends);
+            });
+        }
       }
     };
 
-    const deleteFriend = function () {
+    const deleteFriend = function (friend) {
       // 친구 삭제 기능
-      alert("삭제");
+      console.log(friend);
+      store
+        .dispatch("friends/deleteFriend", {
+          from: state.memberinfo.email,
+          to: friend.email,
+        })
+        .then(function (result) {
+          console.log("deleteResult", result);
+          store
+            .dispatch("friends/getFriendsList", state.memberinfo.email)
+            .then(function (result) {
+              console.log("result", result);
+              state.friends = result.data.body.friends;
+              console.log("friends", state.friends);
+              console.log("friend", state.friends[0]);
+            });
+        });
     };
 
     const clickSend = function () {
@@ -194,7 +188,7 @@ export default {
     };
 
     return {
-      friends,
+      state,
       search,
       key,
       dialogVisible,

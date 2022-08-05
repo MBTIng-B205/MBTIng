@@ -10,6 +10,7 @@ import MeetingWait from "@/views/MeetingWait";
 import MeetingMatch from "@/views/MeetingMatch";
 import MyPage from "@/views/MyPage";
 import LogoutView from "@/views/LogoutView";
+import MeetingRoom from "@/views/MeetingRoom";
 
 const routes = [
   {
@@ -84,6 +85,11 @@ const routes = [
     path: "/meetingmatch",
     name: "/MeetingMatch",
     component: MeetingMatch,
+  },
+  {
+    path: "/room",
+    name: "room",
+    component: MeetingRoom,
   },
 ];
 

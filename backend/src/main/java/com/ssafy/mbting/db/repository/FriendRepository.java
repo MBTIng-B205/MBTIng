@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
     List<Friend> findAllByFromId(Member member);
+    Friend findByFromIdAndToId(Member from, Member to);
 }

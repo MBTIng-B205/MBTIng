@@ -16,4 +16,6 @@ public interface MemberService {
 	Member updateMember(MemberUpdateRequest userRegisterInfo);
 
 	boolean deleteMember(String email);
+
+	boolean nicknameValid(String nickname);
 }
