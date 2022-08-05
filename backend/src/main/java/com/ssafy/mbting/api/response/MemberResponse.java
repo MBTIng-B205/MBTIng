@@ -1,6 +1,6 @@
 package com.ssafy.mbting.api.response;
 
-import com.ssafy.mbting.db.entity.Interest;
+import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,13 +30,12 @@ public class MemberResponse {
 	private String profileUrl;
 	private List<String> interests = new ArrayList<>();
 
-
 	public static MemberResponse of(Member member) {
-//		List<Interest> interests = member.getInterests();
-//		List<String> newinterests = new ArrayList<>();
-//		for (Interest tmp : interests){
-//			newinterests.add(tmp.getIname());
-//		}
+		List<InterestMember> interestMembers = member.getInterestMember();
+		List<String> newInterests = new ArrayList<>();
+		for(InterestMember i : interestMembers){
+			newInterests.add(i.getInterest().getIname());
+		}
 
 		return MemberResponse.builder()
 				.email(member.getEmail())
@@ -46,7 +45,7 @@ public class MemberResponse {
 				.sido(member.getSido())
 				.mbti(member.getMbti())
 				.profileUrl(member.getProfileUrl())
-//				.interests(newinterests)
+				.interests(newInterests)
 				.build();
 	}
 }
