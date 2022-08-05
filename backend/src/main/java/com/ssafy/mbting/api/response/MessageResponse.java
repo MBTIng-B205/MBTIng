@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class MessageResponse {
-    long id;
+    Long id;
     String content;
     //member 리스폰즈를 건드림
     MemberResponse receiver;
