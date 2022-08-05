@@ -243,7 +243,31 @@ export default {
     };
 
     const onDelete = function () {
-      console.log("delete", state.selected.value);
+      console.log("delete", state.selected);
+      store
+        .dispatch("messages/deleteReceiveList", {
+          list: state.selected,
+        })
+        .then(function (result) {
+          console.log("result", result);
+
+          store
+            .dispatch("messages/getReceiveList", {
+              email: state.memberinfo.email,
+              page: 0,
+              key: key.value,
+              word: search.value,
+              size: 10,
+            })
+            .then(function (result) {
+              console.log("result", result);
+              state.messageList = result.data.body.messages;
+              console.log("delete-messageList", state.messageList);
+            });
+        })
+        .catch(function (error) {
+          alert(error);
+        });
     };
 
     const onMsg = function (i) {

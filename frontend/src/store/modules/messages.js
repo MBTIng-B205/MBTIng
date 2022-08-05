@@ -84,6 +84,29 @@ export const messages = {
       });
     },
 
+    deleteReceiveList({ state }, { list }) {
+      console.log(state);
+      console.log(list);
+      let del = [];
+      for (let i = 0; i < list.length; i++) {
+        del.push(list[i]);
+      }
+      const params = {
+        deletedBy: "RECEIVER",
+        deletelist: del,
+      };
+      console.log("delete", params);
+      return axios.delete(
+        `${base.baseUrl}/delete`,
+        { data: params },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    },
+
     readList({ state }, { list }) {
       console.log(state);
       let readList = [];
