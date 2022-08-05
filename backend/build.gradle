@@ -56,7 +56,7 @@ tasks.named('bootRun') {
 	systemProperty 'com.mbting.log_file_name', findProperty('log_file_name') ?: 'mbting-dev-log'
 	systemProperty 'com.mbting.jwt.secret', findProperty('jwt.secret') ?: 'dyAeHubOOc8KaOfYB6XEQoEj22zRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa'
 	systemProperty 'com.mbting.kakao.client_id', findProperty('kakao.client_id') ?: 'ebb8bb50d4cb227cf989335c827681e5'
-	systemProperty 'com.mbting.kakao.redirect_uri', findProperty('kakao.redirect_uri') ?: 'http://localhost:80/loginview'
+	systemProperty 'com.mbting.kakao.redirect_uri', findProperty('kakao.redirect_uri') ?: 'http://localhost/loginview'
 }
 
 test.onlyIf {

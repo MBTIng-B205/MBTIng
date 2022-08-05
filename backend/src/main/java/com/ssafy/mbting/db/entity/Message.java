@@ -19,7 +19,8 @@ public class Message extends BaseEntity {
     @JoinColumn(name="to_id")
     private Member toId;
     private String content;
-    LocalDateTime sendTime;
+    @CreationTimestamp
+    private LocalDateTime sendTime;
     @NotNull
     private Boolean readByTo = false;
     @NotNull
