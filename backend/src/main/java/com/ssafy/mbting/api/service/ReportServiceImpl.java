@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 @Transactional
 public class ReportServiceImpl implements ReportService{
 
-    public Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ReportRepository reportRepository;
 
     @Override

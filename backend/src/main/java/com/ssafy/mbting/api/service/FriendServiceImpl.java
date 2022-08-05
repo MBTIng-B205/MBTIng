@@ -1,7 +1,6 @@
 package com.ssafy.mbting.api.service;
 
 import com.ssafy.mbting.api.response.MemberResponse;
-import com.ssafy.mbting.common.searchSpec.FriendSearchSpec;
 import com.ssafy.mbting.db.entity.Friend;
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.repository.FriendRepository;
@@ -15,15 +14,15 @@ import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service("friendService")
 @RequiredArgsConstructor
 @Transactional
 public class FriendServiceImpl implements FriendService{
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PostConstruct
     public void init() {

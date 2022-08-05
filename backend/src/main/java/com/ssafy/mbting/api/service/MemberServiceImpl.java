@@ -2,12 +2,12 @@ package com.ssafy.mbting.api.service;
 
 import com.ssafy.mbting.api.request.MemberRegisterRequest;
 import com.ssafy.mbting.api.request.MemberUpdateRequest;
-import com.ssafy.mbting.db.entity.Interest;
-import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.repository.InterestMemberRepository;
 import com.ssafy.mbting.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final MemberRepository memberRepository;
 	private final InterestMemberRepository interestMemberRepository;
 	private final InterestService interestService;
@@ -71,6 +72,5 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return true;
 	}
-
 
 }

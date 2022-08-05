@@ -22,10 +22,8 @@ import javax.transaction.Transactional;
 public class MessageServiceImpl implements MessageService{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
-
 
     @PostConstruct
     public void init() {
@@ -35,7 +33,6 @@ public class MessageServiceImpl implements MessageService{
         Member m2 = new Member();
         m2.setNickname("유관순");
         m2.setGender(false);
-
 
         m1.setEmail("rlwls1101@hamail.net");
         m2.setEmail("rlwl202@gmail.com");
@@ -95,6 +92,7 @@ public class MessageServiceImpl implements MessageService{
         message.setDeletedByTo(true);
         return message;
     }
+
     //보낸 쪽지함
     @Override
     public Page<Message> getMessagesFromMember(String email, PageNavigation pageNavigation) {
@@ -114,6 +112,7 @@ public class MessageServiceImpl implements MessageService{
         }
         return all;
     }
+
     //받은 쪽지함
     @Override
     public Page<Message> getMessagesToMember(String email, PageNavigation pageNavigation) {
