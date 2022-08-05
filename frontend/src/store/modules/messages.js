@@ -51,11 +51,51 @@ export const messages = {
         deletelist: [201],
       };
       console.log("delete", params);
-      return axios.delete(`${base.baseUrl}/delete`, params, {
+      return axios.delete(
+        `${base.baseUrl}/delete`,
+        { data: params },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    },
+
+    getReceiveList({ state }, { email, page, key, word, size }) {
+      console.log(state);
+      const params = {
+        page: page,
+        searchUtil: {
+          key: key,
+          word: word,
+        },
+        size: size,
+      };
+      console.log("getReceiveList", email + " " + params);
+      return axios.post(`${base.baseUrl}/tolist/${email}`, params, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+    },
+
+    readList({ state }, { list }) {
+      console.log(state);
+      let readList = [];
+      for (let index = 0; index < list.length; index++) {
+        readList.push(list[index]);
+      }
+      console.log("readList", readList);
+      return axios.put(
+        `${base.baseUrl}/read`,
+        { readlist: readList },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
     },
   },
 };

@@ -29,7 +29,10 @@
         <tr>
           <th>
             <label class="form-checkbox"
-              ><input type="checkbox" v-model="selectAll" @click="onSelect"
+              ><input
+                type="checkbox"
+                v-model="state.selectAll"
+                @click="onSelect"
             /></label>
           </th>
           <th>보낸사람</th>
@@ -40,29 +43,29 @@
       <tbody>
         <tr
           class="cell"
-          :class="{ read: !i.read }"
-          v-for="i in tableData"
-          :key="i"
-          @click="onMsg(i)"
+          v-for="message in state.messageList"
+          :key="message"
+          @click="onMsg(message)"
+          :class="{ read: !message.read }"
         >
           <td>
             <label class="form-checkbox">
               <input
                 type="checkbox"
-                :value="i.id"
-                v-model="selected"
+                :value="message.id"
+                v-model="state.selected"
                 @click.stop
               />
-              <i class="form-icon"></i>
+              <message class="form-icon"></message>
             </label>
           </td>
-          <td class="tableName">{{ i.nickname }}</td>
-          <td class="tableMsg">{{ i.msg }}</td>
-          <td>{{ i.date }}</td>
+          <td class="tableName">{{ message.sender.nickname }}</td>
+          <td class="tableMsg">{{ message.content }}</td>
+          <td>{{ message.sendTime }}</td>
         </tr>
       </tbody>
     </table>
-    <el-dialog v-model="receiveDialog" @close="receiveClose">
+    <el-dialog v-model="state.receiveDialog" @close="receiveClose">
       <el-header style="text-align: left; padding-top: 10px">
         <span class="from"> From. </span>
         <span class="fromFriend"> {{ fromFriend }}</span>
@@ -76,7 +79,7 @@
         <img
           class="friendIcon"
           @click="
-            sirenDialog = true;
+            sirenOpen;
             receiveClose();
           "
           src="@/assets/siren.png"
@@ -88,7 +91,7 @@
         <el-button
           type="success"
           @click="
-            sendDialog = true;
+            state.sendDialog = true;
             receiveClose();
           "
           >답장</el-button
@@ -96,7 +99,7 @@
         <el-button @click="receiveClose">닫기</el-button>
       </div>
     </el-dialog>
-    <el-dialog v-model="sendDialog" @close="sendClose">
+    <el-dialog v-model="state.sendDialog" @close="sendClose">
       <el-header style="text-align: left; padding-top: 10px">
         <span class="to"> TO. </span>
         <span class="toFriend"> {{ toFriend }}</span>
@@ -109,7 +112,7 @@
         />
       </el-header>
       <el-input
-        v-model="sendMsg"
+        v-model="state.sendMsg"
         type="textarea"
         placeholder="내용을 입력해주세요"
         rows="10"
@@ -139,112 +142,59 @@
         background
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
-        :page-size="10"
-        :total="msgcnt"
+        :page-size="4"
+        :total="state.msgcnt"
       />
     </div>
   </el-container>
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { useStore } from "vuex";
+import { ref, reactive, computed, onMounted } from "vue";
 
 export default {
   setup() {
     const key = ref("");
     const search = ref("");
-    const msgcnt = ref(50);
-    const selected = ref([]);
-    const selectAll = computed(
-      () => selected.value.length === tableData.length
-    );
-    const fromFriend = ref("");
-    const fromDate = ref("");
-    const receiveMsg = ref("");
-    const receiveDialog = ref(false);
-    const toFriend = ref("");
-    const toDate = ref("");
-    const sendMsg = ref("");
-    const sendDialog = ref(false);
+    const store = useStore();
+    const state = reactive({
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+      searchFlag: false,
+      messageList: [],
+      // msgcnt: computed(() => state.messageList.length),
+      msgcnt: 15,
+      messageId: "",
+      receiveDialog: false,
+      selected: [],
+      selectAll: computed(
+        () => state.selected.length === state.messageList.length
+      ),
+      sendDialog: false,
+      sendMsg: "",
+    });
+
     const sirenDialog = ref(false);
     const sirenMsg = ref("");
     const toSiren = ref("");
-    const fromSiren = ref("만두왕"); // 신고하는 사람 = 로그인 한 사람
-    const isFriend = ref(false);
-    const tableData = [
-      {
-        id: 1,
-        read: false,
-        isFriend: false,
-        nickname: "aqqqq",
-        msg: "111ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        date: "2022-07-31",
-      },
-      {
-        id: 2,
-        read: false,
-        isFriend: true,
-        nickname: "b",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 3,
-        read: false,
-        isFriend: true,
-        nickname: "c",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 4,
-        read: true,
-        isFriend: true,
-        nickname: "d",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 5,
-        read: true,
-        isFriend: true,
-        nickname: "e",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 6,
-        read: true,
-        isFriend: true,
-        nickname: "f",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 7,
-        read: true,
-        isFriend: true,
-        nickname: "g",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 8,
-        read: true,
-        isFriend: true,
-        nickname: "h",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 9,
-        read: true,
-        isFriend: true,
-        nickname: "i",
-        msg: "111",
-        date: "2022-07-31",
-      },
-    ];
+    const fromSiren = ref(state.memberinfo.nickname); // 신고하는 사람 = 로그인 한 사람
+
+    onMounted(() => {
+      store
+        .dispatch("messages/getReceiveList", {
+          email: state.memberinfo.email,
+          page: 0,
+          key: "",
+          word: "",
+          size: 4,
+        })
+        .then(function (result) {
+          console.log("result", result);
+          state.messageList = result.data.body.messages;
+          console.log("messageList", state.messageList);
+        });
+    });
+
     const onSearch = function () {
       if (key.value == "") {
         alert("검색키를 선택하세요");
@@ -256,76 +206,76 @@ export default {
     };
 
     const onSelect = function () {
-      console.log(selectAll.value);
-      if (!selectAll.value) {
-        selected.value = [];
-        for (let index in tableData) {
-          selected.value.push(tableData[index].id);
+      console.log(state.selectAll.value);
+      if (!state.selectAll.value) {
+        state.selected.value = [];
+        for (let index in state.messageList) {
+          state.selected.value.push(state.messageList[index].id);
         }
       } else {
-        selected.value = [];
+        state.selected.value = [];
       }
     };
 
     const onRead = function () {
-      console.log("read", selected.value);
+      console.log("read", state.selected.value);
+      store
+        .dispatch("messages/readList", {
+          list: state.selected,
+        })
+        .then(function (result) {
+          console.log("result", result);
+
+          store
+            .dispatch("messages/getReceiveList", {
+              email: state.memberinfo.email,
+              page: 0,
+              key: key.value,
+              word: search.value,
+              size: 10,
+            })
+            .then(function (result) {
+              console.log("result", result);
+              state.messageList = result.data.body.messages;
+              console.log("read-messageList", state.messageList);
+            });
+        });
     };
 
     const onDelete = function () {
-      console.log("delete", selected.value);
+      console.log("delete", state.selected.value);
     };
 
     const onMsg = function (i) {
-      //console.log(i);
-      fromFriend.value = i.nickname;
-      fromDate.value = i.date;
-      receiveMsg.value = i.msg;
-      receiveDialog.value = true;
-      toFriend.value = i.nickname;
-      isFriend.value = i.isFriend;
-      toSiren.value = i.nickname;
-      i.read = true;
+      console.log(i);
+      state.messageId = i.id;
+      state.receiveDialog = true;
     };
 
     const receiveClose = function () {
-      receiveDialog.value = false;
-      receiveMsg.value = "";
-      fromFriend.value = "";
-      fromDate.value = "";
+      state.receiveDialog = false;
+      state.receiveMsg = "";
     };
 
     const sendClose = function () {
-      sendDialog.value = false;
-      sendMsg.value = "";
-      toFriend.value = "";
-      toDate.value = "";
+      state.sendDialog = false;
+      state.sendMsg = "";
     };
 
     const clickSend = function () {
-      console.log("clickSend", sendMsg.value + " " + toFriend.value);
-      let time = new Date();
-      let year = String(time.getFullYear());
-      let month = time.getMonth() + 1;
-      let day = String(
-        time.getDate() < 10 ? "0" + time.getDate() : time.getDate()
-      );
-      let hour = String(
-        time.getHours() < 10 ? "0" + time.getHours() : time.getHours()
-      );
-      let min = String(
-        time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
-      );
-      console.log(
-        time,
-        year + "-" + month + "-" + day + " " + hour + ":" + min
-      );
-      if (sendMsg.value == "") {
+      console.log("clickSend", state.sendMsg);
+
+      if (state.sendMsg == "") {
         alert("보낼 내용을 입력하세요!");
       } else {
         // 쪽지 보내기
-        alert(sendMsg.value);
+        alert(state.sendMsg);
         sendClose();
       }
+    };
+
+    const sirenOpen = function () {
+      sirenDialog.value = true;
     };
 
     const sirenClose = function () {
@@ -355,26 +305,31 @@ export default {
       }
     };
 
+    const handleCurrentChange = function (val) {
+      console.log("page", val);
+      store
+        .dispatch("messages/getReceiveList", {
+          email: state.memberinfo.email,
+          page: val - 1,
+          key: key.value,
+          word: search.value,
+          size: 4,
+        })
+        .then(function (result) {
+          console.log("result", result);
+          state.messageList = result.data.body.messages;
+          console.log("messageList", state.messageList);
+        });
+    };
+
     return {
       key,
-      selected,
-      selectAll,
       search,
-      msgcnt,
-      toFriend,
-      toDate,
-      receiveMsg,
-      sendMsg,
-      receiveDialog,
-      sendDialog,
-      fromFriend,
-      fromDate,
-      tableData,
+      state,
       sirenDialog,
       toSiren,
       fromSiren,
       sirenMsg,
-      isFriend,
       onSearch,
       onSelect,
       onRead,
@@ -383,9 +338,11 @@ export default {
       receiveClose,
       sendClose,
       clickSend,
+      sirenOpen,
       sirenClose,
       clickSiren,
       addFriend,
+      handleCurrentChange,
     };
   },
 };

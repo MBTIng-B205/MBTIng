@@ -80,7 +80,7 @@
         background
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
-        :page-size="8"
+        :page-size="4"
         :total="state.msgcnt"
       />
     </div>
@@ -100,7 +100,8 @@ export default {
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       searchFlag: false,
       messageList: [],
-      msgcnt: computed(() => state.messageList.length),
+      // msgcnt: computed(() => state.messageList.length),
+      msgcnt: 15,
       messageId: "",
       messageDialog: false,
       selected: [],
@@ -116,7 +117,7 @@ export default {
           page: 0,
           key: "",
           word: "",
-          size: 10,
+          size: 4,
         })
         .then(function (result) {
           console.log("result", result);
@@ -175,7 +176,7 @@ export default {
     const onMsg = function (i) {
       console.log(i);
       state.messageId = i.id;
-      state.messageDialog.value = true;
+      state.messageDialog = true;
     };
 
     const handleClose = function () {
@@ -184,6 +185,19 @@ export default {
 
     const handleCurrentChange = function (val) {
       console.log("page", val);
+      store
+        .dispatch("messages/getSendList", {
+          email: state.memberinfo.email,
+          page: val - 1,
+          key: key.value,
+          word: search.value,
+          size: 4,
+        })
+        .then(function (result) {
+          console.log("result", result);
+          state.messageList = result.data.body.messages;
+          console.log("messageList", state.messageList);
+        });
     };
 
     return {
