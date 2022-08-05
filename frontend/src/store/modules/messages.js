@@ -9,13 +9,15 @@ const base = {
 export const messages = {
   namespaced: true,
   actions: {
-    sendMsg({ msg }) {
+    sendMsg({ state }, { senderId, receiverId, content }) {
+      console.log(state);
+      console.log("msg", senderId + " " + receiverId + " " + content);
       const params = {
-        senderId: msg.fromFriend,
-        receiverId: msg.toFriend,
-        content: msg.content,
+        senderId: senderId,
+        receiverId: receiverId,
+        content: content,
       };
-      console.log("sendMSg", msg);
+      console.log("sendMSg-axios", params);
       return axios.post(`${base.baseUrl}/`, params, {
         headers: {
           "Content-Type": "application/json",
