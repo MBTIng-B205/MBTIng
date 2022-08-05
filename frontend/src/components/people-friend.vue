@@ -221,6 +221,7 @@ export default {
       if (message.value == "") {
         alert("보낼 내용을 입력하세요!");
       } else {
+        alert("쪽지 전송 완료!");
         messageClose();
       }
     };

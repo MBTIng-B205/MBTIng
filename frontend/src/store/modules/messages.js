@@ -6,7 +6,7 @@ const base = {
   },
 };
 
-export const message = {
+export const messages = {
   namespaced: true,
   actions: {
     sendMsg({ msg }) {
