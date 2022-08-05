@@ -43,9 +43,9 @@ export const accounts = {
         sido: state.member.sido,
         mbti: state.member.mbti,
         profileUrl: state.member.profileUrl,
-        interests: ["a", "b"],
+        interests: state.member.interests,
       };
-
+      console.log(params, "이것이다.");
       let jwt = sessionStorage.getItem("access-token");
       console.log(jwt);
       console.log(params);
