@@ -18,13 +18,8 @@ public class InterestServiceImpl implements InterestService{
     private final InterestMemberRepository interestMemberRepository;
     private final InterestRepository interestRepository;
     @Override
-    public List<String> getInterest(Member member) {
-        List<InterestMember> interestMembers = interestMemberRepository.findAllByMember(member);
-        List<String> interests = new ArrayList<>();
-        for(InterestMember i : interestMembers){
-            interests.add(i.getInterest().getIname());
-        }
-        return interests;
+    public List<InterestMember> getInterest(Member member) {
+        return interestMemberRepository.findAllByMember(member);
     }
 
     @Override
@@ -40,4 +35,6 @@ public class InterestServiceImpl implements InterestService{
         }
         return interestMembers;
     }
+
+//    public List<Interest>
 }
