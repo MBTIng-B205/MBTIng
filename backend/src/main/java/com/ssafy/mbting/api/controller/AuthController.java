@@ -36,7 +36,8 @@ public class AuthController {
 	private final BaseResponseUtil baseResponseUtil;
 
     private final MemberService memberService;
-	KakaoAPI kakaoApi = new KakaoAPI();
+
+	private final KakaoAPI kakaoApi;
 	@GetMapping("/login")
 	public ResponseEntity<?> login(@RequestParam("code") String code) {
 		Map<String, Object> resultMap = new HashMap<>();
