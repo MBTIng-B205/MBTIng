@@ -35,7 +35,7 @@ public class Member extends BaseEntity{
 
     @Builder.Default
     @OneToMany(mappedBy = "member")
-    private List<Interest> interests = new ArrayList<>();
+    private List<InterestMember> interestMember = new ArrayList<>();
     @Builder.Default
     @OneToMany(mappedBy = "toId")
     private List<Message> messages = new ArrayList<>();
