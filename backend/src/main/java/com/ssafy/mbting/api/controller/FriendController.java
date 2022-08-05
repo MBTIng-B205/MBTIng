@@ -59,6 +59,7 @@ public class FriendController {
 
     // 친구 삭제
     @DeleteMapping("/{fromEmail}/{toEmail}")
+    @Transactional
     public ResponseEntity<?> delete(@PathVariable("fromEmail") String fromEmail, @PathVariable("toEmail") String toEmail) {
         Member fromMember = memberService.getUserByEmail(fromEmail);
         Member toMember = memberService.getUserByEmail(toEmail);
