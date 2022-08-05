@@ -81,6 +81,10 @@ export default {
 
     const login = () => {
       // 카카오톡 로그인 화면 전환
+      prompt(
+        `${process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI}\n여기로 갈 거임.`
+      );
+
       window.location.replace(
         `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code`
       );
