@@ -55,16 +55,16 @@ public class MessageController {
 
     //리턴 협의 필요
     @PutMapping("/read")
-    public ResponseEntity<?> readMessage(@RequestParam(value="readlist[]") List<Long> readlist) {
-        for (long messageId : readlist) {
+    public ResponseEntity<?> readMessage(@RequestBody  MessageReadRequest messageReadRequest) {
+        for (long messageId : messageReadRequest.getReadList()) {
             Message message = messageService.readMessage(messageId, true);
         }
         return baseResponseUtil.success();
     }
     //리턴 협의 필요
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteMessage(@RequestParam(value="deletelist[]") List<Long> deletelist,MessageDeleteRequest messageDeleteRequest) {
-        for (long messageId : deletelist) {
+    public ResponseEntity<?> deleteMessage(@RequestBody  MessageDeleteRequest messageDeleteRequest) {
+        for (long messageId : messageDeleteRequest.getDeletelist()) {
             try {
                 if (messageDeleteRequest.getDeletedBy() == MessageDeleteRequest.DeletedBy.RECEIVER) {
                     Message message = messageService.deleteMessageTo(messageId);
