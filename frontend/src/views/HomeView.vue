@@ -34,13 +34,22 @@
         <div>
           <span>{{ contents[index].title }}</span>
           <div class="bottom">
-            <el-link :href="contents[index].site"
-              ><el-button type="warning">시작하기</el-button></el-link
+            <el-link :href="contents[index].site" target="_blank"
+              ><el-button
+                class="testbutton"
+                style="background: rgb(227, 122, 128)"
+                >테스트시작</el-button
+              ></el-link
             >
           </div>
         </div>
       </el-card>
     </el-col>
+    <el-col>
+      <div class="content-name">
+        <h1>MBTI Contents Links</h1>
+      </div></el-col
+    >
     <el-col
       v-for="(o, index) in 4"
       :key="o"
@@ -58,8 +67,10 @@
             ><span>{{ contents[index].title }}</span></el-link
           >
           <div class="bottom">
-            <el-link :href="contents[index].site"
-              ><el-button style="background: #e2d9e7"
+            <el-link :href="contents[index].site" target="_blank"
+              ><el-button
+                class="testbutton"
+                style="background: rgb(175, 228, 154)"
                 >테스트시작</el-button
               ></el-link
             >
@@ -100,7 +111,7 @@ export default {
     const contents = [
       {
         thumb:
-          "https://ddnews.co.kr/wp-content/uploads/2022/03/MBTI-%EC%97%B0%EC%95%A0-%EC%9C%A0%ED%98%95-2.jpg",
+          "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkOzMl%2FbtqESXEhYI3%2FgKvKEjw5aioz06wwW0wkP0%2Fimg.png",
         title: "연애 능력치 테스트",
         site: "http://16types.glam.am/intro",
       },
@@ -239,8 +250,8 @@ export default {
 
 .image {
   width: 100%;
-  display: block;
-  overflow: hidden;
+  height: 20vh;
+  object-fit: contain;
 }
 .profile {
   border-radius: 50%;
@@ -258,5 +269,8 @@ export default {
 }
 .content-name {
   text-align: center;
+}
+.testbutton {
+  color: black;
 }
 </style>
