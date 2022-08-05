@@ -56,6 +56,7 @@ public class MessageController {
     //리턴 협의 필요
     @PutMapping("/read")
     public ResponseEntity<?> readMessage(@RequestBody  MessageReadRequest messageReadRequest) {
+        logger.debug("\n\nread\n\n{}", messageReadRequest.getReadList().toString());
         for (long messageId : messageReadRequest.getReadList()) {
             Message message = messageService.readMessage(messageId, true);
         }

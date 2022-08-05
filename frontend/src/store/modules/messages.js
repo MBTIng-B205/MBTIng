@@ -93,7 +93,7 @@ export const messages = {
       console.log("readList", readList);
       return axios.put(
         `${base.baseUrl}/read`,
-        { readlist: readList },
+        { readList: readList },
         {
           headers: {
             "Content-Type": "application/json",

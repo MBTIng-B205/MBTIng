@@ -206,14 +206,14 @@ export default {
     };
 
     const onSelect = function () {
-      console.log(state.selectAll.value);
-      if (!state.selectAll.value) {
-        state.selected.value = [];
+      console.log(state.selectAll);
+      if (!state.selectAll) {
+        state.selected = [];
         for (let index in state.messageList) {
-          state.selected.value.push(state.messageList[index].id);
+          state.selected.push(state.messageList[index].id);
         }
       } else {
-        state.selected.value = [];
+        state.selected = [];
       }
     };
 
