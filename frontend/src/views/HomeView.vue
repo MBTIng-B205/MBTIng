@@ -15,16 +15,70 @@
   </div>
 
   <!-- menu -->
-  <el-carousel
-    :interval="4000"
-    type="card"
-    height="300px"
-    style="margin-top: 5rem; margin-bottom: 5rem"
-  >
-    <el-carousel-item v-for="item in 6" :key="item">
-      <h3 class="medium">{{ item }}</h3>
-    </el-carousel-item>
-  </el-carousel>
+  <div class="content-name">
+    <h1>MBTI Contents</h1>
+  </div>
+  <el-row class="card-row">
+    <el-col
+      v-for="(o, index) in 4"
+      :key="o"
+      :span="4"
+      :offset="index > 0 ? 2 : 0"
+    >
+      <el-card
+        :body-style="{ padding: '0px' }"
+        class="card-body"
+        :href="contents[index].site"
+      >
+        <img :src="contents[index].thumb" class="image" />
+        <div>
+          <span>{{ contents[index].title }}</span>
+          <div class="bottom">
+            <el-link :href="contents[index].site" target="_blank"
+              ><el-button
+                class="testbutton"
+                style="background: rgb(227, 122, 128)"
+                >테스트시작</el-button
+              ></el-link
+            >
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+    <el-col>
+      <div class="content-name">
+        <h1>MBTI Contents Links</h1>
+      </div></el-col
+    >
+    <el-col
+      v-for="(o, index) in 4"
+      :key="o"
+      :span="4"
+      :offset="index > 0 ? 2 : 0"
+    >
+      <el-card
+        :body-style="{ padding: '0px' }"
+        class="card-body"
+        :href="contents[index].site"
+      >
+        <img :src="contents[index].thumb" class="image" fit="cover" />
+        <div>
+          <el-link :href="contents[index].site"
+            ><span>{{ contents[index].title }}</span></el-link
+          >
+          <div class="bottom">
+            <el-link :href="contents[index].site" target="_blank"
+              ><el-button
+                class="testbutton"
+                style="background: rgb(175, 228, 154)"
+                >테스트시작</el-button
+              ></el-link
+            >
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -53,50 +107,41 @@ export default {
     const meetingStart = function () {
       router.push({ name: "MeetingWait" });
     };
-    const goPeople = function () {
-      router.push({ name: "friend" });
-    };
-    const goMyPage = function () {
-      //router.push({ name: "MyPage" });
-      mypageDialog.value = true;
-    };
-    const handleClose = function () {
-      mypageDialog.value = false;
-    };
 
-    // const submit = () => {
-    //   axios.post(url= "/api/", state.form).then(res) => {
-
-    //   res.data
-    //   };
-    // console.log(res)
-    // }
-
-    const login = () => {
-      // 카카오톡 로그인 화면 전환
-      // window.location.replace(
-      //   `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code`
-      // );
-    };
-
-    const logout = () => {
-      // window.location.replace(
-      //   `https://kauth.kakao.com/oauth/logout?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&logout_redirect_uri=${process.env.VUE_APP_KAKAO_LOGOUT_REDIRECT_URI}`
-      // );
-    };
-
+    const contents = [
+      {
+        thumb:
+          "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkOzMl%2FbtqESXEhYI3%2FgKvKEjw5aioz06wwW0wkP0%2Fimg.png",
+        title: "연애 능력치 테스트",
+        site: "http://16types.glam.am/intro",
+      },
+      {
+        thumb:
+          "https://www.simcong.com/thumb/upfiles/quiz/202011/03_f7ab17586c219cfa2eac45aa651f18d3441378_5206.jpg?w=640&h=",
+        title: "연애유형 테스트",
+        site: "https://www.simcong.com/quiz/393",
+      },
+      {
+        thumb:
+          "https://d3d45df40onv5v.cloudfront.net/mbti/assets/img/maincat.gif",
+        title: "동물로 알아보는 연애 유형 테스트",
+        site: "https://mbti.amanda.co.kr/",
+      },
+      {
+        thumb:
+          "https://mbti.theblessedmoon.com/static/media/intro_logo.d0ce37d8.gif",
+        title: "썸 추진력 MBTI",
+        site: "https://mbti.theblessedmoon.com/",
+      },
+    ];
     return {
-      login,
-      logout,
       meetingStart,
-      goPeople,
-      goMyPage,
       mypageDialog,
-      handleClose,
       Avatar,
       Comment,
       Right,
       state,
+      contents,
     };
   },
 };
@@ -134,20 +179,6 @@ export default {
   width: 80px;
 }
 
-.el-dropdown {
-  display: flex;
-  margin-top: 20px;
-  margin-right: 30px;
-  float: right;
-}
-
-.el-dropdown-link {
-  border-radius: 50%;
-  object-fit: cover;
-  width: 50px;
-  height: 50px;
-}
-
 .navbar {
   background-color: #fff4b8;
   display: flex;
@@ -173,7 +204,19 @@ export default {
   background-color: #e8e8e8;
 }
 
-.el-carousel__item h3 {
+.el-row {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  align-content: stretch;
+  flex-direction: row;
+}
+.el-card__body {
+  width: 10px;
+}
+/* .el-carousel__item h3 {
   color: #475669;
   font-size: 14px;
   opacity: 0.75;
@@ -187,11 +230,47 @@ export default {
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
+} */
+.time {
+  font-size: 12px;
+  color: #999;
 }
 
+.bottom {
+  /* margin-top: 13px;
+  line-height: 12px; */
+  display: flex;
+  justify-content: space-around;
+}
+
+.button {
+  padding: 0;
+  min-height: auto;
+}
+
+.image {
+  width: 100%;
+  height: 20vh;
+  object-fit: contain;
+}
 .profile {
   border-radius: 50%;
   width: 100px;
   height: 100px;
+}
+.card-row {
+  padding-top: 10px;
+}
+.card-body {
+  border: top 100px;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+}
+.content-name {
+  text-align: center;
+}
+.testbutton {
+  color: black;
 }
 </style>
