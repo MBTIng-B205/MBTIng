@@ -16,16 +16,17 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @RequiredArgsConstructor
 @Component
 public class MeetingManager extends TextWebSocketHandler {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private List<WebSocketSession> sessionList = new ArrayList<WebSocketSession>();
-    private List<String> memberpool =  new ArrayList<>();
+    private Map<String,WebSocketSession> sessionMap= new HashMap<String,WebSocketSession>();
+    private Map<String, Set<String> > interestMap = new HashMap<>();
+    private Map<String, Set<String> > locationMap = new HashMap<>();
+    private Map<String, Set<String> > genderMap = new HashMap<>();
 
     //1 . a id -> session a  -> a id session map <id,WebsocketSession>
     //2 . map< String , Set<String> >   관심사         <야구 , id> // <축구 ,id>
@@ -40,13 +41,13 @@ public class MeetingManager extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        TextMessage textMessage = new TextMessage("Welcome chatting server~ ^^");
+        TextMessage textMessage = new TextMessage("meeting wait..");
         session.sendMessage(textMessage);
+
     }
 
-
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.info(session.getHandshakeHeaders().get("access-token").toString());
         String token=session.getHandshakeHeaders().get("access-token").toString();
         JWTVerifier verifier = JwtTokenUtil.getVerifier();
@@ -55,35 +56,87 @@ public class MeetingManager extends TextWebSocketHandler {
         DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
         String userId = decodedJWT.getSubject();
         Member member=memberService.getUserByEmail(userId);
+        session.getAttributes().put("email",member.getEmail());
 
-        memberpool.add(member.getEmail());
-        sessionList.add(session);
+        sessionMap.put(member.getEmail(),session);
+        updateSido(member.getSido(),member.getEmail());
+        updateGender(member.isGender(),member.getEmail());
 
-        logger.info(member.getNickname() + "님이 입장하셨습니다.");
-        logger.info("session 풀 사이즈:" +sessionList.size());
-        logger.info("member 풀 사이즈:" +memberpool.size());
+        logger.info(session.getAttributes().get("email") + "님이 입장하셨습니다.");
+        logger.info("session 풀 사이즈:" +sessionMap.size());
+        logger.info("locationMap 풀 사이즈:" +locationMap.entrySet().toString());
+        logger.info("genderMap 풀 사이즈:" +genderMap.entrySet().toString());
 
-        if(memberpool.size() >=3){
-            logger.info("알고리즘 실행 시켜 줘야한다 ");
+        if(sessionMap.size() >=1){
+            TextMessage textMessage = new TextMessage("meeting wait..");
+            //string json
+
+            session.sendMessage(textMessage);
         }
     }
 
+
+
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        logger.info("#ChattingHandler, afterConnectionClosed");
-        /*
-        String token=session.getHandshakeHeaders().get("access-token").toString();
-        JWTVerifier verifier = JwtTokenUtil.getVerifier();
-        token = token.replace("[","");
-        token = token.replace("]","");
-        DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
-        String userId = decodedJWT.getSubject();
+        String userId = (String) session.getAttributes().get("email");
         Member member=memberService.getUserByEmail(userId);
-        */
-        sessionList.remove(session);
-    //        memberpool.remove(member.getEmail());
-    //       logger.info(member.getNickname()+ "님이 퇴장하셨습니다.");
-        logger.info("session 풀 사이즈:" +sessionList.size());
-        logger.info("member 풀 사이즈:" +memberpool.size());
+
+        sessionMap.remove(member.getEmail());
+
+        deleteSido(member.getSido(),member.getEmail());
+        deleteGender(member.isGender(),member.getEmail());
+
+        logger.info(session.getAttributes().get("email")+ "님이 퇴장하셨습니다.");
+        logger.info("session 풀 사이즈:" +sessionMap.size());
+        logger.info("locationMap 풀 사이즈:" +locationMap.entrySet().toString());
+        logger.info("genderMap 풀 사이즈:" +genderMap.entrySet().toString());
+    }
+
+
+    private void updateSido(String sido,String email) {
+        if (sido==null) {
+            if (!locationMap.containsKey(sido)) {
+                Set<String> sidoset = new HashSet<>();
+                sidoset.add(sido);
+                locationMap.put(sido, sidoset);
+            } else {
+                locationMap.get(sido).add(email);
+            }
+        }
+    }
+
+    private void updateGender(boolean gender, String email) {
+        if(gender) {
+            if (!genderMap.containsKey("male")) {
+                Set<String> genderset = new HashSet<>();
+                genderset.add(email);
+                genderMap.put("male", genderset);
+            } else {
+                genderMap.get("male").add(email);
+            }
+        }
+        else{
+            if (!genderMap.containsKey("femail")) {
+                Set<String> genderset = new HashSet<>();
+                genderset.add(email);
+                genderMap.put("femail", genderset);
+            } else {
+                genderMap.get("femail").add(email);
+            }
+        }
+    }
+
+    private void deleteSido(String sido,String email){
+        locationMap.get(sido).remove(email);
+    }
+
+    private void deleteGender(boolean gender, String email){
+        if (gender){
+            genderMap.get("male").remove(email);
+        }
+        else{
+            genderMap.get("femail").remove(email);
+        }
     }
 }
