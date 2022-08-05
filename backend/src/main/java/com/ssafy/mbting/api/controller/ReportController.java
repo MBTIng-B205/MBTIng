@@ -16,12 +16,9 @@ public class ReportController {
     private final ReportService reportService;
 
     @PostMapping()
-    public ResponseEntity<?> register(
-            @RequestBody
+    public ResponseEntity<?> register(@RequestBody
                     ReportRegisterRequest reportRegisterRequest) {
-
         Report report = reportService.createReport(reportRegisterRequest);
-
         return ResponseEntity.ok().body(ReportRegisterResponse.builder()
                 .report(ReportResponse.of(report))
                 .build());
