@@ -32,11 +32,11 @@ public class MemberResponse {
 
 
 	public static MemberResponse of(Member member) {
-		List<Interest> interests = member.getInterests();
-		List<String> newinterests = new ArrayList<>();
-		for (Interest tmp : interests){
-			newinterests.add(tmp.getIname());
-		}
+//		List<Interest> interests = member.getInterests();
+//		List<String> newinterests = new ArrayList<>();
+//		for (Interest tmp : interests){
+//			newinterests.add(tmp.getIname());
+//		}
 
 		return MemberResponse.builder()
 				.email(member.getEmail())
@@ -46,7 +46,7 @@ public class MemberResponse {
 				.sido(member.getSido())
 				.mbti(member.getMbti())
 				.profileUrl(member.getProfileUrl())
-				.interests(newinterests)
+//				.interests(newinterests)
 				.build();
 	}
 }
