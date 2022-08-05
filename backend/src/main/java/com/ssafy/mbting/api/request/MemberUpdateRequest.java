@@ -2,6 +2,7 @@ package com.ssafy.mbting.api.request;
 
 import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.db.entity.Interest;
+import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +30,7 @@ public class MemberUpdateRequest {
     private String mbti;
     private String profileUrl;
     @Builder.Default
-    private List<Interest> interests = new ArrayList<>();
+    private List<String> interests = new ArrayList<>();
 
 
     public static MemberUpdateRequest of(Member member) {

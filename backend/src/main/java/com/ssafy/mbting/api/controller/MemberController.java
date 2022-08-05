@@ -4,6 +4,7 @@ import com.ssafy.mbting.api.request.MemberRegisterRequest;
 import com.ssafy.mbting.api.request.MemberUpdateRequest;
 import com.ssafy.mbting.api.response.MemberRegisterResponse;
 import com.ssafy.mbting.api.response.MemberResponse;
+import com.ssafy.mbting.api.service.InterestService;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.auth.MemberDetails;
 import com.ssafy.mbting.common.model.response.BaseResponse;
@@ -15,6 +16,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +28,6 @@ import java.util.UUID;
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
  */
-//@Api(value = "유저 API", tags = {"User"})
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/users")
@@ -36,22 +37,22 @@ public class MemberController {
 	private final MemberService memberService;
 	private final ResourceLoader resLoader;
 	private final BaseResponseUtil baseResponseUtil;
+	private  final InterestService interestService;
 	@PostMapping()
-	public ResponseEntity<?> register(
-			@RequestBody
-//			@ApiParam(value="회원가입 정보", required = true)
-			MemberRegisterRequest registerInfo) {
+	@Transactional
+	public ResponseEntity<?> register(@RequestBody	MemberRegisterRequest registerInfo) {
 		
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		Member member = memberService.createMember(registerInfo);
 
-		return ResponseEntity.ok().body(MemberRegisterResponse.builder()
+		member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
+		return baseResponseUtil.success(MemberRegisterResponse.builder()
 				.member(MemberResponse.of(member))
 				.build());
 	}
 	
 	@GetMapping("/me")
-	public ResponseEntity<MemberResponse> getMemberInfo(
+	public ResponseEntity<?> getMemberInfo(
 			Authentication authentication) {
 		/**
 		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
@@ -62,7 +63,7 @@ public class MemberController {
 		if (userDetails == null)
 			return ResponseEntity.badRequest().build();
 
-		return ResponseEntity.ok().body(MemberResponse.of(userDetails.getMember()));
+		return baseResponseUtil.success(MemberResponse.of(userDetails.getMember()));
 	}
 
 	@PutMapping()
@@ -72,7 +73,7 @@ public class MemberController {
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		Member member = memberService.updateMember(updateInfo);
 
-		return ResponseEntity.ok().body(MemberRegisterResponse.builder()
+		return baseResponseUtil.success(MemberRegisterResponse.builder()
 				.member(MemberResponse.of(member))
 				.build());
 	}
