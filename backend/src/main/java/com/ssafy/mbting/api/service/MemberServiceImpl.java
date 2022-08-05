@@ -20,6 +20,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member createMember(MemberRegisterRequest userRegisterInfo) {
 		Member member = Member.of(userRegisterInfo);
+
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		return memberRepository.save(member);
 	}
@@ -36,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
 	public Member updateMember(MemberUpdateRequest userRegisterInfo ) {
 		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
 		//updatemember.setInterests(userRegisterInfo.getInterests());
+
 		updatemember.setNickname(userRegisterInfo.getNickname());
 		updatemember.setMbti(userRegisterInfo.getMbti());
 		updatemember.setSido(userRegisterInfo.getSido());

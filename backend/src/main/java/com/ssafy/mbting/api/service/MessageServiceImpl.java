@@ -37,7 +37,7 @@ public class MessageServiceImpl implements MessageService{
         m2.setGender(false);
 
 
-        m1.setEmail("rlwls1101@hamail.net");
+        m1.setEmail("rlwls1101@hanmail.net");
         m2.setEmail("rlwl202@gmail.com");
         logger.info("\n\n홍길동 : {}\n", memberRepository.save(m1).getId());
         logger.info("\n\n유관순 : {}\n", memberRepository.save(m2).getId());
