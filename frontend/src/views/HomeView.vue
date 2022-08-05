@@ -53,17 +53,6 @@ export default {
     const meetingStart = function () {
       router.push({ name: "MeetingWait" });
     };
-    const goPeople = function () {
-      router.push({ name: "friend" });
-    };
-    const goMyPage = function () {
-      //router.push({ name: "MyPage" });
-      mypageDialog.value = true;
-    };
-    const handleClose = function () {
-      mypageDialog.value = false;
-    };
-
     // const submit = () => {
     //   axios.post(url= "/api/", state.form).then(res) => {
 
@@ -72,27 +61,9 @@ export default {
     // console.log(res)
     // }
 
-    const login = () => {
-      // 카카오톡 로그인 화면 전환
-      // window.location.replace(
-      //   `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code`
-      // );
-    };
-
-    const logout = () => {
-      // window.location.replace(
-      //   `https://kauth.kakao.com/oauth/logout?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&logout_redirect_uri=${process.env.VUE_APP_KAKAO_LOGOUT_REDIRECT_URI}`
-      // );
-    };
-
     return {
-      login,
-      logout,
       meetingStart,
-      goPeople,
-      goMyPage,
       mypageDialog,
-      handleClose,
       Avatar,
       Comment,
       Right,
