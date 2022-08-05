@@ -79,6 +79,7 @@ export const accounts = {
         },
       });
     },
+    // 주석추가.
     deleteMemberinfo({ state }) {
       // const params = {
       //   email: state.member.email,
