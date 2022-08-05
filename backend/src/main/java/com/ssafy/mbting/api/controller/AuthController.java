@@ -32,7 +32,7 @@ public class AuthController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final BaseResponseUtil baseResponseUtil;
-    private final MemberService memberService;
+	private final MemberService memberService;
 	private final KakaoAPI kakaoApi;
 
 	@GetMapping("/login")

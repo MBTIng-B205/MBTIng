@@ -16,10 +16,13 @@ public class Message extends BaseEntity {
 
     private String content;
     private LocalDateTime sendTime;
+    @Builder.Default
     @NotNull
     private Boolean readByTo = false;
+    @Builder.Default
     @NotNull
     private Boolean deletedByTo = false;
+    @Builder.Default
     @NotNull
     private Boolean deletedByFrom = false;
 

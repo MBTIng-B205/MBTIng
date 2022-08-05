@@ -46,7 +46,7 @@ public class Member extends BaseEntity{
         return Member.builder()
                 .email(memberRegisterRequest.getEmail())
                 .nickname(memberRegisterRequest.getNickname())
-                .gender(memberRegisterRequest.isGender())
+                .gender(memberRegisterRequest.getGender())
                 .birth(memberRegisterRequest.getBirth())
                 .sido(memberRegisterRequest.getSido())
                 .mbti(memberRegisterRequest.getMbti())
