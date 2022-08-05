@@ -33,11 +33,13 @@ public class MemberResponse {
 
 
 	public static MemberResponse of(Member member) {
+
 		List<InterestMember> interestMembers = member.getInterestMember();
 		List<String> newInterests = new ArrayList<>();
 		for(InterestMember i : interestMembers){
 			newInterests.add(i.getInterest().getIname());
 		}
+
 
 		return MemberResponse.builder()
 				.email(member.getEmail())
@@ -47,7 +49,9 @@ public class MemberResponse {
 				.sido(member.getSido())
 				.mbti(member.getMbti())
 				.profileUrl(member.getProfileUrl())
+
 				.interests(newInterests)
+
 				.build();
 	}
 }
