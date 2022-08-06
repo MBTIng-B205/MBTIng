@@ -86,28 +86,28 @@
                 readonly
               />
             </el-form-item>
-            <el-form-item label="Nickname">
+            <el-form-item label="닉네임">
               <el-input
                 style="width: 200px"
                 v-model="state.friend.nickname"
                 readonly
               />
             </el-form-item>
-            <el-form-item label="Gender">
+            <el-form-item label="성별">
               <el-input
                 style="width: 200px"
                 v-model="state.friend.gender"
                 readonly
               />
             </el-form-item>
-            <el-form-item label="Birthday">
+            <el-form-item label="생년월일">
               <el-input
                 style="width: 200px"
                 v-model="state.friend.birth"
                 readonly
               />
             </el-form-item>
-            <el-form-item label="Place">
+            <el-form-item label="사는지역">
               <el-input
                 style="width: 200px"
                 v-model="state.friend.sido"
@@ -218,27 +218,9 @@ export default {
 
     const clickSend = function () {
       console.log("clickSend", message);
-      let time = new Date();
-      let year = String(time.getFullYear());
-      let month = time.getMonth() + 1;
-      let day = String(
-        time.getDate() < 10 ? "0" + time.getDate() : time.getDate()
-      );
-      let hour = String(
-        time.getHours() < 10 ? "0" + time.getHours() : time.getHours()
-      );
-      let min = String(
-        time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
-      );
-      console.log(
-        time,
-        year + "-" + month + "-" + day + " " + hour + ":" + min
-      );
       if (message.value == "") {
         alert("보낼 내용을 입력하세요!");
       } else {
-        // 쪽지 보내기
-        alert(message.value);
         messageClose();
       }
     };

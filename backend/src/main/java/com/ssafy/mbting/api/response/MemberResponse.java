@@ -1,6 +1,5 @@
 package com.ssafy.mbting.api.response;
 
-import com.ssafy.mbting.db.entity.Interest;
 import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
 import lombok.*;
@@ -30,7 +29,6 @@ public class MemberResponse {
 	private String mbti;
 	private String profileUrl;
 	private List<String> interests = new ArrayList<>();
-
 
 	public static MemberResponse of(Member member) {
 		List<InterestMember> interestMembers = member.getInterestMember();
