@@ -7,12 +7,15 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageDeleteRequest {
+
     public enum DeletedBy {
         SENDER, RECEIVER
     }
+
     private DeletedBy deletedBy;
     private List<Long> deletelist= new ArrayList<>();
 }

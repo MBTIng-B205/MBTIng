@@ -1,15 +1,8 @@
 package com.ssafy.mbting.api.request;
 
-import com.ssafy.mbting.api.response.MemberResponse;
-import com.ssafy.mbting.db.entity.Interest;
-import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +12,10 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-//@ApiModel("UserRegisterPostRequest")
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberUpdateRequest {
+
     private String email;
     private String nickname;
     //private boolean gender;
@@ -32,7 +27,6 @@ public class MemberUpdateRequest {
 
     @Builder.Default
     private List<String> interests = new ArrayList<>();
-
 
 
     public static MemberUpdateRequest of(Member member) {

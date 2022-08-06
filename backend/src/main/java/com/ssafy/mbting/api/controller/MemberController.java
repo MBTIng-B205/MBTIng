@@ -7,14 +7,11 @@ import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.api.service.InterestService;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.auth.MemberDetails;
-import com.ssafy.mbting.common.model.response.BaseResponse;
 import com.ssafy.mbting.common.util.BaseResponseUtil;
-import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -37,18 +33,17 @@ import java.util.UUID;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class MemberController {
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final MemberService memberService;
 	private final ResourceLoader resLoader;
 	private final BaseResponseUtil baseResponseUtil;
 	private  final InterestService interestService;
+
 	@PostMapping()
 
 	@Transactional
 	public ResponseEntity<?> register(@RequestBody	MemberRegisterRequest registerInfo) {
-
-		
-		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		Member member = memberService.createMember(registerInfo);
 
 		member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));

@@ -2,7 +2,6 @@ package com.ssafy.mbting.api.controller;
 
 import com.ssafy.mbting.api.response.MemberLoginResponse;
 import com.ssafy.mbting.api.response.MemberResponse;
-import com.ssafy.mbting.common.model.response.BaseResponse;
 import com.ssafy.mbting.common.util.BaseResponseUtil;
 import com.ssafy.mbting.common.util.KakaoAPI;
 import com.ssafy.mbting.db.entity.Member;
@@ -10,7 +9,6 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +32,9 @@ public class AuthController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final BaseResponseUtil baseResponseUtil;
-
-    private final MemberService memberService;
-
+	private final MemberService memberService;
 	private final KakaoAPI kakaoApi;
+
 	@GetMapping("/login")
 	public ResponseEntity<?> login(@RequestParam("code") String code) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -60,11 +57,9 @@ public class AuthController {
 		mres.setProfileUrl((String)userInfo.get("profile_image"));
 		mres.setNickname((String)userInfo.get("nickname"));
 
-
 		if(userInfo.get("email") != null) {
 
 			String msg = "login success";
-
 
 			Member member = memberService.getUserByEmail((String) userInfo.get("email"));
 			if(member == null){
