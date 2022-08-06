@@ -15,6 +15,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query(value = "SELECT m FROM Message m WHERE m.toId = :toId and m.deletedByTo = false")
     Page<Message> findAllByTo(@Param("toId")  Member memberTo,
                           Pageable pageable);
+
     Page<Message> findByFromIdAndContentContainingAndDeletedByFrom(Member fromId,String content , boolean deletedByFrom, Pageable pageable);
     Page<Message> findByFromIdAndToIdAndDeletedByFrom(Member fromId,Member toId, boolean deletedByFrom, Pageable pageable);
     Page<Message> findByToIdAndContentContainingAndDeletedByTo(Member toId,String content , boolean deletedByTo, Pageable pageable);
