@@ -9,9 +9,11 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageSendRequest {
+
     private String senderId;
     private String receiverId;
     private String content;

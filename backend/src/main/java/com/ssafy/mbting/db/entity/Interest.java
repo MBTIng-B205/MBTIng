@@ -13,7 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Interest extends BaseEntity{
+
     private String iname;
+
+    @Builder.Default
     @OneToMany(mappedBy = "interest")
     private List<InterestMember> interestMembers = new ArrayList<>();
 
@@ -21,4 +24,3 @@ public class Interest extends BaseEntity{
         return Interest.builder().iname(iname).build();
     }
 }
-

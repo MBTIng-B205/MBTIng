@@ -19,23 +19,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
-import java.lang.reflect.Array;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/message")
 @RequiredArgsConstructor
 public class MessageController {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final MessageService messageService;
     private final FriendService friendService;
     private final BaseResponseUtil baseResponseUtil;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
 
     //하나만 보는거는 message id 가 맞는거 같음
     @GetMapping("/{messageId}")
@@ -47,7 +45,6 @@ public class MessageController {
         }
         return baseResponseUtil.success(MessageResponse.of(message, message.getToId(), message.getFromId()));
     }
-
 
     @PostMapping("/")
     public ResponseEntity<?> sendMessage(@RequestBody MessageSendRequest messageSendRequest) {
@@ -98,9 +95,12 @@ public class MessageController {
         for (Message tmp : messages.getContent()) {
             ml.add(MessageResponse.of(tmp, tmp.getToId(), tmp.getFromId()));
         }
-        return baseResponseUtil.success(MessageListResponse.builder().messages(ml).pagingResponse(pagingResponse).build());
-    }
 
+        return baseResponseUtil.success(MessageListResponse.builder()
+                .messages(ml)
+                .pagingResponse(pagingResponse)
+                .build());
+    }
 
     //받은 쪽지함
     @PostMapping("tolist/{email}")
@@ -116,6 +116,11 @@ public class MessageController {
         for (Message tmp : messages.getContent()) {
             ml.add(MessageResponse.of(tmp, tmp.getToId(), tmp.getFromId()));
         }
-        return baseResponseUtil.success(MessageListResponse.builder().messages(ml).pagingResponse(pagingResponse).build());
+
+        return baseResponseUtil.success(MessageListResponse.builder()
+                .messages(ml)
+                .pagingResponse(pagingResponse)
+                .build());
     }
+
 }
