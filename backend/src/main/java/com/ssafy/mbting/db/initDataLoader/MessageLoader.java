@@ -1,4 +1,4 @@
-package com.ssafy.mbting.db.initData;
+package com.ssafy.mbting.db.initDataLoader;
 
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.entity.Message;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class MessageInitData {
+public class MessageLoader {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private @Value("${com.mbting.ddl_auto}") String ddl_auto;
