@@ -30,11 +30,13 @@ public class MessageLoader {
                     .nickname("홍길동")
                     .email("gildong@hong.com")
                     .gender(true)
+                    .mbti("ISFP")
                     .build());
             Member you = memberRepository.save(Member.builder()
                     .nickname("유관순")
                     .email("gwansun@you.com")
                     .gender(false)
+                    .mbti("ENTJ")
                     .build());
 
             logger.info("\n\n홍길동 id : {}\n", hong.getId());
@@ -57,7 +59,7 @@ public class MessageLoader {
             }
             messageRepository.saveAll(messages);
 
-            logger.info("\n\n메시지 {}개가 성공적으로 들어감\n", messages.size());
+            logger.info("\n\n{}개의 메시지가 들어감\n", messages.size());
         }
     }
 }
