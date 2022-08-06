@@ -174,6 +174,7 @@ export default {
       messageList: [],
       // msgcnt: computed(() => state.messageList.length),
       msgcnt: 15,
+      currentPage: 0,
       messageId: "",
       receiveDialog: false,
       selected: [],
@@ -193,7 +194,7 @@ export default {
       store
         .dispatch("messages/getReceiveList", {
           email: state.memberinfo.email,
-          page: 0,
+          page: state.currentPage,
           key: "",
           word: "",
           size: 4,
@@ -216,7 +217,7 @@ export default {
         store
           .dispatch("messages/getReceiveList", {
             email: state.memberinfo.email,
-            page: 0,
+            page: state.currentPage,
             key: key.value,
             word: search.value,
             size: 4,
@@ -253,15 +254,16 @@ export default {
           store
             .dispatch("messages/getReceiveList", {
               email: state.memberinfo.email,
-              page: 0,
+              page: state.currentPage,
               key: key.value,
               word: search.value,
-              size: 10,
+              size: 4,
             })
             .then(function (result) {
               console.log("result", result);
               state.messageList = result.data.body.messages;
               console.log("read-messageList", state.messageList);
+              state.selected = [];
             });
         });
     };
@@ -278,12 +280,13 @@ export default {
           store
             .dispatch("messages/getReceiveList", {
               email: state.memberinfo.email,
-              page: 0,
+              page: state.currentPage,
               key: key.value,
               word: search.value,
-              size: 10,
+              size: 4,
             })
             .then(function (result) {
+              state.msgcnt = 10;
               console.log("result", result);
               state.messageList = result.data.body.messages;
               console.log("delete-messageList", state.messageList);
@@ -355,6 +358,7 @@ export default {
 
     const handleCurrentChange = function (val) {
       console.log("page", val);
+      state.currentPage = val - 1;
       store
         .dispatch("messages/getReceiveList", {
           email: state.memberinfo.email,
