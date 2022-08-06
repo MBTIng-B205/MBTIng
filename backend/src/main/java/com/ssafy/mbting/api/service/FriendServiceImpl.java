@@ -67,4 +67,16 @@ public class FriendServiceImpl implements FriendService{
         }
         return myFriends;
     }
+
+    @Override
+    public boolean checkFriend(Member fromMember, Member toMember) {
+        List<Friend> friends = friendRepository.findAllByFromId(fromMember);
+        for(Friend friend : friends){
+            Member toId = friend.getToId();
+            if(toMember.getEmail().equals(toId.getEmail())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

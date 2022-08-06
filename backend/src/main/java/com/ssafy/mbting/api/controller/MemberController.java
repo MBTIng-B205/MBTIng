@@ -41,10 +41,9 @@ public class MemberController {
 	private  final InterestService interestService;
 
 	@PostMapping()
+
 	@Transactional
 	public ResponseEntity<?> register(@RequestBody	MemberRegisterRequest registerInfo) {
-		
-		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		Member member = memberService.createMember(registerInfo);
 
 		member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
@@ -110,12 +109,11 @@ public class MemberController {
 				file.transferTo(new File(folder,filename));
 				member.setProfileUrl("http://localhost:8080/static/upload/"+today+"/"+filename);
 				memberService.updateMember(MemberUpdateRequest.of(member));
-
 			}
 		}catch (Exception e) {
 			//여기 수정 필요
 			e.printStackTrace();
-			ResponseEntity.accepted().body(MemberRegisterResponse.builder()
+			return ResponseEntity.accepted().body(MemberRegisterResponse.builder()
 					.member(MemberResponse.of(member))
 					.build());
 		}

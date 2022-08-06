@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +24,7 @@ public class MessageServiceImpl implements MessageService{
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
+
 
     @Override
     public Message getMessage(Long messageId) {
@@ -64,7 +66,10 @@ public class MessageServiceImpl implements MessageService{
     //보낸 쪽지함
     @Override
     public Page<Message> getMessagesFromMember(String email, PageNavigation pageNavigation) {
-        PageRequest pageRequest = PageRequest.of(pageNavigation.getPage(), pageNavigation.getSize());
+
+        Sort sendsort = Sort.by("sendTime").descending();
+        PageRequest pageRequest =PageRequest.of(pageNavigation.getPage(), pageNavigation.getSize(),sendsort);
+
         Page<Message> all;
         if(pageNavigation.getSearchUtil().getKey().equals("content")){
             logger.debug("\n\n\n content \n\n\n");
@@ -84,7 +89,9 @@ public class MessageServiceImpl implements MessageService{
     //받은 쪽지함
     @Override
     public Page<Message> getMessagesToMember(String email, PageNavigation pageNavigation) {
-        PageRequest pageRequest = PageRequest.of(pageNavigation.getPage(), pageNavigation.getSize());
+        Sort sendsort = Sort.by("sendTime").descending();
+        PageRequest pageRequest = PageRequest.of(pageNavigation.getPage(), pageNavigation.getSize(),sendsort);
+
         Page<Message> all;
         if(pageNavigation.getSearchUtil().getKey().equals("content")){
             all = messageRepository.findByToIdAndContentContainingAndDeletedByTo(memberRepository.findByEmail(email),pageNavigation.getSearchUtil().getWord(),false,pageRequest);

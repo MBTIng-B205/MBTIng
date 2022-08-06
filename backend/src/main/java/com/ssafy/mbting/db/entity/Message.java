@@ -1,6 +1,7 @@
 package com.ssafy.mbting.db.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,11 @@ import java.time.LocalDateTime;
 public class Message extends BaseEntity {
 
     private String content;
+    @CreationTimestamp
     private LocalDateTime sendTime;
+    @Builder.Default
+    @NotNull
+    private Boolean friendflag = false;
     @Builder.Default
     @NotNull
     private Boolean readByTo = false;
@@ -25,7 +30,6 @@ public class Message extends BaseEntity {
     @Builder.Default
     @NotNull
     private Boolean deletedByFrom = false;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="from_id")
     private Member fromId;

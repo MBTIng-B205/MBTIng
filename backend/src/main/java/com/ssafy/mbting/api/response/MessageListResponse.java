@@ -1,5 +1,6 @@
 package com.ssafy.mbting.api.response;
 
+import com.ssafy.mbting.common.util.PagingResponse;
 import lombok.*;
 import org.springframework.data.domain.PageRequest;
 
@@ -15,5 +16,5 @@ public class MessageListResponse {
     
     @Builder.Default
     List<MessageResponse> messages = new ArrayList<>();
-    PageRequest pageable;
+    PagingResponse pagingResponse;
 }

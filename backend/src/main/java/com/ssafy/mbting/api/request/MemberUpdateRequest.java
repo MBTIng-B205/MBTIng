@@ -24,8 +24,10 @@ public class MemberUpdateRequest {
     private String sido;
     private String mbti;
     private String profileUrl;
+
     @Builder.Default
     private List<String> interests = new ArrayList<>();
+
 
     public static MemberUpdateRequest of(Member member) {
         return MemberUpdateRequest.builder()
@@ -45,7 +47,7 @@ public class MemberUpdateRequest {
                 ", sido='" + sido + '\'' +
                 ", mbti='" + mbti + '\'' +
                 ", profileUrl='" + profileUrl + '\'' +
-                ", interests=" + interests +
+                //", interests=" + interests +
                 '}';
     }
 }

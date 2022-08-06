@@ -27,7 +27,7 @@ export default {
           if (result.data.body.visited === true) {
             store.dispatch("accounts/getMemberinfo").then(function (res) {
               console.log("res data", res);
-              store.commit("accounts/SET_MEMBER_INFO", res.data);
+              store.commit("accounts/SET_MEMBER_INFO", res.data.body);
               console.log(res.data.body);
             });
             router.push({ path: "/" });
