@@ -20,7 +20,10 @@ public class Message extends BaseEntity {
     private LocalDateTime sendTime;
     @Builder.Default
     @NotNull
-    private Boolean friendflag = false;
+    private Boolean tofriendflag = false;
+    @Builder.Default
+    @NotNull
+    private Boolean fromfriendflag = false;
     @Builder.Default
     @NotNull
     private Boolean readByTo = false;

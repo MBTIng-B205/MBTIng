@@ -36,12 +36,26 @@ public class MessageController {
 
 
     //하나만 보는거는 message id 가 맞는거 같음
-    @GetMapping("/{messageId}")
-    public ResponseEntity<?> getMessage(@PathVariable("messageId") Long messageId) {
+    @GetMapping("/{messageId}/{readtype}")
+    public ResponseEntity<?> getMessage(@PathVariable("messageId") Long messageId, @PathVariable("readtype") String readtype) {
         Message message = messageService.getMessage(messageId);
-        message = messageService.readMessage(messageId, true);
-        if (friendService.checkFriend(message.getFromId(), message.getToId()) && friendService.checkFriend(message.getToId(), message.getFromId())) {
-            message.setFriendflag(true);
+
+        if(readtype.equals("to")){
+            message = messageService.readMessage(messageId, true);
+            if(friendService.checkFriend(message.getToId(), message.getFromId())) {
+                message.setTofriendflag(true);
+            }
+            else
+                message.setTofriendflag(false);
+        }
+        else if(readtype.equals("from")){
+            if(friendService.checkFriend(message.getFromId(), message.getToId()))
+                message.setFromfriendflag(true);
+            else
+                message.setFromfriendflag(false);
+        }
+        else{
+            return baseResponseUtil.fail("readtype을 실어서 보내주세요");
         }
         return baseResponseUtil.success(MessageResponse.of(message, message.getToId(), message.getFromId()));
     }
