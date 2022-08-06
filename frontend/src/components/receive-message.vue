@@ -81,8 +81,12 @@
     <el-dialog v-model="state.receiveDialog" @close="receiveClose">
       <el-header style="text-align: left; padding-top: 10px">
         <span class="from"> From. </span>
-        <span class="fromFriend"> {{ fromFriend }}</span>
-        <img v-if="isFriend" class="friendIcon" src="@/assets/friends.png" />
+        <span class="fromFriend"> {{ state.message.sender.nickname }}</span>
+        <img
+          v-if="state.message.friendflag"
+          class="friendIcon"
+          src="@/assets/friends.png"
+        />
         <img
           v-else
           class="friendIcon"
@@ -97,15 +101,21 @@
           "
           src="@/assets/siren.png"
         />
-        <span class="fromDate"> {{ fromDate }} </span>
+        <span class="fromDate">
+          {{
+            state.message.sendTime.substring(0, 10) +
+            " " +
+            state.message.sendTime.substring(11, 19)
+          }}
+        </span>
       </el-header>
       <el-input v-model="receiveMsg" type="textarea" rows="10" readonly />
       <div style="margin-top: 20px">
         <el-button
           type="success"
           @click="
-            state.sendDialog = true;
-            receiveClose();
+            receiveClose;
+            sendOpen;
           "
           >답장</el-button
         >
@@ -115,8 +125,12 @@
     <el-dialog v-model="state.sendDialog" @close="sendClose">
       <el-header style="text-align: left; padding-top: 10px">
         <span class="to"> TO. </span>
-        <span class="toFriend"> {{ toFriend }}</span>
-        <img v-if="isFriend" class="friendIcon" src="@/assets/friends.png" />
+        <span class="toFriend"> {{ state.message.sender.nickname }}</span>
+        <img
+          v-if="state.message.friendflag"
+          class="friendIcon"
+          src="@/assets/friends.png"
+        />
         <img
           v-else
           class="friendIcon"
@@ -182,7 +196,6 @@ export default {
       msgcnt: 0,
       message: {},
       currentPage: 1,
-      messageId: "",
       receiveDialog: false,
       selected: [],
       sendDialog: false,
@@ -307,13 +320,22 @@ export default {
 
     const onMsg = function (i) {
       console.log(i);
-      state.messageId = i.id;
+      store
+        .dispatch("messages/getMessage", { id: i.id, type: "to" })
+        .then(function (result) {
+          console.log("result", result);
+          state.message = result.data.body;
+        });
+
       state.receiveDialog = true;
     };
 
     const receiveClose = function () {
       state.receiveDialog = false;
-      state.receiveMsg = "";
+    };
+
+    const sendOpen = function () {
+      state.sendDialog = true;
     };
 
     const sendClose = function () {
@@ -328,7 +350,16 @@ export default {
         alert("보낼 내용을 입력하세요!");
       } else {
         // 쪽지 보내기
-        alert(state.sendMsg);
+        store
+          .dispatch("messages/sendMsg", {
+            senderId: state.memberinfo.email,
+            receiverId: state.message.sender.nickname,
+            content: state.sendMsg,
+          })
+          .then(function (result) {
+            console.log("sendmsg", result);
+            alert("쪽지 전송 완료!");
+          });
         sendClose();
       }
     };
@@ -361,6 +392,14 @@ export default {
       if (confirm("친구추가 하시겠습니까?")) {
         // 친구추가 하기
         i.isFriend = true;
+        store
+          .dispatch("friends/addFriend", {
+            from: state.memberinfo.email,
+            to: state.message.sender.email,
+          })
+          .then(function (result) {
+            console.log("addResult", result);
+          });
       }
     };
 
@@ -398,6 +437,7 @@ export default {
       onDelete,
       onMsg,
       receiveClose,
+      sendOpen,
       sendClose,
       clickSend,
       sirenOpen,
