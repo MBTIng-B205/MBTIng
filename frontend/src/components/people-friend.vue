@@ -35,7 +35,7 @@
               ></el-button>
             </template>
           </el-popconfirm>
-          <img class="friendProfile" src="@/assets/profile.png" />
+          <img class="friendProfile" :src="friend.profileUrl" />
           <div style="font-weight: bold">
             <p>{{ friend.nickname }}</p>
             <p>{{ friend.mbti }}</p>
@@ -281,7 +281,6 @@ export default {
   width: 100px;
   height: 100px;
   margin-left: 40px;
-  border: 1px solid black;
   border-radius: 100%;
   background-color: white;
 }
