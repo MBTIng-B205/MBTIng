@@ -4,8 +4,8 @@
       <el-row class="row">
         <el-col :span="6"
           ><el-select v-model="key" placeholder="검색키">
-            <el-option value="receiveFriend" label="받은사람" />
-            <el-option value="message" label="내용" /> </el-select
+            <el-option value="nickname" label="받은사람" />
+            <el-option value="content" label="내용" /> </el-select
         ></el-col>
         <el-col :span="12">
           <el-input v-model="search" />
@@ -24,7 +24,7 @@
       >
     </el-row>
     <table class="table">
-      <thead>
+      <thead v-if="state.messageList.length != 0">
         <tr>
           <th>
             <label class="form-checkbox"
@@ -37,6 +37,16 @@
           <th>받은사람</th>
           <th>내용</th>
           <th>날짜</th>
+        </tr>
+      </thead>
+      <thead v-else-if="state.searchFlag">
+        <tr>
+          검색한 쪽지가 없습니다!
+        </tr>
+      </thead>
+      <thead v-else>
+        <tr>
+          친구에게 쪽지를 보내보세요!
         </tr>
       </thead>
       <tbody>
@@ -133,6 +143,20 @@ export default {
         alert("검색어를 입력하세요");
       } else {
         console.log("search", key.value + " " + search.value);
+        state.searchFlag = true;
+        store
+          .dispatch("messages/getSendList", {
+            email: state.memberinfo.email,
+            page: 0,
+            key: key.value,
+            word: search.value,
+            size: 4,
+          })
+          .then(function (result) {
+            console.log("search-result", result);
+            state.messageList = result.data.body.messages;
+            console.log("search-messageList", state.messageList);
+          });
       }
     };
 
@@ -163,7 +187,7 @@ export default {
               page: 0,
               key: key.value,
               word: search.value,
-              size: 10,
+              size: 4,
             })
             .then(function (result) {
               console.log("result", result);
