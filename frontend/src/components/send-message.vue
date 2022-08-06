@@ -28,10 +28,7 @@
         <tr>
           <th>
             <label class="form-checkbox"
-              ><input
-                type="checkbox"
-                v-model="state.selectAll"
-                @click="onSelect"
+              ><input type="checkbox" v-model="selectAll" @click="onSelect"
             /></label>
           </th>
           <th>받은사람</th>
@@ -69,7 +66,13 @@
           </td>
           <td class="tableName">{{ message.receiver.nickname }}</td>
           <td class="tableMsg">{{ message.content }}</td>
-          <td>{{ message.sendTime }}</td>
+          <td>
+            {{
+              message.sendTime.substring(0, 10) +
+              " " +
+              message.sendTime.substring(11, 19)
+            }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -90,7 +93,8 @@
         background
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
-        :page-size="4"
+        :current-page="state.currentPage"
+        :page-size="8"
         :total="state.msgcnt"
       />
     </div>
@@ -106,18 +110,19 @@ export default {
     const key = ref("");
     const search = ref("");
     const store = useStore();
+    const selectAll = computed(
+      () => state.selected.length === state.messageList.length
+    );
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       searchFlag: false,
       messageList: [],
-      // msgcnt: computed(() => state.messageList.length),
-      msgcnt: 15,
+      msgcnt: 0,
+      message: {},
+      currentPage: 1,
       messageId: "",
       messageDialog: false,
       selected: [],
-      selectAll: computed(
-        () => state.selected.length === state.messageList.length
-      ),
     });
 
     onMounted(() => {
@@ -127,12 +132,13 @@ export default {
           page: 0,
           key: "",
           word: "",
-          size: 4,
+          size: 8,
         })
         .then(function (result) {
           console.log("result", result);
           state.messageList = result.data.body.messages;
-          console.log("messageList", state.messageList);
+          state.msgcnt = result.data.body.pagingResponse.totalcount;
+          console.log("messageList", state.messageList + " " + state.msgcnt);
         });
     });
 
@@ -150,30 +156,31 @@ export default {
             page: 0,
             key: key.value,
             word: search.value,
-            size: 4,
+            size: 8,
           })
           .then(function (result) {
             console.log("search-result", result);
             state.messageList = result.data.body.messages;
+            state.msgcnt = result.data.body.pagingResponse.totalcount;
             console.log("search-messageList", state.messageList);
           });
       }
     };
 
     const onSelect = function () {
-      console.log(state.selectAll.value);
-      if (!state.selectAll.value) {
-        state.selected.value = [];
+      console.log(selectAll.value);
+      if (!selectAll.value) {
+        state.selected = [];
         for (let index in state.messageList) {
-          state.selected.value.push(state.messageList[index].id);
+          state.selected.push(state.messageList[index].id);
         }
       } else {
-        state.selected.value = [];
+        state.selected = [];
       }
     };
 
     const onDelete = function () {
-      console.log("selected", state.selected);
+      console.log("delete", state.selected);
       store
         .dispatch("messages/deleteSendList", {
           list: state.selected,
@@ -187,12 +194,17 @@ export default {
               page: 0,
               key: key.value,
               word: search.value,
-              size: 4,
+              size: 8,
             })
             .then(function (result) {
               console.log("result", result);
               state.messageList = result.data.body.messages;
-              console.log("delete-messageList", state.messageList);
+              state.msgcnt = result.data.body.pagingResponse.totalcount;
+              state.currentPage = 1;
+              console.log(
+                "delete-messageList",
+                state.messageList + " " + state.msgcnt
+              );
             });
         })
         .catch(function (error) {
@@ -212,24 +224,27 @@ export default {
 
     const handleCurrentChange = function (val) {
       console.log("page", val);
+      state.currentPage = val;
       store
         .dispatch("messages/getSendList", {
           email: state.memberinfo.email,
           page: val - 1,
           key: key.value,
           word: search.value,
-          size: 4,
+          size: 8,
         })
         .then(function (result) {
           console.log("result", result);
           state.messageList = result.data.body.messages;
-          console.log("messageList", state.messageList);
+          state.msgcnt = result.data.body.pagingResponse.totalcount;
+          console.log("messageList", state.messageList + " " + state.msgcnt);
         });
     };
 
     return {
       key,
       search,
+      selectAll,
       state,
       onSearch,
       onSelect,

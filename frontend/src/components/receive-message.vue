@@ -29,10 +29,7 @@
         <tr>
           <th>
             <label class="form-checkbox"
-              ><input
-                type="checkbox"
-                v-model="state.selectAll"
-                @click="onSelect"
+              ><input type="checkbox" v-model="selectAll" @click="onSelect"
             /></label>
           </th>
           <th>보낸사람</th>
@@ -71,7 +68,13 @@
           </td>
           <td class="tableName">{{ message.sender.nickname }}</td>
           <td class="tableMsg">{{ message.content }}</td>
-          <td>{{ message.sendTime }}</td>
+          <td>
+            {{
+              message.sendTime.substring(0, 10) +
+              " " +
+              message.sendTime.substring(11, 19)
+            }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -89,7 +92,7 @@
         <img
           class="friendIcon"
           @click="
-            sirenOpen;
+            sirenOpen();
             receiveClose();
           "
           src="@/assets/siren.png"
@@ -152,7 +155,8 @@
         background
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
-        :page-size="4"
+        :current-page="state.currentPage"
+        :page-size="8"
         :total="state.msgcnt"
       />
     </div>
@@ -168,19 +172,19 @@ export default {
     const key = ref("");
     const search = ref("");
     const store = useStore();
+    const selectAll = computed(
+      () => state.selected.length === state.messageList.length
+    );
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       searchFlag: false,
       messageList: [],
-      // msgcnt: computed(() => state.messageList.length),
-      msgcnt: 15,
-      currentPage: 0,
+      msgcnt: 0,
+      message: {},
+      currentPage: 1,
       messageId: "",
       receiveDialog: false,
       selected: [],
-      selectAll: computed(
-        () => state.selected.length === state.messageList.length
-      ),
       sendDialog: false,
       sendMsg: "",
     });
@@ -194,14 +198,15 @@ export default {
       store
         .dispatch("messages/getReceiveList", {
           email: state.memberinfo.email,
-          page: state.currentPage,
+          page: 0,
           key: "",
           word: "",
-          size: 4,
+          size: 8,
         })
         .then(function (result) {
           console.log("result", result);
           state.messageList = result.data.body.messages;
+          state.msgcnt = result.data.body.pagingResponse.totalcount;
           console.log("messageList", state.messageList);
         });
     });
@@ -217,22 +222,23 @@ export default {
         store
           .dispatch("messages/getReceiveList", {
             email: state.memberinfo.email,
-            page: state.currentPage,
+            page: 0,
             key: key.value,
             word: search.value,
-            size: 4,
+            size: 8,
           })
           .then(function (result) {
             console.log("search-result", result);
             state.messageList = result.data.body.messages;
+            state.msgcnt = result.data.body.pagingResponse.totalcount;
             console.log("search-messageList", state.messageList);
           });
       }
     };
 
     const onSelect = function () {
-      console.log(state.selectAll);
-      if (!state.selectAll) {
+      console.log(selectAll.value);
+      if (!selectAll.value) {
         state.selected = [];
         for (let index in state.messageList) {
           state.selected.push(state.messageList[index].id);
@@ -254,14 +260,15 @@ export default {
           store
             .dispatch("messages/getReceiveList", {
               email: state.memberinfo.email,
-              page: state.currentPage,
+              page: state.currentPage - 1,
               key: key.value,
               word: search.value,
-              size: 4,
+              size: 8,
             })
             .then(function (result) {
               console.log("result", result);
               state.messageList = result.data.body.messages;
+              state.msgcnt = result.data.body.pagingResponse.totalcount;
               console.log("read-messageList", state.messageList);
               state.selected = [];
             });
@@ -280,15 +287,16 @@ export default {
           store
             .dispatch("messages/getReceiveList", {
               email: state.memberinfo.email,
-              page: state.currentPage,
+              page: 0,
               key: key.value,
               word: search.value,
-              size: 4,
+              size: 8,
             })
             .then(function (result) {
-              state.msgcnt = 10;
               console.log("result", result);
               state.messageList = result.data.body.messages;
+              state.msgcnt = result.data.body.pagingResponse.totalcount;
+              state.currentPage = 1;
               console.log("delete-messageList", state.messageList);
             });
         })
@@ -358,25 +366,27 @@ export default {
 
     const handleCurrentChange = function (val) {
       console.log("page", val);
-      state.currentPage = val - 1;
+      state.currentPage = val;
       store
         .dispatch("messages/getReceiveList", {
           email: state.memberinfo.email,
           page: val - 1,
           key: key.value,
           word: search.value,
-          size: 4,
+          size: 8,
         })
         .then(function (result) {
           console.log("result", result);
           state.messageList = result.data.body.messages;
-          console.log("messageList", state.messageList);
+          state.msgcnt = result.data.body.pagingResponse.totalcount;
+          console.log("messageList", state.messageList + " " + state.msgcnt);
         });
     };
 
     return {
       key,
       search,
+      selectAll,
       state,
       sirenDialog,
       toSiren,
