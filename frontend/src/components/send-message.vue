@@ -76,14 +76,25 @@
         </tr>
       </tbody>
     </table>
-    <el-dialog v-model="state.messageDialog" @close="handleClose">
+    <el-dialog v-model="state.messageDialog" @close="handleClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
         <span class="to"> TO. </span>
-        <span class="toFriend"> {{ toFriend }}</span>
+        <span class="toFriend"> {{ state.message.receiver.nickname }}</span>
         <img class="friendIcon" src="@/assets/friends.png" />
-        <span class="toDate"> {{ toDate }} </span>
+        <span class="toDate">
+          {{
+            state.message.sendTime.substring(0, 10) +
+            " " +
+            state.message.sendTime.substring(11, 19)
+          }}
+        </span>
       </el-header>
-      <el-input v-model="message" type="textarea" rows="10" readonly />
+      <el-input
+        v-model="state.message.content"
+        type="textarea"
+        rows="10"
+        readonly
+      />
       <div style="margin-top: 20px">
         <el-button @click="handleClose">닫기</el-button>
       </div>
@@ -119,6 +130,7 @@ export default {
       messageList: [],
       msgcnt: 0,
       message: {},
+      friendFlag: true,
       currentPage: 1,
       messageId: "",
       messageDialog: false,
@@ -212,14 +224,35 @@ export default {
         });
     };
 
-    const onMsg = function (i) {
+    const onMsg = async function (i) {
       console.log(i);
       state.messageId = i.id;
+      await store
+        .dispatch("messages/getMessage", { id: i.id, type: "from" })
+        .then(function (result) {
+          console.log("result", result);
+          state.message = result.data.body;
+          store
+            .dispatch("messages/getSendList", {
+              email: state.memberinfo.email,
+              page: state.currentPage - 1,
+              key: key.value,
+              word: search.value,
+              size: 8,
+            })
+            .then(function (result) {
+              console.log("search-result", result);
+              state.messageList = result.data.body.messages;
+              state.msgcnt = result.data.body.pagingResponse.totalcount;
+              state.friendFlag = state.message.fromfriendflag;
+              console.log("search-messageList", state.messageList);
+            });
+        });
       state.messageDialog = true;
     };
 
     const handleClose = function () {
-      state.messageDialog.value = false;
+      state.messageDialog = false;
     };
 
     const handleCurrentChange = function (val) {

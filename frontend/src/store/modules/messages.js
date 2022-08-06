@@ -128,7 +128,7 @@ export const messages = {
     getMessage({ state }, { id, type }) {
       console.log(state);
       console.log("getMessage", id + " " + type);
-      return axios.get(`${base.baseUrl}/?messageId=${id}&readtype=${type}`);
+      return axios.get(`${base.baseUrl}/${id}/${type}`);
     },
   },
 };

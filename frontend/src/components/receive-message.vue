@@ -78,12 +78,12 @@
         </tr>
       </tbody>
     </table>
-    <el-dialog v-model="state.receiveDialog" @close="receiveClose">
+    <el-dialog v-model="state.receiveDialog" @close="receiveClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
         <span class="from"> From. </span>
         <span class="fromFriend"> {{ state.message.sender.nickname }}</span>
         <img
-          v-if="state.message.friendflag"
+          v-if="state.friendFlag"
           class="friendIcon"
           src="@/assets/friends.png"
         />
@@ -96,8 +96,8 @@
         <img
           class="friendIcon"
           @click="
-            sirenOpen();
             receiveClose();
+            sirenOpen();
           "
           src="@/assets/siren.png"
         />
@@ -109,13 +109,18 @@
           }}
         </span>
       </el-header>
-      <el-input v-model="receiveMsg" type="textarea" rows="10" readonly />
+      <el-input
+        type="textarea"
+        v-model="state.message.content"
+        rows="10"
+        readonly
+      />
       <div style="margin-top: 20px">
         <el-button
           type="success"
           @click="
-            receiveClose;
-            sendOpen;
+            receiveClose();
+            sendOpen();
           "
           >답장</el-button
         >
@@ -127,7 +132,7 @@
         <span class="to"> TO. </span>
         <span class="toFriend"> {{ state.message.sender.nickname }}</span>
         <img
-          v-if="state.message.friendflag"
+          v-if="state.friendFlag"
           class="friendIcon"
           src="@/assets/friends.png"
         />
@@ -151,7 +156,7 @@
     </el-dialog>
     <el-dialog v-model="sirenDialog" @close="sirenClose">
       <div style="font-weight: bold; float: left; margin: 10px">
-        신고대상자 : {{ toSiren }}
+        신고대상자 : {{ state.message.sender.nickname }}
       </div>
       <el-input
         v-model="sirenMsg"
@@ -189,12 +194,14 @@ export default {
     const selectAll = computed(
       () => state.selected.length === state.messageList.length
     );
+
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       searchFlag: false,
       messageList: [],
       msgcnt: 0,
       message: {},
+      friendFlag: false,
       currentPage: 1,
       receiveDialog: false,
       selected: [],
@@ -204,8 +211,6 @@ export default {
 
     const sirenDialog = ref(false);
     const sirenMsg = ref("");
-    const toSiren = ref("");
-    const fromSiren = ref(state.memberinfo.nickname); // 신고하는 사람 = 로그인 한 사람
 
     onMounted(() => {
       store
@@ -318,13 +323,28 @@ export default {
         });
     };
 
-    const onMsg = function (i) {
+    const onMsg = async function (i) {
       console.log(i);
-      store
+      await store
         .dispatch("messages/getMessage", { id: i.id, type: "to" })
         .then(function (result) {
           console.log("result", result);
           state.message = result.data.body;
+          store
+            .dispatch("messages/getReceiveList", {
+              email: state.memberinfo.email,
+              page: state.currentPage - 1,
+              key: key.value,
+              word: search.value,
+              size: 8,
+            })
+            .then(function (result) {
+              console.log("search-result", result);
+              state.messageList = result.data.body.messages;
+              state.msgcnt = result.data.body.pagingResponse.totalcount;
+              state.friendFlag = state.message.tofriendflag;
+              console.log("search-messageList", state.messageList);
+            });
         });
 
       state.receiveDialog = true;
@@ -350,10 +370,11 @@ export default {
         alert("보낼 내용을 입력하세요!");
       } else {
         // 쪽지 보내기
+        console.log("sender");
         store
           .dispatch("messages/sendMsg", {
             senderId: state.memberinfo.email,
-            receiverId: state.message.sender.nickname,
+            receiverId: state.message.sender.email,
             content: state.sendMsg,
           })
           .then(function (result) {
@@ -370,19 +391,24 @@ export default {
 
     const sirenClose = function () {
       sirenMsg.value = "";
-      toSiren.value = "";
       sirenDialog.value = false;
     };
 
     const clickSiren = function () {
-      console.log(
-        "신고",
-        sirenMsg.value + " " + toSiren.value + "," + fromSiren.value
-      );
+      console.log("신고", sirenMsg.value);
       if (sirenMsg.value == "") {
         alert("신고 사유를 입력하세요!");
       } else {
-        alert(sirenMsg.value);
+        store
+          .dispatch("reports/registerReport", {
+            from: state.memberinfo.email,
+            to: state.message.sender.email,
+            content: sirenMsg,
+          })
+          .then(function (result) {
+            console.log("result-report", result);
+            alert("신고가 접수되었습니다.");
+          });
         sirenClose();
       }
     };
@@ -390,8 +416,6 @@ export default {
     const addFriend = function (i) {
       console.log("친구추가", i);
       if (confirm("친구추가 하시겠습니까?")) {
-        // 친구추가 하기
-        i.isFriend = true;
         store
           .dispatch("friends/addFriend", {
             from: state.memberinfo.email,
@@ -399,6 +423,7 @@ export default {
           })
           .then(function (result) {
             console.log("addResult", result);
+            state.friendFlag = true;
           });
       }
     };
@@ -428,8 +453,6 @@ export default {
       selectAll,
       state,
       sirenDialog,
-      toSiren,
-      fromSiren,
       sirenMsg,
       onSearch,
       onSelect,
