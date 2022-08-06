@@ -8,7 +8,7 @@ build/
 /jar/
 logs/
 nohup*
-/run.sh
+/*.sh
 application-*.properties
 
 ### STS ###
