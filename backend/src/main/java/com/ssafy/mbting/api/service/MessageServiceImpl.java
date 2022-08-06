@@ -60,6 +60,7 @@ public class MessageServiceImpl implements MessageService{
         message.setDeletedByTo(true);
         return message;
     }
+
     //보낸 쪽지함
     @Override
     public Page<Message> getMessagesFromMember(String email, PageNavigation pageNavigation) {
@@ -79,6 +80,7 @@ public class MessageServiceImpl implements MessageService{
         }
         return all;
     }
+
     //받은 쪽지함
     @Override
     public Page<Message> getMessagesToMember(String email, PageNavigation pageNavigation) {
