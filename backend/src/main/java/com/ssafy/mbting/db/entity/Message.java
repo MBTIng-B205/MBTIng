@@ -1,6 +1,7 @@
 package com.ssafy.mbting.db.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 public class Message extends BaseEntity {
 
     private String content;
+    @CreationTimestamp
     private LocalDateTime sendTime;
     @Builder.Default
     @NotNull

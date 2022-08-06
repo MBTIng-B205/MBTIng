@@ -89,7 +89,9 @@ public class MessageServiceImpl implements MessageService{
     //받은 쪽지함
     @Override
     public Page<Message> getMessagesToMember(String email, PageNavigation pageNavigation) {
-        PageRequest pageRequest = PageRequest.of(pageNavigation.getPage(), pageNavigation.getSize());
+        Sort sendsort = Sort.by("sendTime").descending();
+        PageRequest pageRequest = PageRequest.of(pageNavigation.getPage(), pageNavigation.getSize(),sendsort);
+
         Page<Message> all;
         if(pageNavigation.getSearchUtil().getKey().equals("content")){
             all = messageRepository.findByToIdAndContentContainingAndDeletedByTo(memberRepository.findByEmail(email),pageNavigation.getSearchUtil().getWord(),false,pageRequest);
