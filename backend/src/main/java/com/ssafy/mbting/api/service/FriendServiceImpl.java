@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class FriendServiceImpl implements FriendService{
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${com.mbting.ddl_auto}")
     private String ddlAuto;
