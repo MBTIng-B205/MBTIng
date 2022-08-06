@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 public class KakaoAPI {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
 	private final String CLIENT_ID;
 	private final String REDIRECT_URI;
 
@@ -42,17 +41,17 @@ public class KakaoAPI {
 			conn.setDoOutput(true);
 			
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-			StringBuilder sb = new StringBuilder();
-			sb.append("grant_type=authorization_code")
-					.append("&client_id=" + CLIENT_ID)
-					.append("&redirect_uri=" + REDIRECT_URI)
-					.append("&code="+code);
+			StringBuilder sb = new StringBuilder()
+					.append("grant_type=authorization_code")
+					.append("&client_id=").append(CLIENT_ID)
+					.append("&redirect_uri=").append(REDIRECT_URI)
+					.append("&code=").append(code);
 			
 			bw.write(sb.toString());
 			bw.flush();
 			
 			int responseCode = conn.getResponseCode();
-			logger.debug("response code = " + responseCode);
+			logger.debug("\nresponse code = {}", responseCode);
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			
@@ -62,7 +61,7 @@ public class KakaoAPI {
 			while((line = br.readLine()) != null) {
 				result += line;
 			}
-			logger.debug("response body = " + result);
+			logger.debug("\nresponse body = {}", result);
 			
 			JsonParser parser = new JsonParser();
 			JsonElement element = parser.parse(result);
@@ -89,7 +88,7 @@ public class KakaoAPI {
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Authorization", "Bearer " + accessToken);
 			int responseCode = conn.getResponseCode();
-			logger.debug("response code = " + responseCode);
+			logger.debug("\nresponse code = {}", responseCode);
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			
@@ -99,7 +98,7 @@ public class KakaoAPI {
 			while((line = br.readLine()) != null) {
 				result += line;
 			}
-			logger.debug("response body = " + result);
+			logger.debug("\nresponse body = {}", result);
 
 			JsonParser parser = new JsonParser();
 			JsonElement element = parser.parse(result);
@@ -123,19 +122,19 @@ public class KakaoAPI {
 
 	public void getEmail(){
 		//String reqURL="https://kauth.kakao.com/oauth/authorize?client_id=ebb8bb50d4cb227cf989335c827681e5&redirect_uri=http://localhost:80/loginview&response_type=code&scope=account_email";
-
 	}
+
 	public void kakaoLogout(String accessToken) {
 		String reqURL="http://kapi.kakao.com/v1/user/logout";
 		try {
-			logger.debug("kakao logout");
+			logger.debug("\nkakao logout");
 
 			URL url = new URL(reqURL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Authorization", "Bearer " + accessToken);
 			int responseCode = conn.getResponseCode();
-			logger.debug("responseCode = " + responseCode);
+			logger.debug("\nresponseCode = {}", responseCode);
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			
@@ -145,12 +144,10 @@ public class KakaoAPI {
 			while((line = br.readLine()) != null) {
 				result += line;
 			}
-			logger.debug("result :"+ result);
+			logger.debug("\nresult : {}", result);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
-
 }

@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberLoginResponse {
-    private boolean visited;
+    private Boolean visited;
     private String jwt;
     private MemberResponse member;
 }

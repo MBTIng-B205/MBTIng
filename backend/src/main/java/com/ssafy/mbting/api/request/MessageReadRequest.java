@@ -4,8 +4,10 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageReadRequest {
-    private boolean read;
+
+    private Boolean read;
 }

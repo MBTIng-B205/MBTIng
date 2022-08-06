@@ -9,12 +9,10 @@ import com.ssafy.mbting.db.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 
 @Service
@@ -23,45 +21,8 @@ import javax.transaction.Transactional;
 public class MessageServiceImpl implements MessageService{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Value("${com.mbting.ddl_auto}")
-    private String ddlAuto;
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
-
-
-    @PostConstruct
-    public void init() {
-        if ("create".equalsIgnoreCase(ddlAuto)) {
-            Member m1 = new Member();
-            m1.setNickname("홍길동");
-            m1.setGender(true);
-            Member m2 = new Member();
-            m2.setNickname("유관순");
-            m2.setGender(false);
-
-
-            m1.setEmail("rlwls1101@hamail.net");
-            m2.setEmail("rlwl202@gmail.com");
-            logger.info("\n\n홍길동 : {}\n", memberRepository.save(m1).getId());
-            logger.info("\n\n유관순 : {}\n", memberRepository.save(m2).getId());
-
-            for (int i = 0; i < 100; i++) {
-                Message msg = new Message();
-                msg.setFromId(m1);
-                msg.setToId(m2);
-                msg.setContent("이것은 메시지 " + i + "번입니다.");
-                messageRepository.save(msg);
-            }
-
-            for (int i = 0; i < 100; i++) {
-                Message msg = new Message();
-                msg.setToId(m1);
-                msg.setFromId(m2);
-                msg.setContent("이것은 " + i + "번입니다!!!!!");
-                messageRepository.save(msg);
-            }
-        }
-    }
 
     @Override
     public Message getMessage(Long messageId) {
@@ -99,6 +60,7 @@ public class MessageServiceImpl implements MessageService{
         message.setDeletedByTo(true);
         return message;
     }
+
     //보낸 쪽지함
     @Override
     public Page<Message> getMessagesFromMember(String email, PageNavigation pageNavigation) {
@@ -118,6 +80,7 @@ public class MessageServiceImpl implements MessageService{
         }
         return all;
     }
+
     //받은 쪽지함
     @Override
     public Page<Message> getMessagesToMember(String email, PageNavigation pageNavigation) {

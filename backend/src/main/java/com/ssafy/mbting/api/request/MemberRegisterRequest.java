@@ -1,8 +1,6 @@
 package com.ssafy.mbting.api.request;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -14,10 +12,14 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberRegisterRequest {
+
 	private String email;
 	private String nickname;
-	private boolean gender;
+	private Boolean gender;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birth;
 	private String sido;
