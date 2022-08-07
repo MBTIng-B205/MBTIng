@@ -42,7 +42,9 @@ export const accounts = {
         birth: state.member.birth,
         sido: state.member.sido,
         mbti: state.member.mbti,
-        profileUrl: state.member.profileUrl,
+        // profileUrl: state.member.profileUrl,
+        profileUrl:
+          "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg",
         interests: state.member.interests,
       };
       console.log(params, "이것이다.");
@@ -69,6 +71,7 @@ export const accounts = {
         sido: state.member.sido,
         mbti: state.member.mbti,
         profileUrl: state.member.profileUrl,
+        interests: state.member.interests,
       };
       let jwt = sessionStorage.getItem("access-token");
       console.log(jwt);
