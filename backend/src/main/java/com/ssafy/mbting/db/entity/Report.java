@@ -22,14 +22,14 @@ public class Report extends BaseEntity{
     private ReportType type;
 
     @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE
+            fetch = FetchType.LAZY
+//            cascade = CascadeType.REMOVE
     )
     @JoinColumn(name="from_id")
     private Member from_id;
     @ManyToOne(
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE
+            fetch = FetchType.LAZY
+//            cascade = CascadeType.REMOVE
     )
     @JoinColumn(name="to_id")
     private Member to_id;
