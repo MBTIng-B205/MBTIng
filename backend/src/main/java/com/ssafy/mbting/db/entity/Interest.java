@@ -17,7 +17,10 @@ public class Interest extends BaseEntity{
     private String iname;
 
     @Builder.Default
-    @OneToMany(mappedBy = "interest")
+    @OneToMany(
+            mappedBy = "interest",
+            cascade = CascadeType.REMOVE
+    )
     private List<InterestMember> interestMembers = new ArrayList<>();
 
     public static Interest of(String iname){
