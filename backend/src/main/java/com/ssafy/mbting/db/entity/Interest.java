@@ -18,8 +18,8 @@ public class Interest extends BaseEntity{
 
     @Builder.Default
     @OneToMany(
-            mappedBy = "interest",
-            cascade = CascadeType.REMOVE
+            mappedBy = "interest"
+//            cascade = CascadeType.REMOVE
     )
     private List<InterestMember> interestMembers = new ArrayList<>();
 
