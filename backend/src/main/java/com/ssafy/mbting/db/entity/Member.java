@@ -34,20 +34,20 @@ public class Member extends BaseEntity{
 
     @Builder.Default
     @OneToMany(
-            mappedBy = "member",
-            cascade = CascadeType.REMOVE
+            mappedBy = "member"
+//            cascade = CascadeType.REMOVE
     )
     private List<InterestMember> interestMember = new ArrayList<>();
     @Builder.Default
     @OneToMany(
-            mappedBy = "toId",
-            cascade = CascadeType.REMOVE
+            mappedBy = "toId"
+//            cascade = CascadeType.REMOVE
     )
     private List<Message> messages = new ArrayList<>();
     @Builder.Default
     @OneToMany(
-            mappedBy = "toId",
-            cascade = CascadeType.REMOVE
+            mappedBy = "toId"
+//            cascade = CascadeType.REMOVE
     )
     private List<Friend> friends = new ArrayList<>();
 
