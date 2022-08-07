@@ -111,12 +111,18 @@
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { Avatar, Comment, Right } from "@element-plus/icons-vue";
-import { computed, reactive } from "@vue/runtime-core";
+import { computed, onMounted, reactive } from "@vue/runtime-core";
 
 export default {
   setup() {
     const router = useRouter();
     const store = useStore();
+    onMounted(() => {
+      store.dispatch("accounts/getMemberinfo").then(function (res) {
+        store.commit("accounts/SET_MEMBER_INFO", res.data.body);
+        state.memberinfo = computed(() => store.getters["accounts/getMember"]);
+      });
+    });
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       mypageDialog: false,

@@ -42,9 +42,7 @@ export const accounts = {
         birth: state.member.birth,
         sido: state.member.sido,
         mbti: state.member.mbti,
-        // profileUrl: state.member.profileUrl,
-        profileUrl:
-          "http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg",
+        profileUrl: state.member.profileUrl,
         interests: state.member.interests,
       };
       console.log(params, "이것이다.");
@@ -67,20 +65,16 @@ export const accounts = {
     updateMemberinfo({ state }) {
       const params = {
         email: state.member.email,
-        nickname: state.member.nickname,
-        sido: state.member.sido,
-        mbti: state.member.mbti,
-        profileUrl: state.member.profileUrl,
         interests: state.member.interests,
+        mbti: state.member.mbti,
+        nickname: state.member.nickname,
+        profileUrl: state.member.profileUrl,
+        sido: state.member.sido,
       };
       let jwt = sessionStorage.getItem("access-token");
       console.log(jwt);
       console.log("updateparams", params);
-      return axios.put(`${base.baseUrl}/users`, params, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      return axios.put(`${base.baseUrl}/users`, params);
     },
     // 주석추가.
     deleteMemberinfo({ state }) {
