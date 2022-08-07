@@ -1,11 +1,9 @@
 package com.ssafy.mbting.api.controller;
 
 import com.ssafy.mbting.api.response.FriendResponse;
-import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.api.service.FriendService;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.util.BaseResponseUtil;
-import com.ssafy.mbting.db.entity.Friend;
 import com.ssafy.mbting.db.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,9 +19,11 @@ import java.util.List;
 @RequestMapping("/api/friend")
 public class FriendController {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final BaseResponseUtil baseResponseUtil;
     private final MemberService memberService;
     private final FriendService friendService;
+
     // 친구 리스트 조회
     @GetMapping("/")
     @Transactional

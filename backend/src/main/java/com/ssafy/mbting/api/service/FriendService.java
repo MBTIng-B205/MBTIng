@@ -16,4 +16,6 @@ public interface FriendService {
     List<MemberResponse> getFriendByNickname(Member member, String nickname);
 
     List<MemberResponse> getFriendListByMbti(Member member, String mbti);
+
+    boolean checkFriend(Member fromMember, Member toMember);
 }

@@ -2,12 +2,12 @@ package com.ssafy.mbting.api.service;
 
 import com.ssafy.mbting.api.request.MemberRegisterRequest;
 import com.ssafy.mbting.api.request.MemberUpdateRequest;
-import com.ssafy.mbting.db.entity.Interest;
-import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.repository.InterestMemberRepository;
 import com.ssafy.mbting.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final MemberRepository memberRepository;
 	private final InterestMemberRepository interestMemberRepository;
 	private final InterestService interestService;
@@ -25,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member createMember(MemberRegisterRequest userRegisterInfo) {
 		Member member = Member.of(userRegisterInfo);
+
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		return memberRepository.save(member);
 	}
@@ -41,8 +43,10 @@ public class MemberServiceImpl implements MemberService {
 	public Member updateMember(MemberUpdateRequest userRegisterInfo ) {
 		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
 
+
 		interestMemberRepository.deleteAllByMember(updatemember);
 		interestService.insertInterest(userRegisterInfo.getInterests(), updatemember);
+
 
 		updatemember.setNickname(userRegisterInfo.getNickname());
 		updatemember.setMbti(userRegisterInfo.getMbti());
@@ -71,6 +75,5 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return true;
 	}
-
 
 }
