@@ -12,10 +12,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Friend extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE
+    )
     @JoinColumn(name="from_id")
     private Member fromId;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE
+    )
     @JoinColumn(name="to_id")
     private Member toId;
 

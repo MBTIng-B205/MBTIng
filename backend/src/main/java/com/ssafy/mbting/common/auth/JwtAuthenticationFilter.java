@@ -63,6 +63,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             // parse the token and validate it (decode)
             JWTVerifier verifier = JwtTokenUtil.getVerifier();
             JwtTokenUtil.handleError(token);
+            logger.info(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
             DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
             String userId = decodedJWT.getSubject();
             
