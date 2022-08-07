@@ -31,13 +31,17 @@ public class MemberResponse {
 	private List<String> interests = new ArrayList<>();
 
 	public static MemberResponse of(Member member) {
-
+		List<String> newInterests;
+		try {
 		List<InterestMember> interestMembers = member.getInterestMember();
-		List<String> newInterests = new ArrayList<>();
-		for(InterestMember i : interestMembers){
-			newInterests.add(i.getInterest().getIname());
+			newInterests = new ArrayList<>();
+			for (InterestMember i : interestMembers) {
+				newInterests.add(i.getInterest().getIname());
+			}
 		}
-
+		catch (Exception e){
+			newInterests =null;
+		}
 
 		return MemberResponse.builder()
 				.email(member.getEmail())

@@ -13,11 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReportRegisterRequest {
-
-    private Member from_id;
-    private Member to_id;
+    private String from_id;
+    private String to_id;
     private String content;
     @CreationTimestamp
     private LocalDateTime reportTime;
-    private ReportType type;
 }
