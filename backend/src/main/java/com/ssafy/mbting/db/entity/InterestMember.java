@@ -14,10 +14,16 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 public class InterestMember extends BaseEntity {
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(
+            fetch = LAZY,
+            cascade = CascadeType.REMOVE
+    )
     @JoinColumn(name = "interest_id")
     private Interest interest;
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(
+            fetch = LAZY,
+            cascade = CascadeType.REMOVE
+    )
     @JoinColumn(name = "member_id")
     private Member member;
 
