@@ -26,7 +26,7 @@ public class FriendInitData {
         for (int i = 1; i <= 7; i++) {
             gongs.add(Member.builder()
                     .nickname("효진" + i)
-                    .email("rlwls110"+i+"@hanmail.net")
+                    .email("hyojin@gong.com" + i)
                     .gender(false)
                     .mbti("INFJ")
                     .build());
