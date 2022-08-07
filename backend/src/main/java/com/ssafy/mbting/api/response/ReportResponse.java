@@ -15,16 +15,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReportResponse {
 
-    private Member from_id;
-    private Member to_id;
+    private MemberResponse from_id;
+    private MemberResponse to_id;
     private String content;
     @CreationTimestamp
     private LocalDateTime reportTime;
     private ReportType type;
 
     public static ReportResponse of(Report report) {
-        return ReportResponse.builder().from_id(report.getFrom_id())
-                .to_id(report.getTo_id())
+        return ReportResponse.builder().from_id(MemberResponse.of(report.getFrom_id()))
+                .to_id(MemberResponse.of(report.getTo_id()))
                 .content(report.getContent())
                 .reportTime(report.getReportTime())
                 .type(report.getType())

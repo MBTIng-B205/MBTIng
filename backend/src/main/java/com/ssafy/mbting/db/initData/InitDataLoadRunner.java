@@ -16,6 +16,7 @@ public class InitDataLoadRunner implements ApplicationRunner {
     private @Value("${com.mbting.ddl_auto}") String ddlAuto;
     private final FriendInitData friendInitData;
     private final MessageInitData messageInitData;
+    private final AppMemberInitData appMemberInitData;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -23,6 +24,7 @@ public class InitDataLoadRunner implements ApplicationRunner {
             logger.info("\n\n초기 데이터 로딩을 시작합니다.\n");
             messageInitData.create();
             friendInitData.create();
+            appMemberInitData.create();
             logger.info("\n\n초기 데이터 로딩을 마쳤습니다.\n");
         } else {
             logger.info("\n\nddl_auto 속성이 create이 아닙니다. ddl_auto: {}\n", ddlAuto);
