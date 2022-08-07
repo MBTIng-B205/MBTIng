@@ -20,7 +20,8 @@ public class MessageResponse {
     Boolean read;
     Boolean deletedByReceiver;
     Boolean deletedBySender;
-    Boolean friendflag;
+    Boolean tofriendflag;
+    Boolean fromfriendflag;
     LocalDateTime sendTime;
 
     public static MessageResponse of(Message message, Member receiver, Member sender) {
@@ -33,7 +34,8 @@ public class MessageResponse {
                 .deletedByReceiver(message.getDeletedByTo())
                 .deletedBySender(message.getDeletedByFrom())
                 .sendTime(message.getSendTime())
-                .friendflag(message.getFriendflag())
+                .tofriendflag(message.getTofriendflag())
+                .fromfriendflag(message.getFromfriendflag())
                 .build();
     }
 }
