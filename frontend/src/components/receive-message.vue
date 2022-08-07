@@ -403,7 +403,7 @@ export default {
           .dispatch("reports/registerReport", {
             from: state.memberinfo.email,
             to: state.message.sender.email,
-            content: sirenMsg,
+            content: sirenMsg.value,
           })
           .then(function (result) {
             console.log("result-report", result);

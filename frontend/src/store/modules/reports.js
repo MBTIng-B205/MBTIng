@@ -17,7 +17,8 @@ export const reports = {
         from_id: from,
         content: content,
       };
-      return axios.post(`${base.baseUrl}/`, params, {
+      console.log(params);
+      return axios.post(`${base.baseUrl}`, params, {
         headers: {
           "Content-Type": "application/json",
         },
