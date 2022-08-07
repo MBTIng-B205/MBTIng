@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Report extends BaseEntity{
-
+    @NotNull
     private String content;
     @CreationTimestamp
     private LocalDateTime reportTime;
@@ -26,14 +27,5 @@ public class Report extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="to_id")
     private Member to_id;
-
-    public static Report of(ReportRegisterRequest reportRegisterRequest) {
-        return Report.builder().from_id(reportRegisterRequest.getFrom_id())
-                .to_id(reportRegisterRequest.getTo_id())
-                .content(reportRegisterRequest.getContent())
-                .reportTime(reportRegisterRequest.getReportTime())
-                .type(reportRegisterRequest.getType())
-                .build();
-    }
 }
 

@@ -41,11 +41,11 @@ public class ReportTest {
         Member member1 = mbr.createMember(mb1);
         Member member2 = mbr.createMember(mb2);
         ReportRegisterRequest reportRegisterRequest = new ReportRegisterRequest();
-        reportRegisterRequest.setTo_id(member1);
+        //reportRegisterRequest.setTo_id(member1);
 
-        reportRegisterRequest.setFrom_id(member2);
+        //reportRegisterRequest.setFrom_id(member2);
         reportRegisterRequest.setContent("신고간다잉");
-        reportRegisterRequest.setType(ReportType.UNRESOLVED);
+        //reportRegisterRequest.setType(ReportType.UNRESOLVED);
 
         reportService.createReport(reportRegisterRequest);
 
