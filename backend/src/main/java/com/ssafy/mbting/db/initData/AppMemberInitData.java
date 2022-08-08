@@ -3,6 +3,7 @@ package com.ssafy.mbting.db.initData;
 import com.ssafy.mbting.db.entity.Interest;
 import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
+import com.ssafy.mbting.db.enums.Gender;
 import com.ssafy.mbting.db.repository.InterestMemberRepository;
 import com.ssafy.mbting.db.repository.InterestRepository;
 import com.ssafy.mbting.db.repository.MemberRepository;
@@ -31,7 +32,7 @@ public class AppMemberInitData {
         Member d1 = Member.builder()
                 .nickname("이기진")
                 .email("rlwls1101@hanmail.net")
-                .gender(true)
+                .gender(Gender.MALE)
                 .mbti("INTP")
                 .birth(LocalDate.of(1995, 4, 3))
                 .sido("경기")
@@ -39,7 +40,7 @@ public class AppMemberInitData {
         Member d2 = Member.builder()
                 .nickname("이예은")
                 .email("ejrtks261@nate.com")
-                .gender(false)
+                .gender(Gender.MALE)
                 .mbti("INFJ")
                 .birth(LocalDate.of(1998, 8,28))
                 .sido("인천")
@@ -47,7 +48,7 @@ public class AppMemberInitData {
         Member d3 = Member.builder()
                 .nickname("장정훈")
                 .email("hun950803@gmail.com")
-                .gender(true)
+                .gender(Gender.MALE)
                 .mbti("ISFJ")
                 .birth(LocalDate.of(1995, 8, 3))
                 .sido("대전")
@@ -55,7 +56,7 @@ public class AppMemberInitData {
         Member d4 = Member.builder()
                 .nickname("최수연")
                 .email("c.martin20222023@gmail.com")
-                .gender(false)
+                .gender(Gender.FEMALE)
                 .mbti("INFJ")
                 .birth(LocalDate.of(1995, 10, 13))
                 .sido("경기")
@@ -63,7 +64,7 @@ public class AppMemberInitData {
         Member d5 = Member.builder()
                 .nickname("배건길")
                 .email("wmf3362@naver.com")
-                .gender(true)
+                .gender(Gender.MALE)
                 .mbti("INTJ")
                 .birth(LocalDate.of(1994, 2, 5))
                 .sido("대전")
@@ -71,7 +72,7 @@ public class AppMemberInitData {
         Member d6 = Member.builder()
                 .nickname("송제영")
                 .email("wp29dud@naver.com")
-                .gender(true)
+                .gender(Gender.MALE)
                 .mbti("ISTP")
                 .birth(LocalDate.of(1994, 2, 9))
                 .sido("대전")
