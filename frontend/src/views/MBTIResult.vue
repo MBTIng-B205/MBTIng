@@ -37,6 +37,9 @@ export default {
 </script>
 
 <style>
+.logo {
+  width: 250px;
+}
 .small {
   width: 200px;
   height: 250px;

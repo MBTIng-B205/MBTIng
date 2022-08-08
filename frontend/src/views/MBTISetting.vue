@@ -141,6 +141,9 @@ export default {
 </script>
 
 <style>
+.logo {
+  width: 250px;
+}
 .el-button-group .el-button {
   font-size: xx-large;
   width: 100px;
