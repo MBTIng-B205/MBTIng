@@ -17,7 +17,7 @@
     </el-header>
     <el-row
       v-if="state.friends.length != 0"
-      style="flex-direction: row; justify-content: space-between"
+      style="flex-direction: row; justify-content: flex-start"
     >
       <el-col :span="8" v-for="friend in state.friends" :key="friend">
         <el-card @click="onFriendProfile(friend)">
