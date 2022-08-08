@@ -35,7 +35,6 @@ public class MessageController {
 
 
 
-    //하나만 보는거는 message id 가 맞는거 같음
     @GetMapping("/{messageId}/{readtype}")
     public ResponseEntity<?> getMessage(@PathVariable("messageId") Long messageId, @PathVariable("readtype") String readtype) {
         Message message = messageService.getMessage(messageId);
@@ -66,7 +65,6 @@ public class MessageController {
         return baseResponseUtil.success(MessageResponse.of(message, message.getToId(), message.getFromId()));
     }
 
-    //리턴 협의 필요
     @PutMapping("/read")
     public ResponseEntity<?> readMessage(@RequestBody MessageReadRequest messageReadRequest) {
         for (long messageId : messageReadRequest.getReadList()) {
@@ -75,7 +73,6 @@ public class MessageController {
         return baseResponseUtil.success();
     }
 
-    //리턴 협의 필요
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteMessage(@RequestBody MessageDeleteRequest messageDeleteRequest) {
         for (long messageId : messageDeleteRequest.getDeletelist()) {
@@ -93,7 +90,6 @@ public class MessageController {
         return baseResponseUtil.success();
     }
 
-    //보낸 쪽지함
     @PostMapping("fromlist/{email}")
     public ResponseEntity<?> getAllMessagesFromMember(@PathVariable("email") String email, @RequestBody PageNavigation pageNavigation) {
         Page<Message> messages = messageService.getMessagesFromMember(email, pageNavigation);
@@ -116,7 +112,7 @@ public class MessageController {
                 .build());
     }
 
-    //받은 쪽지함
+
     @PostMapping("tolist/{email}")
     public ResponseEntity<?> getAllMessagesToMember(@PathVariable("email") String email, @RequestBody PageNavigation pageNavigation) {
         Page<Message> messages = messageService.getMessagesToMember(email, pageNavigation);
@@ -136,5 +132,4 @@ public class MessageController {
                 .pagingResponse(pagingResponse)
                 .build());
     }
-
 }

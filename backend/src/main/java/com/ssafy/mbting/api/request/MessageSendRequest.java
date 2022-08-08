@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageSendRequest {
-
     private String senderId;
     private String receiverId;
     private String content;

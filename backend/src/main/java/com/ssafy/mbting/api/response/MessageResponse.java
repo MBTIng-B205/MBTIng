@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class MessageResponse {
     Long id;
     String content;
-    //member 리스폰즈를 건드림
     MemberResponse receiver;
     MemberResponse sender;
     Boolean read;
