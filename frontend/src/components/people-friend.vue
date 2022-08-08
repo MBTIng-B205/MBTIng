@@ -35,41 +35,36 @@
               ></el-button>
             </template>
           </el-popconfirm>
-          <img class="friendProfile" src="@/assets/profile.png" />
+          <img class="friendProfile" :src="friend.profileUrl" />
           <div style="font-weight: bold">
             <p>{{ friend.nickname }}</p>
             <p>{{ friend.mbti }}</p>
           </div>
-          <el-button
-            @click.stop="
-              messageDialog = true;
-              check(friend);
-            "
-            >쪽지 보내기</el-button
-          >
-          <el-dialog v-model="messageDialog" @close="messageClose">
-            <el-header style="text-align: left; padding-top: 10px">
-              <span class="to"> TO. </span>
-              <span class="toFriend"> {{ state.toFriend.nickname }}</span>
-              <img class="friendIcon" src="@/assets/friends.png" />
-            </el-header>
-            <el-input
-              v-model="message"
-              type="textarea"
-              placeholder="내용을 입력해주세요"
-              rows="10"
-            />
-            <div style="margin-top: 20px">
-              <el-button type="success" @click="clickSend">전송</el-button>
-              <el-button @click="messageClose">취소</el-button>
-            </div>
-          </el-dialog>
+          <el-button @click.stop="messageOpen(friend)">쪽지 보내기</el-button>
         </el-card>
       </el-col>
     </el-row>
 
     <el-row v-else-if="state.searchFlag">검색한 친구가 없습니다!</el-row>
     <el-row v-else> 친구를 추가해보세요! </el-row>
+
+    <el-dialog v-model="messageDialog" @close="messageClose">
+      <el-header style="text-align: left; padding-top: 10px">
+        <span class="to"> TO. </span>
+        <span class="toFriend"> {{ state.toFriend.nickname }}</span>
+        <img class="friendIcon" src="@/assets/friends.png" />
+      </el-header>
+      <el-input
+        v-model="message"
+        type="textarea"
+        placeholder="내용을 입력해주세요"
+        rows="10"
+      />
+      <div style="margin-top: 20px">
+        <el-button type="success" @click="clickSend">전송</el-button>
+        <el-button @click="messageClose">취소</el-button>
+      </div>
+    </el-dialog>
 
     <el-dialog v-model="state.friendProfileDialog" @close="friendProfileClose">
       <div style="text-align: center">
@@ -252,9 +247,10 @@ export default {
       message.value = "";
     };
 
-    const check = function (friend) {
+    const messageOpen = function (friend) {
       //console.log(friend);
       state.toFriend = friend;
+      messageDialog.value = true;
     };
 
     return {
@@ -271,7 +267,7 @@ export default {
       deleteFriend,
       clickSend,
       messageClose,
-      check,
+      messageOpen,
     };
   },
 };
@@ -285,7 +281,6 @@ export default {
   width: 100px;
   height: 100px;
   margin-left: 40px;
-  border: 1px solid black;
   border-radius: 100%;
   background-color: white;
 }
