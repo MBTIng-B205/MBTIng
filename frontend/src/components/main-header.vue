@@ -34,6 +34,7 @@
     <div style="text-align: center">
       <el-row>
         <img class="profile" :src="state.memberinfo.profileUrl" />
+        <!-- <input type="file" @change="onFileSelected" /> -->
         <el-button style="margin-top: 10px" size="large">프로필 변경</el-button>
       </el-row>
       <el-row>
@@ -44,30 +45,47 @@
           style="margin-top: 30px; margin-bottom: 30px; align-items: center"
         >
           <el-form-item label="MBTI">
-            <el-input style="width: 200px" v-model="state.memberinfo.mbti" />
+            <el-select v-model="state.memberinfo.mbti">
+              <el-option
+                v-for="item in option2"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="닉네임">
             <el-input
               style="width: 200px"
               v-model="state.memberinfo.nickname"
+              @change="checkButtonActive"
             />
-            <el-button @click="nameCheck" style="margin-left: 10px"
-              >중복확인</el-button
+            <button
+              @click.prevent="nameCheck"
+              style="margin-left: 10px"
+              disabled="true"
+              id="checkButton"
             >
+              중복확인
+            </button>
           </el-form-item>
           <el-form-item label="성별">
-            <el-radio-group v-model="state.memberinfo.gender">
-              <el-radio :label="true">남자</el-radio>
-              <el-radio :label="false">여자</el-radio>
+            <el-radio-group v-model="state.memberinfo.gender" disabled>
+              <el-radio :label="Male">남자</el-radio>
+              <el-radio :label="Female">여자</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="생년월일">
-            <el-date-picker v-model="state.memberinfo.birth" type="date" />
+            <el-date-picker
+              v-model="state.memberinfo.birth"
+              type="date"
+              disabled
+            />
           </el-form-item>
           <el-form-item label="지역">
             <el-select v-model="state.memberinfo.sido">
               <el-option
-                v-for="item in option"
+                v-for="item in option1"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -127,7 +145,7 @@ export default {
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       mypageDialog: false,
     });
-    const option = [
+    const option1 = [
       {
         value: "서울",
         label: "서울",
@@ -197,6 +215,83 @@ export default {
         label: "제주",
       },
     ];
+    const option2 = [
+      {
+        value: "INFJ",
+        label: "INFJ",
+      },
+      {
+        value: "INFP",
+        label: "INFP",
+      },
+      {
+        value: "INTJ",
+        label: "INTJ",
+      },
+      {
+        value: "INTP",
+        label: "INTP",
+      },
+      {
+        value: "ISFJ",
+        label: "ISFJ",
+      },
+      {
+        value: "ISFP",
+        label: "ISFP",
+      },
+      {
+        value: "ISTJ",
+        label: "ISTJ",
+      },
+      {
+        value: "ISTP",
+        label: "ISTP",
+      },
+      {
+        value: "ENFJ",
+        label: "ENFJ",
+      },
+      {
+        value: "ENFP",
+        label: "ENFP",
+      },
+      {
+        value: "ENTJ",
+        label: "ENTJ",
+      },
+      {
+        value: "ENTP",
+        label: "ENTP",
+      },
+      {
+        value: "ESFJ",
+        label: "ESFJ",
+      },
+      {
+        value: "ESFP",
+        label: "ESFP",
+      },
+      {
+        value: "ESTJ",
+        label: "ESTJ",
+      },
+      {
+        value: "ESTP",
+        label: "ESTP",
+      },
+    ];
+    const onFileSelected = function (event) {
+      console.log(event);
+    };
+
+    const checkButtonActive = function () {
+      const button = document.querySelector("#checkButton");
+      console.log(state);
+      button.disabled = false;
+      console.log(button.disabled);
+    };
+
     // let flag = false;
     const nameCheck = function () {
       const nickname = state.memberinfo.nickname;
@@ -232,7 +327,7 @@ export default {
         .dispatch("accounts/updateMemberinfo")
         .then(function (result) {
           console.log(result);
-          store.commit("accounts/SET_MEMBER_INFO", result.data);
+          store.commit("accounts/SET_MEMBER_INFO", result.data.body.member);
         })
         .catch(function (err) {
           console.log(err);
@@ -271,7 +366,10 @@ export default {
 
     return {
       state,
-      option,
+      option1,
+      option2,
+      onFileSelected,
+      checkButtonActive,
       nameCheck,
       goHome,
       goPeople,
@@ -325,5 +423,10 @@ export default {
   border-radius: 50%;
   width: 200px;
   height: 200px;
+}
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 </style>

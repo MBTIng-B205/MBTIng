@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
- */
+
 @Service("userService")
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -51,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
 		updatemember.setMbti(userRegisterInfo.getMbti());
 
 		updatemember.setSido(userRegisterInfo.getSido());
-		//updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
+		updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
 		return updatemember;
 	}
 

@@ -76,11 +76,7 @@ export const accounts = {
       console.log("updateparams", params);
       return axios.put(`${base.baseUrl}/users`, params);
     },
-    // 주석추가.
     deleteMemberinfo({ state }) {
-      // const params = {
-      //   email: state.member.email,
-      // };
       console.log(state.member.email);
       return axios.delete(`${base.baseUrl}/users/?email=${state.member.email}`);
     },

@@ -16,13 +16,11 @@ public class InterestMember extends BaseEntity {
 
     @ManyToOne(
             fetch = LAZY
-//            cascade = CascadeType.REMOVE
     )
     @JoinColumn(name = "interest_id")
     private Interest interest;
     @ManyToOne(
             fetch = LAZY
-//            cascade = CascadeType.REMOVE
     )
     @JoinColumn(name = "member_id")
     private Member member;

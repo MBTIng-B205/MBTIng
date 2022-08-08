@@ -30,65 +30,55 @@ import java.util.Map;
 //auth/login
 public class AuthController {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	private final BaseResponseUtil baseResponseUtil;
-	private final MemberService memberService;
-	private final KakaoAPI kakaoApi;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final BaseResponseUtil baseResponseUtil;
+    private final MemberService memberService;
+    private final KakaoAPI kakaoApi;
 
-	@GetMapping("/login")
-	public ResponseEntity<?> login(@RequestParam("code") String code) {
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = null;
-		logger.debug("code "+ code);
-		// 1번 인증코드 요청 전달
+    @GetMapping("/login")
+    public ResponseEntity<?> login(@RequestParam("code") String code) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        logger.debug("code " + code);
+        // 1번 인증코드 요청 전달
 
-		String accessToken = kakaoApi.getAccessToken(code);
+        String accessToken = kakaoApi.getAccessToken(code);
 
-		logger.debug("accessToken : "+accessToken);
-		// 2번 인증코드로 토큰 전달
-		HashMap<String, Object> userInfo = kakaoApi.getUserInfo(accessToken);
+        logger.debug("accessToken : " + accessToken);
+        // 2번 인증코드로 토큰 전달
+        HashMap<String, Object> userInfo = kakaoApi.getUserInfo(accessToken);
 
-		logger.debug("\n\nlogin info: {}\n", userInfo.toString());
+        logger.debug("\n\nlogin info: {}\n", userInfo.toString());
 
-		String token = JwtTokenUtil.getToken((String) userInfo.get("email"));
+        String token = JwtTokenUtil.getToken((String) userInfo.get("email"));
 
-		MemberResponse mres = new MemberResponse();
-		mres.setEmail((String)userInfo.get("email"));
-		mres.setProfileUrl((String)userInfo.get("profile_image"));
-		mres.setNickname((String)userInfo.get("nickname"));
+        MemberResponse mres = new MemberResponse();
+        mres.setEmail((String) userInfo.get("email"));
+        mres.setProfileUrl((String) userInfo.get("profile_image"));
+        mres.setNickname((String) userInfo.get("nickname"));
 
-		if(userInfo.get("email") != null) {
-
-			String msg = "login success";
-
-			Member member = memberService.getUserByEmail((String) userInfo.get("email"));
-			if(member == null){
-				logger.debug("\n\nfjesfjsifjsduifjsie\n");
-
-				return baseResponseUtil.success(MemberLoginResponse.builder()
-								.visited(false)
-								.jwt(token)
-								.member(mres)
-								.build());
-			} else if (member.getDeleted() == true) {
-				return baseResponseUtil.success(MemberLoginResponse.builder()
-						.visited(false)
-						.jwt(token)
-						.member(mres)
-						.build());
-			}
-			logger.debug("여기서걸림");
-			logger.debug("{}", userInfo);
-			logger.debug("token = " + token);
-		}else {
-			logger.debug("이메일이 안 왔다");
-			logger.debug("우선순위 낮은 우리의 숙제~~~~~~");
-			return baseResponseUtil.fail("no email");
-		}
-		return baseResponseUtil.success(MemberLoginResponse.builder()
-				.visited(true)
-				.jwt(token)
-				.member(mres)
-				.build());
-	}
+        if (userInfo.get("email") != null) {
+            Member member = memberService.getUserByEmail((String) userInfo.get("email"));
+            if (member == null) {
+                return baseResponseUtil.success(MemberLoginResponse.builder()
+                        .visited(false)
+                        .jwt(token)
+                        .member(mres)
+                        .build());
+            } else if (member.getDeleted() == true) {
+                return baseResponseUtil.success(MemberLoginResponse.builder()
+                        .visited(false)
+                        .jwt(token)
+                        .member(mres)
+                        .build());
+            }
+        } else {
+            return baseResponseUtil.fail("no email");
+        }
+        return baseResponseUtil.success(MemberLoginResponse.builder()
+                .visited(true)
+                .jwt(token)
+                .member(mres)
+                .build());
+    }
 }
