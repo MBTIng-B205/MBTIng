@@ -52,7 +52,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-container {
   margin-top: 40px;
   display: flex;

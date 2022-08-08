@@ -173,12 +173,6 @@ export default {
   z-index: 1;
 }
 
-.logo {
-  display: flex;
-  height: 80px;
-  width: 80px;
-}
-
 .navbar {
   background-color: #fff4b8;
   display: flex;
