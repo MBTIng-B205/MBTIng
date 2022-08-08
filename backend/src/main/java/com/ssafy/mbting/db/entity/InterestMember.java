@@ -1,11 +1,8 @@
 package com.ssafy.mbting.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -16,10 +13,17 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InterestMember extends BaseEntity {
-    @ManyToOne(fetch = LAZY)
+
+    @ManyToOne(
+            fetch = LAZY
+//            cascade = CascadeType.REMOVE
+    )
     @JoinColumn(name = "interest_id")
     private Interest interest;
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(
+            fetch = LAZY
+//            cascade = CascadeType.REMOVE
+    )
     @JoinColumn(name = "member_id")
     private Member member;
 

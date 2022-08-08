@@ -16,11 +16,11 @@
       </el-row>
     </el-header>
     <el-row
-      v-if="state.friends.length != 0 && !state.searchFlag"
+      v-if="state.friends.length != 0"
       style="flex-direction: row; justify-content: space-between"
     >
       <el-col :span="8" v-for="friend in state.friends" :key="friend">
-        <el-card @click="onfriendsProfile(friend)">
+        <el-card @click="onFriendProfile(friend)">
           <el-popconfirm
             confirm-button-text="삭제"
             cancel-button-text="취소"
@@ -28,7 +28,11 @@
             @confirm="deleteFriend(friend)"
           >
             <template #reference>
-              <el-button class="delete" :icon="CircleCloseFilled"></el-button>
+              <el-button
+                @click.stop
+                class="delete"
+                :icon="CircleCloseFilled"
+              ></el-button>
             </template>
           </el-popconfirm>
           <img class="friendProfile" src="@/assets/profile.png" />
@@ -38,15 +42,15 @@
           </div>
           <el-button
             @click.stop="
-              dialogVisible = true;
+              messageDialog = true;
               check(friend);
             "
             >쪽지 보내기</el-button
           >
-          <el-dialog v-model="dialogVisible" @close="messageClose">
+          <el-dialog v-model="messageDialog" @close="messageClose">
             <el-header style="text-align: left; padding-top: 10px">
               <span class="to"> TO. </span>
-              <span class="toFriend"> {{ toFriend }}</span>
+              <span class="toFriend"> {{ state.toFriend.nickname }}</span>
               <img class="friendIcon" src="@/assets/friends.png" />
             </el-header>
             <el-input
@@ -57,14 +61,14 @@
             />
             <div style="margin-top: 20px">
               <el-button type="success" @click="clickSend">전송</el-button>
-              <el-button @click="handleClose">취소</el-button>
+              <el-button @click="messageClose">취소</el-button>
             </div>
           </el-dialog>
         </el-card>
       </el-col>
     </el-row>
 
-    <el-row v-else-if="state.search">검색한 친구가 없습니다!</el-row>
+    <el-row v-else-if="state.searchFlag">검색한 친구가 없습니다!</el-row>
     <el-row v-else> 친구를 추가해보세요! </el-row>
 
     <el-dialog v-model="state.friendProfileDialog" @close="friendProfileClose">
@@ -94,11 +98,10 @@
               />
             </el-form-item>
             <el-form-item label="성별">
-              <el-input
-                style="width: 200px"
-                v-model="state.friend.gender"
-                readonly
-              />
+              <el-radio-group v-model="state.friend.gender">
+                <el-radio :label="true" disabled>남자</el-radio>
+                <el-radio :label="false" disabled>여자</el-radio>
+              </el-radio-group>
             </el-form-item>
             <el-form-item label="생년월일">
               <el-input
@@ -136,6 +139,7 @@ export default {
       friendProfileDialog: false,
       friends: [],
       friend: {},
+      toFriend: {},
     });
 
     onMounted(() => {
@@ -148,8 +152,7 @@ export default {
         });
     });
 
-    const toFriend = ref("");
-    const dialogVisible = ref(false);
+    const messageDialog = ref(false);
     const message = ref("");
 
     const onFriendProfile = function (friend) {
@@ -221,29 +224,45 @@ export default {
       if (message.value == "") {
         alert("보낼 내용을 입력하세요!");
       } else {
-        alert("쪽지 전송 완료!");
+        console.log(
+          "send",
+          state.memberinfo.email +
+            " " +
+            state.toFriend.email +
+            " " +
+            message.value
+        );
+
+        store
+          .dispatch("messages/sendMsg", {
+            senderId: state.memberinfo.email,
+            receiverId: state.toFriend.email,
+            content: message.value,
+          })
+          .then(function (result) {
+            console.log("sendmsg", result);
+            alert("쪽지 전송 완료!");
+          });
         messageClose();
       }
     };
 
     const messageClose = function () {
-      dialogVisible.value = false;
+      messageDialog.value = false;
       message.value = "";
-      toFriend.value = "";
     };
 
     const check = function (friend) {
       //console.log(friend);
-      toFriend.value = friend.nickname;
+      state.toFriend = friend;
     };
 
     return {
       state,
       search,
       key,
-      dialogVisible,
+      messageDialog,
       message,
-      toFriend,
       CircleCloseFilled,
       UserFilled,
       onFriendProfile,
@@ -292,5 +311,10 @@ export default {
   width: 25px;
   height: 25px;
   margin-left: 15px;
+}
+.profile {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
 }
 </style>

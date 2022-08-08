@@ -9,18 +9,61 @@ const base = {
 export const messages = {
   namespaced: true,
   actions: {
-    sendMsg({ msg }) {
+    sendMsg({ state }, { senderId, receiverId, content }) {
+      console.log(state);
+      console.log("msg", senderId + " " + receiverId + " " + content);
       const params = {
-        senderId: msg.fromFriend,
-        receiverId: msg.toFriend,
-        content: msg.content,
+        senderId: senderId,
+        receiverId: receiverId,
+        content: content,
       };
-      console.log("sendMSg", msg);
+      console.log("sendMSg-axios", params);
       return axios.post(`${base.baseUrl}/`, params, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+    },
+
+    getSendList({ state }, { email, page, key, word, size }) {
+      console.log(state);
+      const params = {
+        page: page,
+        searchUtil: {
+          key: key,
+          word: word,
+        },
+        size: size,
+      };
+      console.log("getSendList", email + " " + params);
+      return axios.post(`${base.baseUrl}/fromlist/${email}`, params, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+
+    deleteSendList({ state }, { list }) {
+      console.log(state);
+      console.log(list);
+      let del = [];
+      for (let i = 0; i < list.length; i++) {
+        del.push(list[i]);
+      }
+      const params = {
+        deletedBy: "SENDER",
+        deletelist: del,
+      };
+      console.log("delete", params);
+      return axios.delete(
+        `${base.baseUrl}/delete`,
+        { data: params },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
     },
   },
 };

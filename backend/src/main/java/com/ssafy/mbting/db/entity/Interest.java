@@ -13,12 +13,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Interest extends BaseEntity{
+
     private String iname;
-    @OneToMany(mappedBy = "interest")
+
+    @Builder.Default
+    @OneToMany(
+            mappedBy = "interest"
+//            cascade = CascadeType.REMOVE
+    )
     private List<InterestMember> interestMembers = new ArrayList<>();
 
     public static Interest of(String iname){
         return Interest.builder().iname(iname).build();
     }
 }
-
