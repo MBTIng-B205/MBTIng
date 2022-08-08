@@ -4,6 +4,7 @@ import com.ssafy.mbting.api.request.MemberRegisterRequest;
 import com.ssafy.mbting.api.request.MemberUpdateRequest;
 import com.ssafy.mbting.api.response.MemberRegisterResponse;
 import com.ssafy.mbting.api.response.MemberResponse;
+import com.ssafy.mbting.api.service.InterestMemberService;
 import com.ssafy.mbting.api.service.InterestService;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.auth.MemberDetails;
@@ -38,15 +39,27 @@ public class MemberController {
 	private final MemberService memberService;
 	private final ResourceLoader resLoader;
 	private final BaseResponseUtil baseResponseUtil;
-	private  final InterestService interestService;
+	private final InterestService interestService;
+	private final InterestMemberService interestMemberService;
 
 	@PostMapping()
 
 	@Transactional
 	public ResponseEntity<?> register(@RequestBody	MemberRegisterRequest registerInfo) {
-		Member member = memberService.createMember(registerInfo);
-
-		member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
+		Member member = memberService.getUserByEmail(registerInfo.getEmail());
+		if(member.getDeleted() == true){
+			member.setNickname(registerInfo.getNickname());
+			member.setGender(registerInfo.getGender());
+			member.setBirth(registerInfo.getBirth());
+			member.setMbti(registerInfo.getMbti());
+			member.setProfileUrl(registerInfo.getProfileUrl());
+			interestMemberService.deleteAllByMember(member);
+			member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
+			member.setDeleted(false);
+		} else {
+			member = memberService.createMember(registerInfo);
+			member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
+		}
 		return baseResponseUtil.success(MemberRegisterResponse.builder()
 				.member(MemberResponse.of(member))
 				.build());
@@ -74,7 +87,6 @@ public class MemberController {
 	@PutMapping()
 	public ResponseEntity<?> updateMember(
 			@RequestBody MemberUpdateRequest updateInfo) {
-		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		Member member = memberService.updateMember(updateInfo);
 
 		return baseResponseUtil.success(MemberRegisterResponse.builder()
