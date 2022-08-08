@@ -109,6 +109,7 @@ public class MemberController {
                 memberService.updateMember(MemberUpdateRequest.of(member));
             }
         } catch (Exception e) {
+            System.out.println(e);
             return baseResponseUtil.fail("file upload fail");
         }
         return baseResponseUtil.success(MemberRegisterResponse.builder()

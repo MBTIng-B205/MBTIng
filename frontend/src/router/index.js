@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
-import MBTITest from "@/views/MBTITest";
+import MyMBTITest from "@/views/MyMBTITest";
+import MyMBTIResult from "@/views/MyMBTIResult";
+import YourMBTITest from "@/views/YourMBTITest";
+import YourMBTIResult from "@/views/YourMBTIResult";
 import MBTISetting from "@/views/MBTISetting";
 import ProfileSetting from "@/views/ProfileSetting";
 import HomeView from "@/views/HomeView";
 import LoginView from "@/views/LoginView";
 import People from "@/views/PeoplePage";
-import MBTIResult from "@/views/MBTIResult";
 import MeetingWait from "@/views/MeetingWait";
 import MeetingMatch from "@/views/MeetingMatch";
 import LogoutView from "@/views/LogoutView";
@@ -33,14 +35,24 @@ const routes = [
     component: MBTISetting,
   },
   {
-    path: "/mbtitest",
-    name: "MBTITest",
-    component: MBTITest,
+    path: "/mymbtitest",
+    name: "MyMBTITest",
+    component: MyMBTITest,
   },
   {
-    path: "/mbtiresult",
-    name: "MBTIResult",
-    component: MBTIResult,
+    path: "/mymbtiresult",
+    name: "MyMBTIResult",
+    component: MyMBTIResult,
+  },
+  {
+    path: "/yourmbtitest",
+    name: "YourMBTITest",
+    component: YourMBTITest,
+  },
+  {
+    path: "/yourmbtiresult",
+    name: "YourMBTIResult",
+    component: YourMBTIResult,
   },
   {
     path: "/profilesetting",

@@ -25,6 +25,12 @@
       >
     </el-row>
     <table class="table">
+      <colgroup>
+        <col width="10%" />
+        <col width="25%" />
+        <col width="40%" />
+        <col width="25%" />
+      </colgroup>
       <thead v-if="state.messageList.length != 0">
         <tr>
           <th>
