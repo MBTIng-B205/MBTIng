@@ -34,7 +34,7 @@
     <div style="text-align: center">
       <el-row>
         <img class="profile" :src="state.memberinfo.profileUrl" />
-        <!-- <input type="file" @change="onFileSelected" /> -->
+        <input type="file" @change="onFileSelected" />
         <el-button style="margin-top: 10px" size="large">프로필 변경</el-button>
       </el-row>
       <el-row>
@@ -144,6 +144,7 @@ export default {
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       mypageDialog: false,
+      image: "",
     });
     const option1 = [
       {
@@ -281,8 +282,17 @@ export default {
         label: "ESTP",
       },
     ];
+
     const onFileSelected = function (event) {
-      console.log(event);
+      event.preventDefault();
+      console.log(event.target.files);
+      //console.log(uploadimage.value);
+      state.image = event.target.files[0];
+      store
+        .dispatch("accounts/profileUpload", state.image)
+        .then(function (res) {
+          store.commit("accounts/SET_MEMBER_INFO", res.data.body.member);
+        });
     };
 
     const checkButtonActive = function () {
