@@ -84,7 +84,7 @@ export default {
   padding: 10px;
   height: 275px;
   width: 600px;
-  border: 20px solid #e3842d;
+  border: 20px solid deeppink;
   background-color: white;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
 }
