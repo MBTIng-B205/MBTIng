@@ -51,7 +51,9 @@
               style="width: 200px"
               v-model="state.memberinfo.nickname"
             />
-            <el-button>중복확인</el-button>
+            <el-button @click="nameCheck" style="margin-left: 10px"
+              >중복확인</el-button
+            >
           </el-form-item>
           <el-form-item label="성별">
             <el-radio-group v-model="state.memberinfo.gender">
@@ -72,6 +74,29 @@
               />
             </el-select>
           </el-form-item>
+          <el-col style="flex-direction: column">
+            <el-form-item label="관심사">
+              <el-checkbox-group
+                v-model="state.memberinfo.interests"
+                style="width: 380px; align-items: center"
+              >
+                <el-checkbox label="캠핑" name="캠핑" />
+                <el-checkbox label="맛집탐방" name="맛집탐방" />
+                <el-checkbox label="코딩" name="코딩" />
+                <el-checkbox label="TV/영화" name="TV/영화" />
+                <el-checkbox label="스포츠" name="스포츠" />
+                <el-checkbox label="술" name="술" />
+                <el-checkbox label="음악" name="음악" />
+                <el-checkbox label="쇼핑" name="쇼핑" />
+                <el-checkbox label="자동차" name="자동차" />
+                <el-checkbox label="게임" name="게임" />
+                <el-checkbox label="동물" name="동물" />
+                <el-checkbox label="패션" name="패션" />
+                <el-checkbox label="뷰티" name="뷰티" />
+                <el-checkbox label="디자인" name="디자인" />
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
         </el-form>
       </el-row>
       <el-footer>
@@ -86,12 +111,18 @@
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { Avatar, Comment, Right } from "@element-plus/icons-vue";
-import { computed, reactive } from "@vue/runtime-core";
+import { computed, onMounted, reactive } from "@vue/runtime-core";
 
 export default {
   setup() {
     const router = useRouter();
     const store = useStore();
+    onMounted(() => {
+      store.dispatch("accounts/getMemberinfo").then(function (res) {
+        store.commit("accounts/SET_MEMBER_INFO", res.data.body);
+        state.memberinfo = computed(() => store.getters["accounts/getMember"]);
+      });
+    });
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       mypageDialog: false,
@@ -166,6 +197,21 @@ export default {
         label: "제주",
       },
     ];
+    // let flag = false;
+    const nameCheck = function () {
+      const nickname = state.memberinfo.nickname;
+      console.log("이거는프로필 닉네임", nickname);
+      store.dispatch("accounts/getUserName", { nickname }).then(function (res) {
+        console.log("res", res);
+        if (res.data.body === true) {
+          alert("사용가능한 닉네임 입니다.");
+          // flag = true;
+        } else {
+          alert("중복 된 닉네임입니다.");
+          // flag = false;
+        }
+      });
+    };
     const goHome = function () {
       router.push({ name: "HomeView" });
     };
@@ -175,6 +221,7 @@ export default {
     };
     const goMyPage = function () {
       state.mypageDialog = true;
+      console.log("mypage", state.memberinfo);
     };
 
     const handleClose = function () {
@@ -225,6 +272,7 @@ export default {
     return {
       state,
       option,
+      nameCheck,
       goHome,
       goPeople,
       goMyPage,

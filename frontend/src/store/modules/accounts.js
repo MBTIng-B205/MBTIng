@@ -65,19 +65,16 @@ export const accounts = {
     updateMemberinfo({ state }) {
       const params = {
         email: state.member.email,
-        nickname: state.member.nickname,
-        sido: state.member.sido,
+        interests: state.member.interests,
         mbti: state.member.mbti,
+        nickname: state.member.nickname,
         profileUrl: state.member.profileUrl,
+        sido: state.member.sido,
       };
       let jwt = sessionStorage.getItem("access-token");
       console.log(jwt);
       console.log("updateparams", params);
-      return axios.put(`${base.baseUrl}/users`, params, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      return axios.put(`${base.baseUrl}/users`, params);
     },
     // 주석추가.
     deleteMemberinfo({ state }) {

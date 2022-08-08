@@ -8,7 +8,6 @@ import People from "@/views/PeoplePage";
 import MBTIResult from "@/views/MBTIResult";
 import MeetingWait from "@/views/MeetingWait";
 import MeetingMatch from "@/views/MeetingMatch";
-import MyPage from "@/views/MyPage";
 import LogoutView from "@/views/LogoutView";
 import MeetingRoom from "@/views/MeetingRoom";
 
@@ -28,12 +27,6 @@ const routes = [
     name: "LogoutView",
     component: LogoutView,
   },
-  {
-    path: "/mypage",
-    name: "MyPage",
-    component: MyPage,
-  },
-
   {
     path: "/mbtisetting",
     name: "MBTISetting",
