@@ -13,9 +13,7 @@ import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-/**
- * 컨트롤러(controller)가 아닌곳에서, 서버 응답값(바디) 직접 변경 및 전달 하기위한 유틸 정의.
- */
+
 public class ResponseBodyWriteUtil {
 	
 	public static void sendApiResponse(HttpServletResponse response, BaseResponseBody apiResponse) throws IOException {

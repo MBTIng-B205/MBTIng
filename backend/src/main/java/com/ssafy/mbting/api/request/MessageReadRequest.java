@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageReadRequest {
-
+    @Builder.Default
     private List<Long> readList= new ArrayList<>();
-
 }

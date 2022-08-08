@@ -39,20 +39,16 @@ public class Member extends BaseEntity{
     @Builder.Default
     @OneToMany(
             mappedBy = "member"
-//            cascade = CascadeType.PERSIST,
-//            orphanRemoval = true
     )
     private List<InterestMember> interestMember = new ArrayList<>();
     @Builder.Default
     @OneToMany(
             mappedBy = "toId"
-//            cascade = CascadeType.REMOVE
     )
     private List<Message> messages = new ArrayList<>();
     @Builder.Default
     @OneToMany(
             mappedBy = "toId"
-//            cascade = CascadeType.REMOVE
     )
     private List<Friend> friends = new ArrayList<>();
 

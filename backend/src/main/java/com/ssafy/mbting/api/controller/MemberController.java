@@ -26,116 +26,99 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
- */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class MemberController {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	private final MemberService memberService;
-	private final ResourceLoader resLoader;
-	private final BaseResponseUtil baseResponseUtil;
-	private final InterestService interestService;
-	private final InterestMemberService interestMemberService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final MemberService memberService;
+    private final ResourceLoader resLoader;
+    private final BaseResponseUtil baseResponseUtil;
+    private final InterestService interestService;
+    private final InterestMemberService interestMemberService;
 
-	@PostMapping()
+    @PostMapping()
+    @Transactional
+    public ResponseEntity<?> register(@RequestBody MemberRegisterRequest registerInfo) {
+        Member member = memberService.getUserByEmail(registerInfo.getEmail());
+        if (member.getDeleted() == true) {
+            member.setNickname(registerInfo.getNickname());
+            member.setGender(registerInfo.getGender());
+            member.setBirth(registerInfo.getBirth());
+            member.setMbti(registerInfo.getMbti());
+            member.setProfileUrl(registerInfo.getProfileUrl());
+            interestMemberService.deleteAllByMember(member);
+            member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
+            member.setDeleted(false);
+        } else {
+            member = memberService.createMember(registerInfo);
+            member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
+        }
+        return baseResponseUtil.success(MemberRegisterResponse.builder()
+                .member(MemberResponse.of(member))
+                .build());
+    }
 
-	@Transactional
-	public ResponseEntity<?> register(@RequestBody	MemberRegisterRequest registerInfo) {
-		Member member = memberService.getUserByEmail(registerInfo.getEmail());
-		if(member.getDeleted() == true){
-			member.setNickname(registerInfo.getNickname());
-			member.setGender(registerInfo.getGender());
-			member.setBirth(registerInfo.getBirth());
-			member.setMbti(registerInfo.getMbti());
-			member.setProfileUrl(registerInfo.getProfileUrl());
-			interestMemberService.deleteAllByMember(member);
-			member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
-			member.setDeleted(false);
-		} else {
-			member = memberService.createMember(registerInfo);
-			member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
-		}
-		return baseResponseUtil.success(MemberRegisterResponse.builder()
-				.member(MemberResponse.of(member))
-				.build());
-	}
-	
-	@GetMapping("/me")
-	@Transactional
-	public ResponseEntity<?> getMemberInfo(
-			Authentication authentication) {
-		/**
-		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
-		 * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
-		 */
-		MemberDetails userDetails = (MemberDetails) authentication.getDetails();
+    @GetMapping("/me")
+    @Transactional
+    public ResponseEntity<?> getMemberInfo(Authentication authentication) {
+        MemberDetails userDetails = (MemberDetails) authentication.getDetails();
+        if (userDetails == null)
+            return ResponseEntity.badRequest().build();
+        Member member = userDetails.getMember();
+        member.setInterestMember(interestService.getInterest(member));
+        return baseResponseUtil.success(MemberResponse.of(userDetails.getMember()));
+    }
 
-		if (userDetails == null)
-			return ResponseEntity.badRequest().build();
-		Member member = userDetails.getMember();
+    @PutMapping()
+    public ResponseEntity<?> updateMember(@RequestBody MemberUpdateRequest updateInfo) {
+        Member member = memberService.updateMember(updateInfo);
 
-		member.setInterestMember(interestService.getInterest(member));
+        return baseResponseUtil.success(MemberRegisterResponse.builder()
+                .member(MemberResponse.of(member))
+                .build());
+    }
 
-		return baseResponseUtil.success(MemberResponse.of(userDetails.getMember()));
-	}
+    @GetMapping("/")
+    public ResponseEntity<?> validCheck(@RequestParam(value = "nickname") String nickname) {
+        return baseResponseUtil.success(memberService.nicknameValid(nickname));
+    }
 
-	@PutMapping()
-	public ResponseEntity<?> updateMember(
-			@RequestBody MemberUpdateRequest updateInfo) {
-		Member member = memberService.updateMember(updateInfo);
+    @PostMapping("userprofile/{email}")
+    public ResponseEntity<?> userProfile(@PathVariable("email") String email, @RequestParam("upfile") MultipartFile file) {
+        Member member = memberService.getUserByEmail(email);
+        try {
+            if (!file.isEmpty()) {
+                Resource res = resLoader.getResource("classpath:static/upload");
+                String canonicalPath = res.getFile().getCanonicalPath();
+                String today = new SimpleDateFormat("yyMMdd").format(new Date());
+                String saveFolder = canonicalPath + File.separator + today;
+                File folder = new File(saveFolder);
+                System.out.println("folder.toString() = " + folder.toString());
+                if (!folder.exists())
+                    folder.mkdirs();
+                String originalFileName = file.getOriginalFilename();
+                String extension = originalFileName.substring(originalFileName.lastIndexOf("."), originalFileName.length());
+                UUID uuid = UUID.randomUUID();
+                String filename = uuid.toString() + extension;
 
-		return baseResponseUtil.success(MemberRegisterResponse.builder()
-				.member(MemberResponse.of(member))
-				.build());
-	}
+                file.transferTo(new File(folder, filename));
+                member.setProfileUrl("http://localhost:8080/static/upload/" + today + "/" + filename);
+                memberService.updateMember(MemberUpdateRequest.of(member));
+            }
+        } catch (Exception e) {
+            return baseResponseUtil.fail("file upload fail");
+        }
+        return baseResponseUtil.success(MemberRegisterResponse.builder()
+                .member(MemberResponse.of(member))
+                .build());
+    }
 
-	@GetMapping("/")
-	public ResponseEntity<?> validCheck(@RequestParam(value = "nickname") String nickname){
-		return baseResponseUtil.success(memberService.nicknameValid(nickname));
-	}
+    @DeleteMapping("/")
+    public ResponseEntity<?> delete(@RequestParam(value = "email") String email) {
 
-	@PostMapping("userprofile/{email}")
-	public ResponseEntity<?> userProfile(@PathVariable("email") String email, @RequestParam("upfile") MultipartFile file) {
-		Member member = memberService.getUserByEmail(email);
-		try {
-			if(!file.isEmpty()) {
-				Resource res = resLoader.getResource("classpath:static/upload");
-				String canonicalPath = res.getFile().getCanonicalPath();
-				String today = new SimpleDateFormat("yyMMdd").format(new Date());
-				String saveFolder = canonicalPath + File.separator + today;
-				File folder = new File(saveFolder);
-				System.out.println("folder.toString() = " + folder.toString());
-				if (!folder.exists())
-					folder.mkdirs();
-				String originalFileName = file.getOriginalFilename();
-				String extension  = originalFileName.substring(originalFileName.lastIndexOf("."), originalFileName.length());
-				UUID uuid = UUID.randomUUID();
-				String filename = uuid.toString()+extension;
-
-				file.transferTo(new File(folder,filename));
-				member.setProfileUrl("http://localhost:8080/static/upload/"+today+"/"+filename);
-				memberService.updateMember(MemberUpdateRequest.of(member));
-			}
-		}catch (Exception e) {
-			//여기 수정 필요
-			e.printStackTrace();
-			return ResponseEntity.accepted().body(MemberRegisterResponse.builder()
-					.member(MemberResponse.of(member))
-					.build());
-		}
-		return ResponseEntity.ok().body(MemberRegisterResponse.builder()
-				.member(MemberResponse.of(member))
-				.build());
-	}
-
-	@DeleteMapping("/")
-	public ResponseEntity<?> delete(@RequestParam(value = "email") String email){
-
-		return baseResponseUtil.success(memberService.deleteMember(email));
-	}
+        return baseResponseUtil.success(memberService.deleteMember(email));
+    }
 }
