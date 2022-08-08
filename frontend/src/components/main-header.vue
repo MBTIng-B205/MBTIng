@@ -184,6 +184,7 @@ export default {
       store
         .dispatch("accounts/updateMemberinfo")
         .then(function (result) {
+          console.log(result);
           store.commit("accounts/SET_MEMBER_INFO", result.data);
         })
         .catch(function (err) {
