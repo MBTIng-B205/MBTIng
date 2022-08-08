@@ -70,6 +70,12 @@ public class AuthController {
 								.jwt(token)
 								.member(mres)
 								.build());
+			} else if (member.getDeleted() == true) {
+				return baseResponseUtil.success(MemberLoginResponse.builder()
+						.visited(false)
+						.jwt(token)
+						.member(mres)
+						.build());
 			}
 			logger.debug("여기서걸림");
 			logger.debug("{}", userInfo);
