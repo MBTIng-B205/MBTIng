@@ -38,16 +38,29 @@
         ></el-row>
       </el-footer>
     </el-card>
+    <button id="send" @click="send">test</button>
   </el-container>
 </template>
 
 <script>
-import { ref } from "vue";
+import { useStore } from "vuex";
+import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 export default {
   setup() {
     const loading = ref(true);
     const router = useRouter();
+    const store = useStore();
+    const state = reactive({
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+      proposal: null,
+      stompClient: null,
+    });
+    onMounted(() => {
+      connect();
+    });
     const svg = `
         <path class="path" d="
           M 30 15
@@ -66,7 +79,59 @@ export default {
     const goHome = function () {
       router.push({ name: "HomeView" });
     };
-    return { loading, svg, Info, goHome };
+
+    const connect = function () {
+      const serverURL = "http://localhost:8080/ws/connect";
+      let socket = new SockJS(serverURL);
+      state.stompClient = Stomp.over(socket);
+      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
+      state.stompClient.connect(
+        {},
+        (frame) => {
+          // 소켓 연결 성공
+          state.stompClient.connected = true;
+          console.log("소켓 연결 성공", frame);
+          // 서버의 메시지 전송 endpoint를 구독합니다.
+          // 이런형태를 pub sub 구조라고 합니다.
+          console.log(state.memberinfo.email);
+          state.stompClient.subscribe(
+            `http://localhost:8080/ws/dest/indi/${state.memberinfo.email}`,
+            (res) => {
+              //prop
+              console.log("받은 메시지", res.body);
+              state.proposal = res.body;
+            }
+          );
+        },
+        (error) => {
+          // 소켓 연결 실패
+          console.log("소켓 연결 실패", error);
+          this.connected = false;
+        }
+      );
+    };
+
+    watch(
+      () => state.proposal,
+      (data) => {
+        console.log(data);
+        send();
+      }
+    );
+    const send = function () {
+      console.log("send 실행");
+      const data = {
+        email: state.memberinfo.email,
+        //jwt 추가로 줘야함
+      };
+      console.log(data);
+      state.stompClient.send(
+        `/ws/msg/indi/${state.memberinfo.email}`,
+        { email: `${state.memberinfo.email}` },
+        JSON.stringify({ msg: "" })
+      );
+    };
+    return { loading, svg, Info, goHome, connect, send };
   },
 };
 </script>
