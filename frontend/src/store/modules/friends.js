@@ -37,6 +37,11 @@ export const friends = {
         },
       });
     },
+    addFriend({ state }, { to, from }) {
+      console.log(state);
+      console.log("addFriend", to + " " + from);
+      return axios.post(`${base.baseUrl}/${from}/${to}`);
+    },
     deleteFriend({ state }, { to, from }) {
       console.log("deleteFriend");
       console.log("state", state);
