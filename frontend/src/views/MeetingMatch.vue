@@ -48,8 +48,7 @@ export default {
       gender: true,
       mbti: "ENFP",
     };
-    //const user = computed(());
-
+    //     //const user = computed(());
     return { user };
   },
 };

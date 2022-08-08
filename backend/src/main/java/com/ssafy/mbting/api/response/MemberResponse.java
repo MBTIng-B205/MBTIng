@@ -31,8 +31,10 @@ public class MemberResponse {
 	private List<String> interests = new ArrayList<>();
 
 	public static MemberResponse of(Member member) {
+
 		List<String> newInterests;
 		try {
+
 		List<InterestMember> interestMembers = member.getInterestMember();
 			newInterests = new ArrayList<>();
 			for (InterestMember i : interestMembers) {
@@ -42,6 +44,7 @@ public class MemberResponse {
 		catch (Exception e){
 			newInterests =null;
 		}
+
 
 		return MemberResponse.builder()
 				.email(member.getEmail())
