@@ -31,6 +31,7 @@ public class MemberResponse {
 	private List<String> interests = new ArrayList<>();
 
 	public static MemberResponse of(Member member) {
+
 		List<String> newInterests;
 		try {
 		List<InterestMember> interestMembers = member.getInterestMember();
