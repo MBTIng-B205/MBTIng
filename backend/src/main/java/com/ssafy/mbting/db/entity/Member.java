@@ -1,6 +1,7 @@
 package com.ssafy.mbting.db.entity;
 
 import com.ssafy.mbting.api.request.MemberRegisterRequest;
+import com.ssafy.mbting.db.enums.Gender;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,7 +26,8 @@ public class Member extends BaseEntity{
     private String email;
     @Column(unique = true)
     private String nickname;
-    private boolean gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
     private String sido;
@@ -37,20 +39,16 @@ public class Member extends BaseEntity{
     @Builder.Default
     @OneToMany(
             mappedBy = "member"
-//            cascade = CascadeType.PERSIST,
-//            orphanRemoval = true
     )
     private List<InterestMember> interestMember = new ArrayList<>();
     @Builder.Default
     @OneToMany(
             mappedBy = "toId"
-//            cascade = CascadeType.REMOVE
     )
     private List<Message> messages = new ArrayList<>();
     @Builder.Default
     @OneToMany(
             mappedBy = "toId"
-//            cascade = CascadeType.REMOVE
     )
     private List<Friend> friends = new ArrayList<>();
 

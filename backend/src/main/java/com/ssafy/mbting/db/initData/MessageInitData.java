@@ -2,6 +2,7 @@ package com.ssafy.mbting.db.initData;
 
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.entity.Message;
+import com.ssafy.mbting.db.enums.Gender;
 import com.ssafy.mbting.db.repository.MemberRepository;
 import com.ssafy.mbting.db.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,13 @@ public class MessageInitData {
         Member hong = memberRepository.save(Member.builder()
                 .nickname("홍길동")
                 .email("gildong@hong.com")
-                .gender(true)
+                .gender(Gender.MALE)
                 .mbti("ISFP")
                 .build());
         Member you = memberRepository.save(Member.builder()
                 .nickname("유관순")
                 .email("gwansun@you.com")
-                .gender(false)
+                .gender(Gender.FEMALE)
                 .mbti("ENTJ")
                 .build());
 
