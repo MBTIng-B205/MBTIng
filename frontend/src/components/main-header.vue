@@ -71,8 +71,8 @@
           </el-form-item>
           <el-form-item label="성별">
             <el-radio-group v-model="state.memberinfo.gender" disabled>
-              <el-radio :label="Male">남자</el-radio>
-              <el-radio :label="Female">여자</el-radio>
+              <el-radio :label="Male" :value="Male">남자</el-radio>
+              <el-radio :label="Female" :value="Female">여자</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="생년월일">
