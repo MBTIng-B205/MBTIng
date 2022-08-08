@@ -91,7 +91,7 @@ export default {
   justify-content: center;
 }
 .timer {
-  background-color: #632de3;
+  background-color: deeppink;
   height: 100px;
   width: 300px;
   margin-right: 10px;
