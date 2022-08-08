@@ -2,6 +2,7 @@ package com.ssafy.mbting.db.initData;
 
 import com.ssafy.mbting.db.entity.Friend;
 import com.ssafy.mbting.db.entity.Member;
+import com.ssafy.mbting.db.enums.Gender;
 import com.ssafy.mbting.db.repository.FriendRepository;
 import com.ssafy.mbting.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,13 @@ public class FriendInitData {
             gongs.add(Member.builder()
                     .nickname("효진" + i)
                     .email("hyojin@gong.com" + i)
-                    .gender(false)
+                    .gender(Gender.FEMALE)
                     .mbti("INFJ")
                     .build());
             kangs.add(Member.builder()
                     .nickname("하늘" + i)
                     .email("haneul@kang.com" + i)
-                    .gender(true)
+                    .gender(Gender.FEMALE)
                     .mbti("ESTP")
                     .build());
         }
