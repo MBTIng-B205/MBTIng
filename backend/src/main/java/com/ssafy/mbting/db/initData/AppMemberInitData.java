@@ -1,5 +1,6 @@
 package com.ssafy.mbting.db.initData;
 
+import com.ssafy.mbting.api.service.OpenviduService;
 import com.ssafy.mbting.db.entity.Interest;
 import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
@@ -13,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +22,13 @@ import java.util.List;
 public class AppMemberInitData {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final MemberRepository memberRepository;
     private final InterestRepository interestRepository;
     private final InterestMemberRepository interestMemberRepository;
-
+    private final OpenviduService openviduService;
     public void create() {
+        String token = openviduService.getToken("qweqw");
+        System.out.println("token = " + token);
         List<Member> devs = new ArrayList<>();
         Member d1 = Member.builder()
                 .nickname("이기진")
