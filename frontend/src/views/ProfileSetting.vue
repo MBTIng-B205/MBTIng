@@ -115,7 +115,6 @@ export default {
     const router = useRouter();
     const store = useStore();
     const tmpmemberinfo = computed(() => store.getters["accounts/getMember"]);
-
     const option = [
       {
         value: "서울",

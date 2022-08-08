@@ -55,7 +55,20 @@ export const accounts = {
         },
       });
     },
-
+    profileUpload({ state }, upfile) {
+      console.log("ProfileUpload 확인", upfile);
+      let formData = new FormData();
+      formData.append("upfile", upfile);
+      return axios.post(
+        `${base.baseUrl}/users/userprofile/${state.member.email}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    },
     getMemberinfo() {
       let jwt = sessionStorage.getItem("access-token");
       console.log("jwt", jwt);
