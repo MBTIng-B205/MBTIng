@@ -238,6 +238,9 @@ export default {
 </script>
 
 <style>
+.logo {
+  width: 250px;
+}
 .el-row {
   display: flex;
   flex-wrap: wrap;

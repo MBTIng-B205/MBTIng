@@ -2,10 +2,7 @@
   <el-container style="background-color: #fff4b8">
     <el-header>
       <img class="logo" src="@/assets/logo.png" />
-      <el-button
-        style="float: right; vertical-align: middle"
-        type="danger"
-        round
+      <el-button style="float: right; margin-top: 25px" type="danger" round
         >소개팅종료</el-button
       >
     </el-header>
@@ -55,6 +52,9 @@ export default {
 </script>
 
 <style>
+.logo {
+  width: 250px;
+}
 .small {
   width: 200px;
   height: 250px;

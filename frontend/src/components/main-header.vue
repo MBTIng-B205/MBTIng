@@ -289,7 +289,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .loginbtn {
   margin: 20px;
   height: 40px;
