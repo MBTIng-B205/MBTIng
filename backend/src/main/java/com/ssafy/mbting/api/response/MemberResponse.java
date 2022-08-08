@@ -33,10 +33,6 @@ public class MemberResponse {
 	public static MemberResponse of(Member member) {
 		List<String> newInterests;
 		try {
-
-
-		List<String> newInterests;
-		try {
 		List<InterestMember> interestMembers = member.getInterestMember();
 			newInterests = new ArrayList<>();
 			for (InterestMember i : interestMembers) {
