@@ -31,7 +31,7 @@ public class FriendController {
                                   @RequestParam(value = "nickname", required = false) String nickname,
                                   @RequestParam(value = "mbti", required = false) String mbti) {
         Member member = memberService.getUserByEmail(email);
-        if(nickname != null) {
+        if (nickname != null) {
             return baseResponseUtil.success(FriendResponse.builder()
                     .friends(friendService.getFriendByNickname(member, nickname))
                     .build());
@@ -47,7 +47,7 @@ public class FriendController {
 
     // 친구 추가
     @PostMapping("/{fromEmail}/{toEmail}")
-    public ResponseEntity<?> create(@PathVariable("fromEmail") String fromEmail, @PathVariable("toEmail") String toEmail){
+    public ResponseEntity<?> create(@PathVariable("fromEmail") String fromEmail, @PathVariable("toEmail") String toEmail) {
         Member fromMember = memberService.getUserByEmail(fromEmail);
         Member toMember = memberService.getUserByEmail(toEmail);
         friendService.createFriend(fromMember, toMember);
@@ -65,5 +65,4 @@ public class FriendController {
 
         return baseResponseUtil.success();
     }
-    // 친구 검색
 }

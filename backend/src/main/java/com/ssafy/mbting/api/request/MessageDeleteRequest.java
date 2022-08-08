@@ -17,5 +17,6 @@ public class MessageDeleteRequest {
     }
 
     private DeletedBy deletedBy;
-    private List<Long> deletelist= new ArrayList<>();
+    @Builder.Default
+    private List<Long> deletelist = new ArrayList<>();
 }
