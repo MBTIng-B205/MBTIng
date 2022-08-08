@@ -31,11 +31,14 @@ public class Member extends BaseEntity{
     private String sido;
     private String mbti;
     private String profileUrl;
+    @Builder.Default
+    private Boolean deleted = false;
 
     @Builder.Default
     @OneToMany(
             mappedBy = "member"
-//            cascade = CascadeType.REMOVE
+//            cascade = CascadeType.PERSIST,
+//            orphanRemoval = true
     )
     private List<InterestMember> interestMember = new ArrayList<>();
     @Builder.Default
