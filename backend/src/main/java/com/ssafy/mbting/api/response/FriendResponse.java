@@ -19,6 +19,5 @@ public class FriendResponse {
         return FriendResponse.builder()
                 .friends(friends)
                 .build();
-
     }
 }

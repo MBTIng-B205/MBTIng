@@ -11,22 +11,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
- */
+
 @Service("userService")
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final MemberRepository memberRepository;
-	private final InterestMemberRepository interestMemberRepository;
 	private final InterestService interestService;
+	private final InterestMemberService interestMemberService;
 
 	@Override
 	public Member createMember(MemberRegisterRequest userRegisterInfo) {
 		Member member = Member.of(userRegisterInfo);
-
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		return memberRepository.save(member);
 	}
@@ -44,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
 		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
 
 
-		interestMemberRepository.deleteAllByMember(updatemember);
+		interestMemberService.deleteAllByMember(updatemember);
 		interestService.insertInterest(userRegisterInfo.getInterests(), updatemember);
 
 
@@ -52,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
 		updatemember.setMbti(userRegisterInfo.getMbti());
 
 		updatemember.setSido(userRegisterInfo.getSido());
-		//updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
+		updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
 		return updatemember;
 	}
 
@@ -60,17 +57,13 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional
 	public boolean deleteMember(String email) {
 		Member member = memberRepository.findByEmail(email);
-		try{
-			memberRepository.delete(member);
-		} catch (Exception e) {
-			return false;
-		}
+		member.setDeleted(true);
 		return true;
 	}
 
 	@Override
 	public boolean nicknameValid(String nickname) {
-		if(memberRepository.countAllByNickname(nickname) != 0){
+		if(memberRepository.countAllByNicknameAndDeleted(nickname, false) != 0){
 			return false;
 		}
 		return true;

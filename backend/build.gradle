@@ -43,6 +43,9 @@ dependencies {
 
 	// socket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	//openvidu
+	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.22.0'
 }
 
 tasks.named('test') {

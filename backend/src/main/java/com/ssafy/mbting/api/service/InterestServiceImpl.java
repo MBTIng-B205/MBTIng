@@ -39,6 +39,4 @@ public class InterestServiceImpl implements InterestService{
         }
         return interestMembers;
     }
-
-//    public List<Interest>
 }
