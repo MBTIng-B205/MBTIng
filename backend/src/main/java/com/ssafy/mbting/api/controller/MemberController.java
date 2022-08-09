@@ -48,6 +48,7 @@ public class MemberController {
             member.setGender(registerInfo.getGender());
             member.setBirth(registerInfo.getBirth());
             member.setMbti(registerInfo.getMbti());
+            member.setSido(registerInfo.getSido());
             member.setProfileUrl(registerInfo.getProfileUrl());
             interestMemberService.deleteAllByMember(member);
             member.setInterestMember(interestService.insertInterest(registerInfo.getInterests(), member));
