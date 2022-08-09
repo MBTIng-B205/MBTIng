@@ -45,8 +45,8 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     }
 
     @Override
-    public StompUser findBySessionId(String sessionId) {
-        return sessionIdStompUserMap.get(sessionId);
+    public MeetingUser findBySessionId(String sessionId) {
+        return sessionIdStompUserMap.get(sessionId).getMeetingUser();
     }
 
     @Override
