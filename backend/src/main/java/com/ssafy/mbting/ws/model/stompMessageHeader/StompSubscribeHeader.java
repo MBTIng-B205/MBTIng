@@ -19,6 +19,10 @@ public class StompSubscribeHeader {
     @Builder.Default
     private List<String> interests = new ArrayList<>();
 
+    public boolean isValid() {
+        return getGender() != null && getSido() != null;
+    }
+
     public static StompSubscribeHeader of(StompHeaderAccessor stompHeaderAccessor) {
         return StompSubscribeHeader.builder()
                 .destination(stompHeaderAccessor.getDestination())
