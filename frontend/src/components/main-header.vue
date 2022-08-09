@@ -32,10 +32,12 @@
 
   <el-dialog v-model="state.mypageDialog" @close="handleClose">
     <div style="text-align: center">
-      <el-row>
+      <el-row class="filebox">
         <img class="profile" :src="state.memberinfo.profileUrl" />
-        <input type="file" @change="onFileSelected" />
-        <el-button style="margin-top: 10px" size="large">프로필 변경</el-button>
+        <!-- <input type="file" @change="onFileSelected" /> -->
+        <input class="upload-name" value="첨부파일" placeholder="첨부파일" />
+        <label for="file">파일찾기</label>
+        <input type="file" id="file" @change="onFileSelected" />
       </el-row>
       <el-row>
         <el-form
@@ -71,8 +73,8 @@
           </el-form-item>
           <el-form-item label="성별">
             <el-radio-group v-model="state.memberinfo.gender" disabled>
-              <el-radio :label="Male" :value="Male">남자</el-radio>
-              <el-radio :label="Female" :value="Female">여자</el-radio>
+              <el-radio label="MALE">남자</el-radio>
+              <el-radio label="FEMALE">여자</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="생년월일">
@@ -434,9 +436,36 @@ export default {
   width: 200px;
   height: 200px;
 }
-button {
+/* button {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+} */
+.filebox .upload-name {
+  display: inline-block;
+  height: 40px;
+  padding: 0 10px;
+  vertical-align: middle;
+  border: 1px solid #dddddd;
+  width: 78%;
+  color: #999999;
+}
+.filebox label {
+  display: inline-block;
+  padding: 10px 20px;
+  color: #fff;
+  vertical-align: middle;
+  background-color: #999999;
+  cursor: pointer;
+  height: 40px;
+  margin-left: 10px;
+}
+.filebox input[type="file"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
 }
 </style>
