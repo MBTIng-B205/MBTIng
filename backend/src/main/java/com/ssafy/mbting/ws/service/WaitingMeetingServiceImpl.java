@@ -5,7 +5,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.util.JwtTokenUtil;
-import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
+import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
 import com.ssafy.mbting.ws.model.stompMessageHeader.ConnectHeader;
 import com.ssafy.mbting.ws.model.stompMessageHeader.SubscribeHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
@@ -18,13 +18,14 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class WaitingMeetingServiceImpl implements WaitingMeetingService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final ApplicationEventPublisher publisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final WaitingMeetingUserRepository waitingMeetingUserRepository;
     private final MemberService memberService;
 
@@ -43,7 +44,10 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
             throw new RuntimeException("No Member!");
         }
 
-        waitingMeetingUserRepository.createSession(sessionId, StompUser.of(email));
+        if (waitingMeetingUserRepository.createSession(sessionId, StompUser.of(email)) != null) {
+            logger.info("\n\nsessionId 가 이미 존재함\n");
+            throw new RuntimeException("Already Exist!");
+        }
     }
 
     @Override
@@ -53,14 +57,16 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
 
     @Override
     public void takeUser(String sessionId, SubscribeHeader subscribeHeader) {
-        MeetingUser meetingUser = null;
-        waitingMeetingUserRepository.takeUser(meetingUser);
-
-        logger.info("\n\nsize: {}\n", waitingMeetingUserRepository.size());
-
-        if (waitingMeetingUserRepository.hasEnoughSize()) {
-            publisher.publishEvent(new WaitingMeetingUserQueueSizeEnoughEvent(this, Clock.systemDefaultZone()));
+        if(waitingMeetingUserRepository.findBySessionId(sessionId) != null) {
+            logger.info("\n\n이미 대기열에 들어감\n");
+            throw new RuntimeException("Already Queued!");
         }
+        MeetingUser meetingUser = MeetingUser.of(subscribeHeader);
+        waitingMeetingUserRepository.queueMeetingUser(sessionId, meetingUser);
+        waitingMeetingUserRepository.addSessionIdToFeatureUserTables(sessionId, meetingUser);
+
+        applicationEventPublisher.publishEvent(
+                new WaitingMeetingUserQueuedEvent(this, Clock.systemDefaultZone()));
     }
 
     @Override

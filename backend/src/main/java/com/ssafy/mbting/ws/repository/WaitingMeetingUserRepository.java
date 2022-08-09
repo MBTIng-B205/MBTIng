@@ -5,12 +5,11 @@ import com.ssafy.mbting.ws.model.vo.StompUser;
 
 public interface WaitingMeetingUserRepository {
 
-    void createSession(String sessionId, StompUser stompUser);
+    StompUser createSession(String sessionId, StompUser stompUser);
     void removeSession(String sessionId);
-    void takeUser(MeetingUser meetingUser);
-    boolean hasSubscribedDestinationBySessionId(String sessionId);
-    MeetingUser findByEmail(String email);
-    String peekMeetingUserEmail();
+    void queueMeetingUser(String sessionId, MeetingUser meetingUser);
+    StompUser findBySessionId(String sessionId);
+    void addSessionIdToFeatureUserTables(String sessionId, MeetingUser meetingUser);
+    void removeSessionIdFromFeatureUserTables(String sessionId, MeetingUser meetingUser);
     int size();
-    boolean hasEnoughSize();
 }

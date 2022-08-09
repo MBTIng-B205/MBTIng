@@ -19,23 +19,17 @@ public class SubscribeHandler implements StompCommandHandler {
     @Override
     public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor) {
         // 구독 시작 처리 : 소개팅 대기 유저로 등록
-        SubscribeHeader subscribeHeader;
-        try {
-            subscribeHeader = SubscribeHeader.of(stompHeaderAccessor);
-        } catch (NullPointerException e) {
-            logger.error("\n\n!!! {} !!!\n클라이언트가 Subscribe 시 헤더에 gender 또는 region 을 안 준 경우\n"
-                    , e.getMessage());
-            throw new RuntimeException("Bad Request!");
-        }
+        SubscribeHeader subscribeHeader = SubscribeHeader.of(stompHeaderAccessor);
+
         logger.info("\n\n* {} *\nHeader: {}\n"
                 , stompCommand
                 , subscribeHeader);
 
-        try {
-            waitingMeetingService.takeUser(stompHeaderAccessor.getSessionId(), subscribeHeader);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Internal Server Error!");
+        if (!subscribeHeader.isValid()) {
+            logger.info("\n\n클라이언트가 Subscribe 시 헤더에 gender 또는 sido 를 안 준 경우\n");
+            throw new RuntimeException("Bad Request!");
         }
+
+        waitingMeetingService.takeUser(stompHeaderAccessor.getSessionId(), subscribeHeader);
     }
 }

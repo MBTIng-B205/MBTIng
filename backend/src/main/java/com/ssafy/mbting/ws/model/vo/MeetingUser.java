@@ -1,11 +1,9 @@
 package com.ssafy.mbting.ws.model.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.ssafy.mbting.db.enums.Gender;
+import com.ssafy.mbting.ws.model.stompMessageHeader.SubscribeHeader;
+import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +11,18 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MeetingUser implements Comparable<MeetingUser> {
+public class MeetingUser {
 
-    private String email;
-    private LocalDateTime enterTime;
+    private Gender gender;
     private String sido;
     @Builder.Default
     private List<String> interests = new ArrayList<>();
 
-    @Override
-    public int compareTo(MeetingUser o) {
-        return this.getEnterTime().compareTo(o.getEnterTime());
+    public static MeetingUser of(SubscribeHeader subscribeHeader) {
+        return MeetingUser.builder()
+                .gender(Gender.valueOf(subscribeHeader.getGender().trim().toUpperCase()))
+                .sido(subscribeHeader.getSido())
+                .interests(subscribeHeader.getInterests())
+                .build();
     }
 }
