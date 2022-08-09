@@ -30,6 +30,6 @@ public class ConnectHandler implements StompCommandHandler {
             throw new RuntimeException("No Authorization!");
         }
 
-        waitingMeetingService.connectUser(stompConnectHeader);
+        waitingMeetingService.connectUser(stompHeaderAccessor.getSessionId(), stompConnectHeader);
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 @ToString
 public class StompConnectHeader {
 
-    private String sessionId;
     private String accessToken;
     private String email;
 
@@ -20,7 +19,6 @@ public class StompConnectHeader {
 
     public static StompConnectHeader of(StompHeaderAccessor stompHeaderAccessor) {
         return StompConnectHeader.builder()
-                .sessionId(stompHeaderAccessor.getSessionId())
                 .accessToken(stompHeaderAccessor.getFirstNativeHeader("accessToken"))
                 .email(stompHeaderAccessor.getFirstNativeHeader("email"))
                 .build();

@@ -30,8 +30,7 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     private final MemberService memberService;
 
     @Override
-    public void connectUser(StompConnectHeader stompConnectHeader) {
-        String sessionId = stompConnectHeader.getSessionId();
+    public void connectUser(String sessionId, StompConnectHeader stompConnectHeader) {
         String accessToken = stompConnectHeader.getAccessToken();
         String email = stompConnectHeader.getEmail();
 
@@ -54,7 +53,7 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     }
 
     @Override
-    public void takeUser(StompSubscribeHeader subscribeHeader) {
+    public void takeUser(String sessionId, StompSubscribeHeader subscribeHeader) {
         MeetingUser meetingUser = null;
         waitingMeetingUserQueue.takeUser(meetingUser);
 

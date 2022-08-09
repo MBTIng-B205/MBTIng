@@ -13,7 +13,6 @@ import java.util.List;
 @ToString
 public class StompSubscribeHeader {
 
-    private String sessionId;
     private String destination;
     private String gender;
     private String sido;
@@ -22,7 +21,6 @@ public class StompSubscribeHeader {
 
     public static StompSubscribeHeader of(StompHeaderAccessor stompHeaderAccessor) {
         return StompSubscribeHeader.builder()
-                .sessionId(stompHeaderAccessor.getSessionId())
                 .destination(stompHeaderAccessor.getDestination())
                 .gender(stompHeaderAccessor.getFirstNativeHeader("gender"))
                 .sido(stompHeaderAccessor.getFirstNativeHeader("sido"))

@@ -5,8 +5,8 @@ import com.ssafy.mbting.ws.model.stompMessageHeader.StompSubscribeHeader;
 
 public interface WaitingMeetingService {
 
-    void connectUser(StompConnectHeader stompConnectHeader);
+    void connectUser(String sessionId, StompConnectHeader stompConnectHeader);
     void disconnectUser(String sessionId);
-    void takeUser(StompSubscribeHeader stompSubscribeHeader);
+    void takeUser(String sessionId, StompSubscribeHeader stompSubscribeHeader);
     boolean hasSubscribedDestinationBySessionId(String sessionId);
 }
