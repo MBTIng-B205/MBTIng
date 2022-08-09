@@ -22,7 +22,7 @@ public class waitingMeetingEventListener {
     @EventListener
     public void onQueued(WaitingMeetingUserQueuedEvent event) {
         logger.debug("\n\n온큐드 핸들러 왔니?\n");
-        simpMessagingTemplate.convertAndSend("/ws/sub/indi/abc", "{\"success\": true}");
+        simpMessagingTemplate.convertAndSend("/ws/sub/indi/abc", "{\"success\": \"진짜 이게 옴?\"}");
     }
 
     @EventListener

@@ -26,10 +26,10 @@ public class ConnectHandler implements StompCommandHandler {
                 , stompCommand
                 , connectHeader);
 
-        if (!connectHeader.isValid()) {
-            logger.info("\n\n클라이언트가 Connect 시 헤더에 accessToken 또는 email 을 안 줌\n");
-            throw new RuntimeException("No Authorization!");
-        }
+//        if (!connectHeader.isValid()) {
+//            logger.info("\n\n클라이언트가 Connect 시 헤더에 accessToken 또는 email 을 안 줌\n");
+//            throw new RuntimeException("No Authorization!");
+//        }
 
         waitingMeetingService.connectUser(stompHeaderAccessor.getSessionId(), connectHeader);
     }

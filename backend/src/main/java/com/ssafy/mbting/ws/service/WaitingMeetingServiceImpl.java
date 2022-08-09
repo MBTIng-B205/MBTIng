@@ -40,15 +40,15 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
         String accessToken = connectHeader.getAccessToken();
         String email = connectHeader.getEmail();
 
-        if (!identicalTokenAndEmail(accessToken, email)) {
-            logger.info("\n\naccessToken 과 email 이 매치되지 않음\n");
-            throw new RuntimeException("Unauthorized!");
-        }
-
-        if (memberService.getUserByEmail(email) == null) {
-            logger.info("\n\n해당 email 의 회원이 없음\n");
-            throw new RuntimeException("No Member!");
-        }
+//        if (!identicalTokenAndEmail(accessToken, email)) {
+//            logger.info("\n\naccessToken 과 email 이 매치되지 않음\n");
+//            throw new RuntimeException("Unauthorized!");
+//        }
+//
+//        if (memberService.getUserByEmail(email) == null) {
+//            logger.info("\n\n해당 email 의 회원이 없음\n");
+//            throw new RuntimeException("No Member!");
+//        }
 
         if (waitingMeetingUserRepository.createSession(sessionId, StompUser.of(email)) != null) {
             logger.info("\n\nsessionId 가 이미 존재함\n");
@@ -71,19 +71,13 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
         waitingMeetingUserRepository.queueMeetingUser(sessionId, meetingUser);
         waitingMeetingUserRepository.addSessionIdToFeatureUserTables(sessionId, meetingUser);
 
-//        applicationEventPublisher.publishEvent(
-//                new WaitingMeetingUserQueuedEvent(
-//                        this,
-//                        Clock.systemDefaultZone(),
-//                        waitingMeetingUserRepository.findBySessionId(sessionId)));
+        applicationEventPublisher.publishEvent(
+                new WaitingMeetingUserQueuedEvent(
+                        this,
+                        Clock.systemDefaultZone(),
+                        waitingMeetingUserRepository.findBySessionId(sessionId)));
 
 //        throw new RuntimeException("에러");
-
-        SimpMessagingTemplate simpMessagingTemplate = new SimpMessagingTemplate(messageChannel);
-
-        simpMessagingTemplate.send("/ws/sub/indi/wp29dud@naver.com",
-                MessageBuilder.createMessage("success",
-                        new MessageHeaders(null)));
 
         logger.debug("\n\n테이크 유저 서비스 왔니?\n");
     }

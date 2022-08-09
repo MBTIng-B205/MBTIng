@@ -44,7 +44,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { ref, reactive, computed, onMounted, watch } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
@@ -87,8 +87,9 @@ export default {
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
       state.stompClient.connect(
         {
-          accessToken: sessionStorage.getItem("access-token"),
-          email: state.memberinfo.email,
+          email: Math.random().toString(36).substring(2, 12),
+          // accessToken: sessionStorage.getItem("access-token"),
+          // email: state.memberinfo.email,
         },
         (frame) => {
           // 소켓 연결 성공
@@ -96,18 +97,22 @@ export default {
           console.log("소켓 연결 성공", frame);
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
-          console.log(state.memberinfo.email);
+          // console.log(state.memberinfo.email);
           state.stompClient.subscribe(
-            `/ws/sub/indi/${state.memberinfo.email}`,
+            "/ws/sub/indi/abc",
+            // `/ws/sub/indi/${state.memberinfo.email}`,
             (res) => {
               //prop
               console.log("받은 메시지", res.body);
               state.proposal = res.body.proposal;
             },
             {
-              gender: state.memberinfo.gender,
-              sido: state.memberinfo.sido,
-              interests: state.memberinfo.interests,
+              gender: "MALE",
+              sido: "서울",
+              interests: [],
+              // gender: state.memberinfo.gender,
+              // sido: state.memberinfo.sido,
+              // interests: state.memberinfo.interests,
             }
           );
         },
@@ -119,13 +124,6 @@ export default {
       );
     };
 
-    watch(
-      () => state.proposal,
-      (data) => {
-        console.log(data);
-        send();
-      }
-    );
     const send = function () {
       console.log("send 실행");
       const data = {
