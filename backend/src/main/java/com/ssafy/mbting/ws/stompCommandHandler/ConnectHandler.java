@@ -5,6 +5,7 @@ import com.ssafy.mbting.ws.service.WaitingMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class ConnectHandler implements StompCommandHandler {
     private final WaitingMeetingService waitingMeetingService;
 
     @Override
-    public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor) {
+    public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor, MessageChannel messageChannel) {
         // 연결 시작 처리 : 사용자 인증
         ConnectHeader connectHeader = ConnectHeader.of(stompHeaderAccessor);
 

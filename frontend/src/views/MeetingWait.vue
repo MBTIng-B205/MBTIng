@@ -98,7 +98,7 @@ export default {
           // 이런형태를 pub sub 구조라고 합니다.
           console.log(state.memberinfo.email);
           state.stompClient.subscribe(
-            `http://localhost:8080/ws/dest/indi/${state.memberinfo.email}`,
+            `/ws/sub/indi/${state.memberinfo.email}`,
             (res) => {
               //prop
               console.log("받은 메시지", res.body);

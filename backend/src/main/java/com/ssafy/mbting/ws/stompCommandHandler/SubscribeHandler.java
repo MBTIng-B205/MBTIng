@@ -5,6 +5,7 @@ import com.ssafy.mbting.ws.service.WaitingMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class SubscribeHandler implements StompCommandHandler {
     private final WaitingMeetingService waitingMeetingService;
 
     @Override
-    public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor) {
+    public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor, MessageChannel messageChannel) {
         // 구독 시작 처리 : 소개팅 대기 유저로 등록
         SubscribeHeader subscribeHeader = SubscribeHeader.of(stompHeaderAccessor);
 
@@ -30,6 +31,6 @@ public class SubscribeHandler implements StompCommandHandler {
             throw new RuntimeException("Bad Request!");
         }
 
-        waitingMeetingService.takeUser(stompHeaderAccessor.getSessionId(), subscribeHeader);
+        waitingMeetingService.takeUser(stompHeaderAccessor.getSessionId(), subscribeHeader, messageChannel);
     }
 }

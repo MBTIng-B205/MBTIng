@@ -15,6 +15,12 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.messaging.support.MessageHeaderInitializer;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -56,8 +62,8 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     }
 
     @Override
-    public void takeUser(String sessionId, SubscribeHeader subscribeHeader) {
-        if(waitingMeetingUserRepository.findBySessionId(sessionId) != null) {
+    public void takeUser(String sessionId, SubscribeHeader subscribeHeader, MessageChannel messageChannel) {
+        if(waitingMeetingUserRepository.findBySessionId(sessionId).getMeetingUser() != null) {
             logger.info("\n\n이미 대기열에 들어감\n");
             throw new RuntimeException("Already Queued!");
         }
@@ -65,8 +71,21 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
         waitingMeetingUserRepository.queueMeetingUser(sessionId, meetingUser);
         waitingMeetingUserRepository.addSessionIdToFeatureUserTables(sessionId, meetingUser);
 
-        applicationEventPublisher.publishEvent(
-                new WaitingMeetingUserQueuedEvent(this, Clock.systemDefaultZone()));
+//        applicationEventPublisher.publishEvent(
+//                new WaitingMeetingUserQueuedEvent(
+//                        this,
+//                        Clock.systemDefaultZone(),
+//                        waitingMeetingUserRepository.findBySessionId(sessionId)));
+
+//        throw new RuntimeException("에러");
+
+        SimpMessagingTemplate simpMessagingTemplate = new SimpMessagingTemplate(messageChannel);
+
+        simpMessagingTemplate.send("/ws/sub/indi/wp29dud@naver.com",
+                MessageBuilder.createMessage("success",
+                        new MessageHeaders(null)));
+
+        logger.debug("\n\n테이크 유저 서비스 왔니?\n");
     }
 
     @Override

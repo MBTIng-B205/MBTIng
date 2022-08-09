@@ -19,7 +19,7 @@ public class MeetingInterceptor implements ChannelInterceptor {
     private final StompCommandHandlerMap stompCommandHandlerMap;
 
     @Override
-    public Message<?> preSend(Message<?> message, MessageChannel channel) {
+    public Message<?> preSend(Message<?> message, MessageChannel messageChannel) {
         logger.debug("\n\n============================\n==== 메시지 인터셉터 시작 ====\n");
 
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(message);
@@ -35,8 +35,8 @@ public class MeetingInterceptor implements ChannelInterceptor {
 
         stompCommandHandlerMap
                 .getOrDefault(stompCommand,
-                        (command, header) -> logger.info("\n\n* {} *\n", command))
-                .handle(stompCommand, stompHeaderAccessor);
+                        (command, header, channel) -> logger.info("\n\n* {} *\n", command))
+                .handle(stompCommand, stompHeaderAccessor, messageChannel);
 
         logger.debug("\n\n==== 메시지 인터셉터 끝 ====\n==========================\n");
 
