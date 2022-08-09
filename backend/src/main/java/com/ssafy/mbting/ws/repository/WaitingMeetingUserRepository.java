@@ -1,10 +1,11 @@
 package com.ssafy.mbting.ws.repository;
 
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
+import com.ssafy.mbting.ws.model.vo.StompUser;
 
-public interface WaitingMeetingUserQueue {
+public interface WaitingMeetingUserRepository {
 
-    void createSession(String sessionId, String email);
+    void createSession(String sessionId, StompUser stompUser);
     void removeSession(String sessionId);
     void takeUser(MeetingUser meetingUser);
     boolean hasSubscribedDestinationBySessionId(String sessionId);

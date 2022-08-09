@@ -3,15 +3,14 @@ package com.ssafy.mbting.ws.service;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.util.JwtTokenUtil;
-import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
-import com.ssafy.mbting.ws.model.stompMessageHeader.StompConnectHeader;
-import com.ssafy.mbting.ws.model.stompMessageHeader.StompSubscribeHeader;
+import com.ssafy.mbting.ws.model.stompMessageHeader.ConnectHeader;
+import com.ssafy.mbting.ws.model.stompMessageHeader.SubscribeHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
-import com.ssafy.mbting.ws.repository.WaitingMeetingUserQueue;
+import com.ssafy.mbting.ws.model.vo.StompUser;
+import com.ssafy.mbting.ws.repository.WaitingMeetingUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +25,13 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher publisher;
-    private final WaitingMeetingUserQueue waitingMeetingUserQueue;
+    private final WaitingMeetingUserRepository waitingMeetingUserRepository;
     private final MemberService memberService;
 
     @Override
-    public void connectUser(String sessionId, StompConnectHeader stompConnectHeader) {
-        String accessToken = stompConnectHeader.getAccessToken();
-        String email = stompConnectHeader.getEmail();
+    public void connectUser(String sessionId, ConnectHeader connectHeader) {
+        String accessToken = connectHeader.getAccessToken();
+        String email = connectHeader.getEmail();
 
         if (!identicalTokenAndEmail(accessToken, email)) {
             logger.info("\n\naccessToken 과 email 이 매치되지 않음\n");
@@ -44,22 +43,22 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
             throw new RuntimeException("No Member!");
         }
 
-        waitingMeetingUserQueue.createSession(sessionId, email);
+        waitingMeetingUserRepository.createSession(sessionId, StompUser.of(email));
     }
 
     @Override
     public void disconnectUser(String sessionId) {
-        waitingMeetingUserQueue.removeSession(sessionId);
+        waitingMeetingUserRepository.removeSession(sessionId);
     }
 
     @Override
-    public void takeUser(String sessionId, StompSubscribeHeader subscribeHeader) {
+    public void takeUser(String sessionId, SubscribeHeader subscribeHeader) {
         MeetingUser meetingUser = null;
-        waitingMeetingUserQueue.takeUser(meetingUser);
+        waitingMeetingUserRepository.takeUser(meetingUser);
 
-        logger.info("\n\nsize: {}\n", waitingMeetingUserQueue.size());
+        logger.info("\n\nsize: {}\n", waitingMeetingUserRepository.size());
 
-        if (waitingMeetingUserQueue.hasEnoughSize()) {
+        if (waitingMeetingUserRepository.hasEnoughSize()) {
             publisher.publishEvent(new WaitingMeetingUserQueueSizeEnoughEvent(this, Clock.systemDefaultZone()));
         }
     }

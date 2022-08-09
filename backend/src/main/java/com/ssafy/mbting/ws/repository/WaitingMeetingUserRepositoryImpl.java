@@ -2,31 +2,28 @@ package com.ssafy.mbting.ws.repository;
 
 import com.google.common.collect.Maps;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
+import com.ssafy.mbting.ws.model.vo.StompUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.LinkedHashMap;
 
 @Repository
-public class WaitingMeetingUserQueueImpl implements WaitingMeetingUserQueue{
+public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final int ENOUGH_WAITING_MEETING_USER_QUEUE_SIZE = 3;
-    private final Map<String, String> sessionIdEmailMap = Maps.newConcurrentMap();
-    private final SortedSet<MeetingUser> meetingUsers = new ConcurrentSkipListSet<>();
-    private final Map<String, MeetingUser> emailMeetingUserMap = Maps.newConcurrentMap();
+    private final LinkedHashMap<String, StompUser> sessionIdStompUserMap = new LinkedHashMap<>();
 
     @PostConstruct
     private void init() {
     }
 
     @Override
-    public void createSession(String sessionId, String email) {
-        if (sessionIdEmailMap.put(sessionId, email) != null) {
+    public void createSession(String sessionId, StompUser stompUser) {
+        if (sessionIdStompUserMap.put(sessionId, stompUser) != null) {
             logger.info("\n\nsessionId 가 이미 존재함\n");
             throw new RuntimeException("SessionId Already Exists!");
         }

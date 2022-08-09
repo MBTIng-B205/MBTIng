@@ -8,7 +8,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 @Data
 @Builder
 @ToString
-public class StompConnectHeader {
+public class ConnectHeader {
 
     private String accessToken;
     private String email;
@@ -17,8 +17,8 @@ public class StompConnectHeader {
         return getEmail() != null && getAccessToken() != null;
     }
 
-    public static StompConnectHeader of(StompHeaderAccessor stompHeaderAccessor) {
-        return StompConnectHeader.builder()
+    public static ConnectHeader of(StompHeaderAccessor stompHeaderAccessor) {
+        return ConnectHeader.builder()
                 .accessToken(stompHeaderAccessor.getFirstNativeHeader("accessToken"))
                 .email(stompHeaderAccessor.getFirstNativeHeader("email"))
                 .build();

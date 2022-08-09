@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Builder
 @ToString
-public class StompSubscribeHeader {
+public class SubscribeHeader {
 
     private String destination;
     private String gender;
@@ -23,8 +23,8 @@ public class StompSubscribeHeader {
         return getGender() != null && getSido() != null;
     }
 
-    public static StompSubscribeHeader of(StompHeaderAccessor stompHeaderAccessor) {
-        return StompSubscribeHeader.builder()
+    public static SubscribeHeader of(StompHeaderAccessor stompHeaderAccessor) {
+        return SubscribeHeader.builder()
                 .destination(stompHeaderAccessor.getDestination())
                 .gender(stompHeaderAccessor.getFirstNativeHeader("gender"))
                 .sido(stompHeaderAccessor.getFirstNativeHeader("sido"))

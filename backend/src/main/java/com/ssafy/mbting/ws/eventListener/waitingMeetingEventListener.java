@@ -2,7 +2,7 @@ package com.ssafy.mbting.ws.eventListener;
 
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserMatchedEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
-import com.ssafy.mbting.ws.repository.WaitingMeetingUserQueue;
+import com.ssafy.mbting.ws.repository.WaitingMeetingUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class waitingMeetingEventListener {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher publisher;
     private final SimpMessagingTemplate simpMessagingTemplate;
-    private final WaitingMeetingUserQueue waitingMeetingUserQueue;
+    private final WaitingMeetingUserRepository waitingMeetingUserRepository;
 
     @EventListener
     public void onEnough(WaitingMeetingUserQueueSizeEnoughEvent event) {
