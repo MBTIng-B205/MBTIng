@@ -4,7 +4,7 @@ import com.ssafy.mbting.ws.model.vo.MeetingUser;
 
 public interface WaitingMeetingUserQueue {
 
-    void createSession();
+    void createSession(String sessionId, String email);
     void removeSession(String sessionId);
     void takeUser(MeetingUser meetingUser);
     boolean hasSubscribedDestinationBySessionId(String sessionId);

@@ -19,24 +19,17 @@ public class ConnectHandler implements StompCommandHandler {
     @Override
     public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor) {
         // 연결 시작 처리 : 사용자 인증
-        StompConnectHeader stompConnectHeader;
-        try {
-            stompConnectHeader = StompConnectHeader.of(stompHeaderAccessor);
-        } catch (NullPointerException e) {
-            logger.error("\n\n!!! {} !!!\n클라이언트가 Connect 시 헤더에 accessToken 또는 email 을 안 준 경우\n"
-                    , e.getMessage());
-            throw new RuntimeException("No Authorization!");
-        }
+        StompConnectHeader stompConnectHeader = StompConnectHeader.of(stompHeaderAccessor);
 
         logger.info("\n\n* {} *\nHeader: {}\n"
                 , stompCommand
                 , stompConnectHeader);
 
-        try {
-            waitingMeetingService.connectUser(stompConnectHeader);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Internal Server Error!");
+        if (!stompConnectHeader.isValid()) {
+            logger.info("\n\n클라이언트가 Connect 시 헤더에 accessToken 또는 email 을 안 줌\n");
+            throw new RuntimeException("No Authorization!");
         }
+
+        waitingMeetingService.connectUser(stompConnectHeader);
     }
 }

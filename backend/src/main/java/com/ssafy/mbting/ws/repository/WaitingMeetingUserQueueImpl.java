@@ -16,6 +16,7 @@ public class WaitingMeetingUserQueueImpl implements WaitingMeetingUserQueue{
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final int ENOUGH_WAITING_MEETING_USER_QUEUE_SIZE = 3;
+    private final Map<String, String> sessionIdEmailMap = Maps.newConcurrentMap();
     private final SortedSet<MeetingUser> meetingUsers = new ConcurrentSkipListSet<>();
     private final Map<String, MeetingUser> emailMeetingUserMap = Maps.newConcurrentMap();
 
@@ -24,8 +25,11 @@ public class WaitingMeetingUserQueueImpl implements WaitingMeetingUserQueue{
     }
 
     @Override
-    public void createSession() {
-
+    public void createSession(String sessionId, String email) {
+        if (sessionIdEmailMap.put(sessionId, email) != null) {
+            logger.info("\n\nsessionId 가 이미 존재함\n");
+            throw new RuntimeException("SessionId Already Exists!");
+        }
     }
 
     @Override
