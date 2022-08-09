@@ -23,7 +23,7 @@
         ></el-col
       >
     </el-row>
-    <table class="table">
+    <table class="table" v-if="state.messageList.length != 0">
       <colgroup>
         <col width="10%" />
         <col width="25%" />
@@ -31,7 +31,7 @@
         <col width="25%" />
       </colgroup>
 
-      <thead v-if="state.messageList.length != 0">
+      <thead>
         <tr>
           <th>
             <label class="form-checkbox"
@@ -41,16 +41,6 @@
           <th>받은사람</th>
           <th>내용</th>
           <th>날짜</th>
-        </tr>
-      </thead>
-      <thead v-else-if="state.searchFlag">
-        <tr>
-          검색한 쪽지가 없습니다!
-        </tr>
-      </thead>
-      <thead v-else>
-        <tr>
-          친구에게 쪽지를 보내보세요!
         </tr>
       </thead>
       <tbody>
@@ -83,6 +73,8 @@
         </tr>
       </tbody>
     </table>
+    <el-row v-else-if="state.searchFlag">검색한 쪽지가 없습니다!</el-row>
+    <el-row v-else>친구에게 쪽지를 보내보세요!</el-row>
     <el-dialog v-model="state.messageDialog" @close="handleClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
         <span class="to"> TO. </span>
