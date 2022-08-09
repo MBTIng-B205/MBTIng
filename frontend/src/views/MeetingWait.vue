@@ -86,7 +86,10 @@ export default {
       state.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
       state.stompClient.connect(
-        {},
+        {
+          accessToken: sessionStorage.getItem("access-token"),
+          email: state.memberinfo.email,
+        },
         (frame) => {
           // 소켓 연결 성공
           state.stompClient.connected = true;
@@ -99,7 +102,12 @@ export default {
             (res) => {
               //prop
               console.log("받은 메시지", res.body);
-              state.proposal = res.body;
+              state.proposal = res.body.proposal;
+            },
+            {
+              gender: state.memberinfo.gender,
+              sido: state.memberinfo.sido,
+              interests: state.memberinfo.interests,
             }
           );
         },
