@@ -25,7 +25,7 @@ public class StompSubscribeHeader {
                 .sessionId(stompHeaderAccessor.getSessionId())
                 .destination(stompHeaderAccessor.getDestination())
                 .gender(stompHeaderAccessor.getFirstNativeHeader("gender"))
-                .sido(stompHeaderAccessor.getFirstNativeHeader("region"))
+                .sido(stompHeaderAccessor.getFirstNativeHeader("sido"))
                 .interests(stompHeaderAccessor.getNativeHeader("interests"))
                 .build();
     }
