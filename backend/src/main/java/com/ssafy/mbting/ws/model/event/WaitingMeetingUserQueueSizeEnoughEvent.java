@@ -1,4 +1,4 @@
-package com.ssafy.mbting.ws.event;
+package com.ssafy.mbting.ws.model.event;
 
 import org.springframework.context.ApplicationEvent;
 
@@ -6,12 +6,12 @@ import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 
-public class WaitingMeetingUserEnoughEvent extends ApplicationEvent {
+public class WaitingMeetingUserQueueSizeEnoughEvent extends ApplicationEvent {
 
     private static final long ENOUGH_INTERVAL_IN_SECOND = 3;
     private static Instant previous = Instant.ofEpochMilli(0);
 
-    public WaitingMeetingUserEnoughEvent(Object source, Clock clock) {
+    public WaitingMeetingUserQueueSizeEnoughEvent(Object source, Clock clock) {
         super(source, clock);
     }
 
