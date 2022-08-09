@@ -124,8 +124,8 @@ export default {
       {
         thumb:
           "https://d3d45df40onv5v.cloudfront.net/mbti/assets/img/maincat.gif",
-        title: "동물로 알아보는 연애 유형 테스트",
-        site: "https://mbti.amanda.co.kr/",
+        title: "MBTI 월드컵",
+        site: "/mbtiworldcup",
       },
       {
         thumb:

@@ -3,6 +3,8 @@ import MyMBTITest from "@/views/MyMBTITest";
 import MyMBTIResult from "@/views/MyMBTIResult";
 import YourMBTITest from "@/views/YourMBTITest";
 import YourMBTIResult from "@/views/YourMBTIResult";
+import MBTIWorldCup from "@/views/MBTIWorldCup";
+import MBTIWorldCupResult from "@/views/MBTIWorldCupResult";
 import MBTISetting from "@/views/MBTISetting";
 import ProfileSetting from "@/views/ProfileSetting";
 import HomeView from "@/views/HomeView";
@@ -53,6 +55,16 @@ const routes = [
     path: "/yourmbtiresult",
     name: "YourMBTIResult",
     component: YourMBTIResult,
+  },
+  {
+    path: "/mbtiworldcup",
+    name: "MBTIWorldCup",
+    component: MBTIWorldCup,
+  },
+  {
+    path: "/mbtiworldcupresult",
+    name: "MBTIWorldCupResult",
+    component: MBTIWorldCupResult,
   },
   {
     path: "/profilesetting",
