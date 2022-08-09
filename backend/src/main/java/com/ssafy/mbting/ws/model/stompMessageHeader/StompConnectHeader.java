@@ -14,6 +14,10 @@ public class StompConnectHeader {
     private String accessToken;
     private String email;
 
+    public boolean isValid() {
+        return getEmail() != null && getAccessToken() != null;
+    }
+
     public static StompConnectHeader of(StompHeaderAccessor stompHeaderAccessor) {
         return StompConnectHeader.builder()
                 .sessionId(stompHeaderAccessor.getSessionId())
