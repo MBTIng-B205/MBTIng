@@ -69,7 +69,7 @@
   <!-- controller -->
   <div class="controller">
     <div class="left">
-      <el-button type="success" :icon="BellFilled" circle />
+      <el-button type="success" @click="greenlight" :icon="BellFilled" circle />
       <el-button type="danger" :icon="BellFilled" circle />
       <el-button type="info" :icon="QuestionFilled" circle />
       <span>라이트를 눌러 화상여부를 선택하세요</span>
@@ -157,8 +157,8 @@ export default {
       });
 
       getToken(state.mySessionId).then((token) => {
-        // token =
-        //   "wss://i7b205.p.ssafy.io:4443?sessionId=ses_J0lpY4CygF&token=tok_SWIrIydEDAq6ZLyT";
+        token =
+          "wss://i7b205.p.ssafy.io:4443?sessionId=ses_ETSA2l25Ta&token=tok_MopCDdtbQCpqqmph";
         state.session
           .connect(token, { clientData: state.myUserName })
           .then(() => {
