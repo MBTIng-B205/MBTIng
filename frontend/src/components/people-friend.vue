@@ -94,8 +94,8 @@
             </el-form-item>
             <el-form-item label="성별">
               <el-radio-group v-model="state.friend.gender">
-                <el-radio :label="true" disabled>남자</el-radio>
-                <el-radio :label="false" disabled>여자</el-radio>
+                <el-radio :label="'MALE'" disabled>남자</el-radio>
+                <el-radio :label="'FEMALE'" disabled>여자</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="생년월일">
@@ -111,6 +111,28 @@
                 v-model="state.friend.sido"
                 readonly
               />
+            </el-form-item>
+            <el-form-item label="관심사">
+              <el-checkbox-group
+                v-model="state.friend.interests"
+                style="width: 380px; align-items: center"
+                disabled
+              >
+                <el-checkbox label="캠핑" name="캠핑" />
+                <el-checkbox label="맛집탐방" name="맛집탐방" />
+                <el-checkbox label="코딩" name="코딩" />
+                <el-checkbox label="TV/영화" name="TV/영화" />
+                <el-checkbox label="스포츠" name="스포츠" />
+                <el-checkbox label="술" name="술" />
+                <el-checkbox label="음악" name="음악" />
+                <el-checkbox label="쇼핑" name="쇼핑" />
+                <el-checkbox label="자동차" name="자동차" />
+                <el-checkbox label="게임" name="게임" />
+                <el-checkbox label="동물" name="동물" />
+                <el-checkbox label="패션" name="패션" />
+                <el-checkbox label="뷰티" name="뷰티" />
+                <el-checkbox label="디자인" name="디자인" />
+              </el-checkbox-group>
             </el-form-item>
           </el-form>
         </el-row>
