@@ -34,9 +34,7 @@
     <div style="text-align: center">
       <el-row class="filebox">
         <img class="profile" :src="state.memberinfo.profileUrl" />
-        <!-- <input type="file" @change="onFileSelected" /> -->
-        <input class="upload-name" value="첨부파일" placeholder="첨부파일" />
-        <label for="file">파일찾기</label>
+        <label for="file">프로필 사진 변경</label>
         <input type="file" id="file" @change="onFileSelected" />
       </el-row>
       <el-row>
@@ -436,36 +434,41 @@ export default {
   width: 200px;
   height: 200px;
 }
-/* button {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-} */
-.filebox .upload-name {
-  display: inline-block;
-  height: 40px;
-  padding: 0 10px;
-  vertical-align: middle;
-  border: 1px solid #dddddd;
-  width: 78%;
-  color: #999999;
-}
 .filebox label {
   display: inline-block;
   padding: 10px 20px;
-  color: #fff;
+  color: black;
+  background-color: #fafafa;
   vertical-align: middle;
-  background-color: #999999;
   cursor: pointer;
-  height: 40px;
+  border-radius: 5px;
   margin-left: 10px;
+  margin-top: 10px;
 }
+.filebox label:hover {
+  background-color: #ecf5ff;
+  color: #409eff;
+  border-color: #409eff;
+}
+#checkButton {
+  display: inline-block;
+  padding: 5px 10px;
+  color: black;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 5px;
+  outline: 0;
+  border: 0;
+}
+/* #checkButton:hover {
+  background-color: #ecf5ff;
+  color: #409eff;
+  border-color: #409eff;
+} */
 .filebox input[type="file"] {
   position: absolute;
   width: 0;
   height: 0;
-  padding: 0;
   overflow: hidden;
-  border: 0;
 }
 </style>
