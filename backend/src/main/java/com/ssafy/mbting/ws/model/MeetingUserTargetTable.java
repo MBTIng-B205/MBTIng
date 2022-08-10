@@ -1,4 +1,4 @@
-package com.ssafy.mbting.ws.repository;
+package com.ssafy.mbting.ws.model;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
