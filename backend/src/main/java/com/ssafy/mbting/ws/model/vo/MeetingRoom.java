@@ -1,12 +1,20 @@
 package com.ssafy.mbting.ws.model.vo;
 
-import lombok.Builder;
-import lombok.Data;
+import com.ssafy.mbting.api.request.AnalysisRegisterRequest;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MeetingRoom {
-    private Boolean[] meetingRoomStatus;
+
     private String openviduSessionName;
-    private String[] sessionIds;
+    @Builder.Default
+    private Boolean[] meetingRoomStatus = new Boolean[2];
+    @Builder.Default
+    private String[] sessionIds = new String[2];
+    @Builder.Default
+    private AnalysisRegisterRequest[] meetingRoomResult = new AnalysisRegisterRequest[2];
 }

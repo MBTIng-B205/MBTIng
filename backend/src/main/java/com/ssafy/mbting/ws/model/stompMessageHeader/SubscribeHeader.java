@@ -14,18 +14,22 @@ import java.util.List;
 public class SubscribeHeader {
 
     private String destination;
+    private String mbti;
     private String gender;
     private String sido;
     @Builder.Default
     private List<String> interests = new ArrayList<>();
 
     public boolean isValid() {
-        return getGender() != null && getSido() != null;
+        return getMbti() != null
+                && getGender() != null
+                && getSido() != null;
     }
 
     public static SubscribeHeader of(StompHeaderAccessor stompHeaderAccessor) {
         return SubscribeHeader.builder()
                 .destination(stompHeaderAccessor.getDestination())
+                .mbti(stompHeaderAccessor.getFirstNativeHeader("mbti"))
                 .gender(stompHeaderAccessor.getFirstNativeHeader("gender"))
                 .sido(stompHeaderAccessor.getFirstNativeHeader("sido"))
                 .interests(stompHeaderAccessor.getNativeHeader("interests"))

@@ -9,6 +9,8 @@ public class StompUser {
     private String email;
     private StompUserStatus stompUserStatus;
     private MeetingUser meetingUser;
+    private String matchedMeetingUserSessionId;
+    private Boolean proposalAccepted;
     private String meetingRoomId;
     private Integer indexOnRoom;
 

@@ -26,6 +26,6 @@ public class DisconnectHandler implements StompCommandHandler {
         // 연결 해제 처리 : 사용자 제거
         logger.info("\n\n* {} *\n", stompCommand);
 
-        waitingMeetingService.disconnectUser(stompHeaderAccessor.getSessionId());
+        waitingMeetingService.disconnect(stompHeaderAccessor.getSessionId());
     }
 }

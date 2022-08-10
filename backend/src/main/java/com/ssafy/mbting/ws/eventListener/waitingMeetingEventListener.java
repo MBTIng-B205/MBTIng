@@ -4,13 +4,11 @@ import com.ssafy.mbting.ws.model.event.RequestToJoinQueueEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserMatchedEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
-import com.ssafy.mbting.ws.model.stompMessageBody.TempSuccess;
 import com.ssafy.mbting.ws.service.WaitingMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +23,7 @@ public class waitingMeetingEventListener {
     @EventListener
     public void onRequestToJoin(RequestToJoinQueueEvent event) {
         logger.debug("\n\nonRequestToJoin 이벤트 발생함\n");
-        waitingMeetingService.takeUser(event.getSessionId(), event.getMeetingUser());
+        waitingMeetingService.subscribe(event.getSessionId(), event.getMeetingUser());
     }
 
     @EventListener

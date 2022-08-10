@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MeetingUser {
 
+    private String mbti;
     private Gender gender;
     private String sido;
     @Builder.Default
@@ -20,6 +21,7 @@ public class MeetingUser {
 
     public static MeetingUser of(SubscribeHeader subscribeHeader) {
         return MeetingUser.builder()
+                .mbti(subscribeHeader.getMbti())
                 .gender(Gender.valueOf(subscribeHeader.getGender().trim().toUpperCase()))
                 .sido(subscribeHeader.getSido())
                 .interests(subscribeHeader.getInterests())
