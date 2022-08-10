@@ -62,7 +62,7 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     }
 
     @Override
-    public void takeUser(String sessionId, SubscribeHeader subscribeHeader, MessageChannel messageChannel) {
+    public void takeUser(String sessionId, SubscribeHeader subscribeHeader) {
         if(waitingMeetingUserRepository.findBySessionId(sessionId).getMeetingUser() != null) {
             logger.info("\n\n이미 대기열에 들어감\n");
             throw new RuntimeException("Already Queued!");

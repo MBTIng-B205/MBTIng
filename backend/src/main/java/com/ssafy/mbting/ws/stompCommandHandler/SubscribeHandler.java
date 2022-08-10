@@ -31,6 +31,6 @@ public class SubscribeHandler implements StompCommandHandler {
             throw new RuntimeException("Bad Request!");
         }
 
-        waitingMeetingService.takeUser(stompHeaderAccessor.getSessionId(), subscribeHeader, messageChannel);
+        waitingMeetingService.takeUser(stompHeaderAccessor.getSessionId(), subscribeHeader);
     }
 }

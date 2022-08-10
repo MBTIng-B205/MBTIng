@@ -8,6 +8,6 @@ public interface WaitingMeetingService {
 
     void connectUser(String sessionId, ConnectHeader connectHeader);
     void disconnectUser(String sessionId);
-    void takeUser(String sessionId, SubscribeHeader subscribeHeader, MessageChannel messageChannel);
+    void takeUser(String sessionId, SubscribeHeader subscribeHeader);
     boolean hasSubscribedDestinationBySessionId(String sessionId);
 }
