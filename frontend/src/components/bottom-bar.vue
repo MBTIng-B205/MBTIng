@@ -1,10 +1,11 @@
 <template>
-  <div class="controller">
-    <div class="left">
+  <div class="controller" style="display: flex; justify-content: space-between">
+    <div class="leftside" style="margin-left: 2rem">
       <el-button type="success" :icon="BellFilled" circle />
       <el-button type="danger" :icon="BellFilled" circle />
       <el-button type="info" :icon="QuestionFilled" circle />
-      <span>라이트를 눌러 화상여부를 선택하세요</span>
+    </div>
+    <div class="rightside" style="margin-right: 2rem">
       <el-button
         type="danger"
         :icon="WarningFilled"
@@ -15,14 +16,10 @@
         "
         >신고하기</el-button
       >
-      <el-button @click="videoOnOff">화면끄기</el-button>
-      <el-button @click="audioOnOff">소리끄기</el-button>
-      <!-- <el-button type="info" :icon="ChatDotSquare" round>채팅</el-button> -->
-      <el-button type="danger" :icon="Close" round @click="leaveSession"
-        >나가기</el-button
+      <el-button @click="chatOnOff" type="info" :icon="ChatDotSquare" round
+        >채팅</el-button
       >
     </div>
-
     <!-- report dialog -->
     <el-dialog v-model="sirenDialog" @close="sirenClose">
       <div style="font-weight: bold; float: left; margin: 10px">
@@ -48,52 +45,37 @@ import {
   BellFilled,
   WarningFilled,
   Close,
+  ChatDotSquare,
 } from "@element-plus/icons-vue";
 import { reactive } from "vue";
+
 export default {
-  setup(props, { emit }) {
-    const state = reactive({
-      video: true,
-      audio: true,
+  setup() {
+    const data = reactive({
+      flag: false,
     });
 
-    const videoOnOff = () => {
-      if (state.video) {
-        state.video = false;
-      } else {
-        state.video = true;
-      }
-
-      emit("videoOnOff", {
-        video: state.video,
-      });
+    const chatOnOff = () => {
+      data.flag = !data.flag;
+      console.log(data.flag);
     };
 
-    const audioOnOff = () => {
-      if (state.audio) {
-        state.audio = false;
-      } else {
-        state.audio = true;
-      }
-      console.log(state.audio);
-      emit("audioOnOff", {
-        audio: state.audio,
-      });
-    };
     return {
-      videoOnOff,
-      audioOnOff,
+      data,
+      chatOnOff,
       BellFilled,
       QuestionFilled,
       WarningFilled,
       Close,
+      ChatDotSquare,
     };
   },
 };
 </script>
 
-<style>
+<style scope>
 .controller {
   width: 100%;
+  height: 50px;
 }
 </style>

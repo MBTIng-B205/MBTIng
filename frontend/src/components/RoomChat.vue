@@ -30,9 +30,7 @@
       </ul>
     </div>
     <!-- 메시지 작성 -->
-    <div
-      style="position: absolute; bottom: 0; margin-left: 5px; margin-top: 10px"
-    >
+    <div style="position: absolute; margin-left: 5px; margin-top: 10px">
       <div class="">
         <el-input
           v-model="state.message"

@@ -1,42 +1,44 @@
 <template>
-  <el-container style="display: flex">
-    <div class="cam">
-      <div class="mbtiinfo">
-        <div class="mbtic"></div>
+  <el-container style="display: flex; flex-direction: column">
+    <!-- cam -->
+    <div class="cam" style="">
+      <div class="video1-wrapper">
         <user-video
-          class="userVideo-you"
+          class="uservideo-you"
           v-for="sub in state.subscribers"
           :key="sub.stream.connection.connectionId"
           :stream-manager="sub"
           @click="updateMainVideoStreamManager(sub)"
-          style=""
+          style="width: 100%; height: 100%"
         />
+      </div>
+      <div class="video2-wrapper">
         <user-video
           class="userVideo-me"
           :stream-manager="state.publisher"
           @click="updateMainVideoStreamManager(state.publisher)"
         />
-        <div id="session">
-          <div id="session-header">
-            <h1 id="seesion-title">{{ mySessionId }}</h1>
-          </div>
-        </div>
+        <video-controller
+          @videoOnOff="videoOnOff"
+          @audioOnOff="audioOnOff"
+        ></video-controller>
+      </div>
+
+      <div
+        class="chatdiv"
+        style="float: right; background-color: black; border-radius: 5px"
+      >
+        <room-chat
+          ref="chat"
+          @message="sendMessage"
+          :subscribers="subscribers"
+          style="width: 300px; height: 600px"
+        ></room-chat>
       </div>
     </div>
-    <!-- 
-    <div class="chatdiv">
-      <room-chat
-        ref="chat"
-        @message="sendMessage"
-        :subscribers="subscribers"
-        style="width: 300px; height: 600px; border-radius: 5px"
-      ></room-chat>
-    </div> -->
-    <div class="bardiv">
-      <bottom-bar
-        @videoOnOff="videoOnOff"
-        @audioOnOff="audioOnOff"
-      ></bottom-bar>
+
+    <div class="bar-wrapper" style="display: flex">
+      <bottom-bar></bottom-bar>
     </div>
   </el-container>
 </template>
@@ -53,8 +55,9 @@ import {
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/UserVideo.vue";
-// import RoomChat from "@/components/RoomChat.vue";
+import RoomChat from "@/components/RoomChat.vue";
 import BottomBar from "@/components/bottom-bar.vue";
+import VideoController from "@/components/video-controller.vue";
 import { reactive, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -66,8 +69,9 @@ const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 export default {
   components: {
     UserVideo,
-    //  RoomChat,
+    RoomChat,
     BottomBar,
+    VideoController,
   },
   setup() {
     const router = useRouter();
@@ -118,8 +122,6 @@ export default {
       });
 
       getToken(state.mySessionId).then((token) => {
-        // token =
-        //   "wss://i7b205.p.ssafy.io:4443?sessionId=ses_J0lpY4CygF&token=tok_SWIrIydEDAq6ZLyT";
         state.session
           .connect(token, { clientData: state.myUserName })
           .then(() => {
@@ -148,10 +150,6 @@ export default {
       });
       window.addEventListener("beforeunload", leaveSession);
     };
-    // const audioOnOff = ({ audio }) => {
-    //   console.log("audio");
-    //   this.publisher.publishAudio(audio);
-    // };
 
     const videoOnOff = ({ video }) => {
       console.log("video");
@@ -339,11 +337,8 @@ export default {
 .cam {
   display: flex;
   background-color: #7d7d7d;
-  width: 80%;
   height: 600px;
   margin-bottom: 34px;
-  justify-content: center;
-  align-items: center;
 }
 .mbtiinfo {
   background-color: #908d8d;
@@ -354,31 +349,26 @@ export default {
   display: flex;
   position: relative;
 }
-.mbtic {
+.video-wrapper {
+  width: 10rem;
+  height: 10rem;
+}
+.uservideo-you {
+  width: 100%;
+  height: 100%;
+}
+.chatdiv {
+  background-color: black;
+  z-index: 1;
+}
+::v-deep .uservideo-you video {
+  width: 500px;
+  height: 500px;
+}
+::v-deep .userVideo-me {
   display: flex;
-}
-.mbti {
-  left: 39%;
-  position: absolute;
-}
-
-.controller {
-  background-color: #fff4b8;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-}
-.right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.left {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.bardiv {
-  bottom: 0;
+  margin-top: auto;
+  margin-right: auto;
+  align-self: flex-start;
 }
 </style>
