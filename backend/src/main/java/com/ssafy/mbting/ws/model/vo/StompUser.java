@@ -7,12 +7,15 @@ import lombok.*;
 public class StompUser {
 
     private String email;
+    private StompUserStatus stompUserStatus;
     private MeetingUser meetingUser;
+    private String meetingRoomId;
+    private Integer indexOnRoom;
 
-    public static StompUser of(String email) {
+    public static StompUser ofBeforeSubscribe(String email) {
         return StompUser.builder()
                 .email(email)
-                .meetingUser(null)
+                .stompUserStatus(StompUserStatus.UNSUBSCRIBED)
                 .build();
     }
 }

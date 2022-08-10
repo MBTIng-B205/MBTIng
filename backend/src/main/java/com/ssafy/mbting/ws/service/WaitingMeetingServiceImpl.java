@@ -55,12 +55,11 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     }
 
     @Override
-    public void takeUser(String sessionId, SubscribeHeader subscribeHeader) {
+    public void takeUser(String sessionId, MeetingUser meetingUser) {
         if(waitingMeetingUserRepository.findBySessionId(sessionId).getMeetingUser() != null) {
             logger.info("\n\n이미 대기열에 들어감\n");
             throw new RuntimeException("Already Queued!");
         }
-        MeetingUser meetingUser = MeetingUser.of(subscribeHeader);
         waitingMeetingUserRepository.joinMeetingUser(sessionId, meetingUser);
         waitingMeetingUserRepository.addSessionIdToFeatureUserTables(sessionId, meetingUser);
 
