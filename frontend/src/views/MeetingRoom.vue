@@ -23,75 +23,7 @@
         </div>
       </div>
     </div>
-        <!--
-        <div class="mbtic">
-          <img src="@/assets/main-green.png" alt="main-green" />
-        </div>
-        -->
-        <div id="sessiion" v-if="state.session">
-          <div id="session-header">
-            <h1 id="seesion-title">{{ mySessionId }}</h1>
-            <input
-              class="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              @click="leaveSession"
-              value="Leave session"
-            />
-          </div>
-        </div>
-        <div class="mbti">
-          <h1 style="font-size: xxx-large; color: white">ESTP</h1>
-        </div>
-      </div>
-    </div>
-  </el-container>
-  <el-container>
-    <div class="cam">
-      <div class="mbtiinfo">
-        <div div class="mbtic">
-          <user-video
-            v-for="sub in state.subscribers"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-          />
-        </div>
-        <!--
-        <div class="mbtic">
-          <img src="@/assets/main-green.png" alt="main-green" />
-        </div>
-        -->
-        <div id="sessiion" v-if="state.session">
-          <div id="session-header">
-            <h1 id="seesion-title">{{ mySessionId }}</h1>
-            <input
-              class="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              @click="leaveSession"
-              value="Leave session"
-            />
-          </div>
-        </div>
-        <div class="mbti">
-          <h1 style="font-size: xxx-large; color: white">ESTP</h1>
-        </div>
-      </div>
-    </div>
-  </el-container>
-  <!-- controller -->
-  <div class="controller">
-    <div class="left">
-      <el-button type="success" @click="greenlight" :icon="BellFilled" circle />
-      <el-button type="danger" :icon="BellFilled" circle />
-      <el-button type="info" :icon="QuestionFilled" circle />
-      <span>라이트를 눌러 화상여부를 선택하세요</span>
-    </div>
-    <div class="timer"></div>
-    <div class="right">
-      <el-button type="danger" :icon="WarningFilled" round>신고하기</el-button>
-      <!--<el-button type="info" :icon="ChatDotSquare" round>채팅</el-button>-->
+
     <div class="chatdiv">
       <room-chat
         ref="chat"
@@ -182,8 +114,8 @@ export default {
       });
 
       getToken(state.mySessionId).then((token) => {
-        token =
-          "wss://i7b205.p.ssafy.io:4443?sessionId=ses_ETSA2l25Ta&token=tok_MopCDdtbQCpqqmph";
+        // token =
+        //   "wss://i7b205.p.ssafy.io:4443?sessionId=ses_J0lpY4CygF&token=tok_SWIrIydEDAq6ZLyT";
         state.session
           .connect(token, { clientData: state.myUserName })
           .then(() => {
