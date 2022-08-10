@@ -10,9 +10,10 @@ import java.time.Clock;
 public class WaitingMeetingUserQueuedEvent extends ApplicationEvent {
 
     private final String destination;
-
+    private final String email;
     public WaitingMeetingUserQueuedEvent(Object source, Clock clock, StompUser stompUser) {
         super(source, clock);
         destination = "/ws/sub/indi/" + stompUser.getEmail();
+        email = stompUser.getEmail();
     }
 }

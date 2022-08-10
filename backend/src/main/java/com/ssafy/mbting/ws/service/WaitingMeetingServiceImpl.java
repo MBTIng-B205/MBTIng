@@ -75,7 +75,8 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
                 new WaitingMeetingUserQueuedEvent(
                         this,
                         Clock.systemDefaultZone(),
-                        waitingMeetingUserRepository.findBySessionId(sessionId)));
+                        waitingMeetingUserRepository.findBySessionId(sessionId))
+                        );
 
 //        throw new RuntimeException("에러");
 
