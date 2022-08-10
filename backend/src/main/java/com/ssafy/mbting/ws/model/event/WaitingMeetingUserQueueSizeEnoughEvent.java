@@ -1,11 +1,13 @@
 package com.ssafy.mbting.ws.model.event;
 
+import lombok.*;
 import org.springframework.context.ApplicationEvent;
 
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 
+@Getter
 public class WaitingMeetingUserQueueSizeEnoughEvent extends ApplicationEvent {
 
     private static final long ENOUGH_INTERVAL_IN_SECOND = 3;
