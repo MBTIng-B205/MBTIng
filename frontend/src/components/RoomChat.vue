@@ -1,9 +1,12 @@
 <template>
-  <div class="wrapper" style="display: flex; flex-direction: column">
+  <div
+    class="wrapper"
+    style="display: flex; flex-direction: column-reverse; overflow-y: auto"
+  >
     <!-- chat-bar -->
-    <div ref="content" class="background-color: white; overflow-y: scroll">
+    <div ref="content" class="background-color: white;">
       <!-- 채팅 내용 -->
-      <ul id="chat-bar" style="list-style-type: none; overflow-y: scroll">
+      <ul id="chat-bar" style="list-style-type: none">
         <li class="" v-for="(chat, idx) in state.chats" :key="idx">
           <!-- 내가 보낸 채팅인 경우 -->
           <div v-if="chat.isMyMessage" class="">
@@ -27,9 +30,7 @@
       </ul>
     </div>
     <!-- 메시지 작성 -->
-    <div
-      style="position: absolute; bottom: 0; margin-left: 5px; margin-top: 10px"
-    >
+    <div style="position: absolute; margin-left: 5px; margin-top: 10px">
       <div class="">
         <el-input
           v-model="state.message"
@@ -96,7 +97,6 @@ export default {
       let isScrollBottom =
         chatBar.scrollHeight - chatBar.scrollTop <= chatBar.clientHeight + 2;
 
-      console.log(chatBar.scrollHeight, "이게뭔데?");
       // await 키워드 => 새로운 채팅 메시지 추가 완료 후 스크롤바가 아래로 이동되도록 함.
       await state.chats.push({
         userId: message.sender,
