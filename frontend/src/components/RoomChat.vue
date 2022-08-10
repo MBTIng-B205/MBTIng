@@ -1,49 +1,48 @@
 <template>
-  <div class="">
+  <div class="wrapper" style="display: flex; flex-direction: column">
     <!-- chat-bar -->
-    <div ref="content" class="">
+    <div ref="content" class="background-color: white; overflow-y: scroll">
       <!-- 채팅 내용 -->
-      <ul id="chat-bar">
+      <ul id="chat-bar" style="list-style-type: none; overflow-y: scroll">
         <li class="" v-for="(chat, idx) in state.chats" :key="idx">
           <!-- 내가 보낸 채팅인 경우 -->
           <div v-if="chat.isMyMessage" class="">
             <div>
-              <span>Me</span>
-            </div>
-            <div>
-              <p class="">
-                {{ chat.content }}
+              <p>
+                나 :
+                {{ chat.content.content }}
               </p>
             </div>
           </div>
           <!-- 다른 사람이 보낸 채팅인 경우 -->
           <div v-else>
             <div>
-              <span>{{ chat.userId }}</span>
-            </div>
-            <div>
               <p>
-                {{ chat.content }}
+                {{ chat.userId }} :
+                {{ chat.content.content }}
               </p>
             </div>
           </div>
         </li>
       </ul>
-
-      <div>
-        <!-- 메시지 작성 -->
-        <div>
-          <textarea
-            v-model="state.message"
-            @keydown.enter="sendMessage"
-          ></textarea>
-          <button
-            @click="sendMessage()"
-            class="h-6 w-6 send-icon cursor-pointer"
-          >
-            보내기
-          </button>
-        </div>
+    </div>
+    <!-- 메시지 작성 -->
+    <div
+      style="position: absolute; bottom: 0; margin-left: 5px; margin-top: 10px"
+    >
+      <div class="">
+        <el-input
+          v-model="state.message"
+          @keydown.enter="sendMessage"
+          style="width: 230px; margin-right: 3px"
+        >
+        </el-input>
+        <el-button
+          type="warning"
+          plain
+          :icon="Promotion"
+          @click="sendMessage()"
+        />
       </div>
     </div>
   </div>
@@ -51,7 +50,7 @@
 
 <script>
 import { reactive } from "vue";
-
+import { Promotion } from "@element-plus/icons-vue";
 export default {
   props: {
     subscribers: Object,
@@ -66,10 +65,6 @@ export default {
       subscribers: props.subscribers,
       chats: [],
     });
-
-    const toggle = () => {
-      state.isSidebarOpen = !state.isSidebarOpen;
-    };
 
     const sendMessage = () => {
       let strippeddMessage = state.message.trim();
@@ -97,13 +92,14 @@ export default {
       }
 
       let chatBar = document.querySelector("#chat-bar");
+      console.log(chatBar, "chatbar");
       let isScrollBottom =
         chatBar.scrollHeight - chatBar.scrollTop <= chatBar.clientHeight + 2;
 
+      console.log(chatBar.scrollHeight, "이게뭔데?");
       // await 키워드 => 새로운 채팅 메시지 추가 완료 후 스크롤바가 아래로 이동되도록 함.
       await state.chats.push({
         userId: message.sender,
-        time: message.time,
         content: message.content,
         isMyMessage: isMyMessage,
       });
@@ -116,7 +112,7 @@ export default {
       console.log("메시지 수신 완료");
     };
 
-    return { state, toggle, sendMessage, addMessage };
+    return { state, sendMessage, addMessage, Promotion };
   },
 };
 </script>

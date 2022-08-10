@@ -2,90 +2,43 @@
   <el-container>
     <div class="cam">
       <div class="mbtiinfo">
-        <div div class="mbtic">
-          <user-video
-            :stream-manager="state.publisher"
-            @click="updateMainVideoStreamManager(state.publisher)"
-          />
+        <div div class="mbtic"></div>
+        <user-video
+          class="userVideo-you"
+          v-for="sub in state.subscribers"
+          :key="sub.stream.connection.connectionId"
+          :stream-manager="sub"
+          @click="updateMainVideoStreamManager(sub)"
+          style=""
+        />
+        <user-video
+          class="userVideo-me"
+          :stream-manager="state.publisher"
+          @click="updateMainVideoStreamManager(state.publisher)"
+        />
+        <div id="session">
+          <div id="session-header">
+            <h1 id="seesion-title">{{ mySessionId }}</h1>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <!--
-        <div class="mbtic">
-          <img src="@/assets/main-green.png" alt="main-green" />
-        </div>
-        -->
-        <div id="sessiion" v-if="state.session">
-          <div id="session-header">
-            <h1 id="seesion-title">{{ mySessionId }}</h1>
-            <input
-              class="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              @click="leaveSession"
-              value="Leave session"
-            />
-          </div>
-        </div>
-        <div class="mbti">
-          <h1 style="font-size: xxx-large; color: white">ESTP</h1>
-        </div>
-      </div>
-    </div>
-  </el-container>
-  <el-container>
-    <div class="cam">
-      <div class="mbtiinfo">
-        <div div class="mbtic">
-          <user-video
-            v-for="sub in state.subscribers"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-          />
-        </div>
-        <!--
-        <div class="mbtic">
-          <img src="@/assets/main-green.png" alt="main-green" />
-        </div>
-        -->
-        <div id="sessiion" v-if="state.session">
-          <div id="session-header">
-            <h1 id="seesion-title">{{ mySessionId }}</h1>
-            <input
-              class="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              @click="leaveSession"
-              value="Leave session"
-            />
-          </div>
-        </div>
-        <div class="mbti">
-          <h1 style="font-size: xxx-large; color: white">ESTP</h1>
-        </div>
-      </div>
-    </div>
-  </el-container>
-  <!-- controller -->
-  <div class="controller">
-    <div class="left">
-      <el-button type="success" :icon="BellFilled" circle />
-      <el-button type="danger" :icon="BellFilled" circle />
-      <el-button type="info" :icon="QuestionFilled" circle />
-      <span>라이트를 눌러 화상여부를 선택하세요</span>
-    </div>
-    <div class="timer"></div>
-    <div class="right">
-      <el-button type="danger" :icon="WarningFilled" round>신고하기</el-button>
-      <!--<el-button type="info" :icon="ChatDotSquare" round>채팅</el-button>-->
+    <div class="chatdiv">
       <room-chat
         ref="chat"
         @message="sendMessage"
         :subscribers="subscribers"
+        style="
+          border-color: deeppink;
+          width: 300px;
+          height: 300px;
+          border-radius: 5px;
+        "
       ></room-chat>
-      <el-button type="danger" :icon="Close" round>나가기</el-button>
     </div>
-  </div>
+    <bottom-bar @videoOnOff="videoOnOff" @audioOnOff="audioOnOff"></bottom-bar>
+  </el-container>
 </template>
 
 <script>
@@ -101,16 +54,20 @@ import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/UserVideo.vue";
 import RoomChat from "@/components/RoomChat.vue";
-import { reactive, ref } from "@vue/reactivity";
-import { onMounted } from "@vue/runtime-core";
+import BottomBar from "@/components/bottom-bar.vue";
+import { reactive, ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 export default {
-  components: { UserVideo, RoomChat },
+  components: { UserVideo, RoomChat, BottomBar },
   setup() {
+    const router = useRouter();
+    const store = useStore();
     const state = reactive({
       OV: undefined,
       session: undefined,
@@ -130,6 +87,7 @@ export default {
 
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
+        console.log(subscriber, "이거다");
         state.subscribers.push(subscriber);
         console.log("streamCreated");
       });
@@ -148,7 +106,6 @@ export default {
 
       // Add chat
       state.session.on("signal:public-chat", (event) => {
-        console.log(chat.value, "chat들어오냐?");
         chat.value.addMessage(
           event.data,
           JSON.parse(event.data).sender === state.myUserName,
@@ -165,9 +122,9 @@ export default {
             let publisher = state.OV.initPublisher(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: false, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: false, // Whether you want to start publishing with your video enabled or not
-              resolution: "640x480", // The resolution of your video
+              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: true, // Whether you want to start publishing with your video enabled or not
+              resolution: "320x240", // The resolution of your video
               frameRate: 30, // The frame rate of your video
               insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
               mirror: true, // Whether to mirror your local video or not
@@ -185,9 +142,23 @@ export default {
             );
           });
       });
-
       window.addEventListener("beforeunload", leaveSession);
     };
+    // const audioOnOff = ({ audio }) => {
+    //   console.log("audio");
+    //   this.publisher.publishAudio(audio);
+    // };
+
+    const videoOnOff = ({ video }) => {
+      console.log("video");
+      state.publisher.publishVideo(video);
+    };
+
+    const audioOnOff = ({ audio }) => {
+      console.log("audio");
+      state.publisher.publishAudio(audio);
+    };
+
     const leaveSession = () => {
       if (state.session) state.session.disconnect();
 
@@ -198,6 +169,7 @@ export default {
       state.OV = undefined;
 
       window.removeEventListener("beforeunload", leaveSession);
+      router.push({ name: "HomeView" });
     };
 
     const updateMainVideoStreamManager = (stream) => {
@@ -288,22 +260,61 @@ export default {
           type: "public-chat",
         })
         .then(() => {
-          console.log("전송완료요~", messageData);
+          console.log(messageData);
         })
         .catch((error) => {
           console.log(error);
         });
     };
+
+    // 신고기능
+    const sirenDialog = ref(false);
+    const sirenMsg = ref("");
+    const sirenOpen = function () {
+      sirenDialog.value = true;
+    };
+
+    const sirenClose = function () {
+      sirenMsg.value = "";
+      sirenDialog.value = false;
+    };
+
+    const clickSiren = function () {
+      console.log("신고", sirenMsg.value);
+      if (sirenMsg.value == "") {
+        alert("신고 사유를 입력하세요!");
+      } else {
+        store
+          .dispatch("reports/registerReport", {
+            from: state.memberinfo.email,
+            to: state.message.sender.email,
+            content: sirenMsg.value,
+          })
+          .then(function (result) {
+            console.log("result-report", result);
+            alert("신고가 접수되었습니다.");
+          });
+        sirenClose();
+      }
+    };
+
     return {
       state,
       chat,
       joinSession,
       leaveSession,
+      videoOnOff,
+      audioOnOff,
       updateMainVideoStreamManager,
       getToken,
       createSession,
       createToken,
       sendMessage,
+      sirenDialog,
+      sirenMsg,
+      sirenOpen,
+      sirenClose,
+      clickSiren,
       Check,
       QuestionFilled,
       BellFilled,
