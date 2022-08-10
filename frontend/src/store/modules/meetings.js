@@ -25,6 +25,9 @@ export const meetings = {
     getSocket(state) {
       return state.mtsocket;
     },
+    getToken(state) {
+      return state.token;
+    },
   },
   // 체크 필요
   actions: {
