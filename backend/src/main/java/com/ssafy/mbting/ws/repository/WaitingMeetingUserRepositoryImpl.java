@@ -40,7 +40,7 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     }
 
     @Override
-    public void queueMeetingUser(String sessionId, MeetingUser meetingUser) {
+    public void joinMeetingUser(String sessionId, MeetingUser meetingUser) {
         sessionIdStompUserMap.get(sessionId).setMeetingUser(meetingUser);
     }
 

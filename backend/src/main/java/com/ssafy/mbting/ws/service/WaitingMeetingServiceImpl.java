@@ -15,16 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.messaging.support.MessageHeaderInitializer;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +61,7 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
             throw new RuntimeException("Already Queued!");
         }
         MeetingUser meetingUser = MeetingUser.of(subscribeHeader);
-        waitingMeetingUserRepository.queueMeetingUser(sessionId, meetingUser);
+        waitingMeetingUserRepository.joinMeetingUser(sessionId, meetingUser);
         waitingMeetingUserRepository.addSessionIdToFeatureUserTables(sessionId, meetingUser);
 
         applicationEventPublisher.publishEvent(
