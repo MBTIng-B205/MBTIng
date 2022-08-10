@@ -79,7 +79,7 @@ export default {
 
     const connect = function () {
       let testemail = Math.random().toString(36).substring(2, 12);
-      const serverURL = "http://localhost:8080/ws/connect";
+      const serverURL = process.env.VUE_APP_WS_SERVER_BASE_URL + "/ws/connect";
       let socket = new SockJS(serverURL);
       state.stompClient = Stomp.over(socket);
       store.commit("meetings/SET_SOCKET", state.stompClient);
