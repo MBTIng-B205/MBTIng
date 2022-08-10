@@ -16,6 +16,7 @@
     "element-plus": "^2.2.10",
     "sockjs-client": "^1.6.1",
     "stomp-client": "^0.9.0",
+    "openvidu-browser": "^2.22.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vue-stomp": "^0.0.5",

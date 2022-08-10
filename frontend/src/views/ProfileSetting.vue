@@ -37,8 +37,8 @@
             </el-form-item>
             <el-form-item label="성별">
               <el-radio-group v-model="form.gender" style="margin-left: 30px">
-                <el-radio :label="true">남자</el-radio>
-                <el-radio :label="false">여자</el-radio>
+                <el-radio :label="true" :value="Male">남자</el-radio>
+                <el-radio :label="false" :value="Female">여자</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="생년월일">
@@ -115,7 +115,6 @@ export default {
     const router = useRouter();
     const store = useStore();
     const tmpmemberinfo = computed(() => store.getters["accounts/getMember"]);
-
     const option = [
       {
         value: "서울",
@@ -188,6 +187,7 @@ export default {
     ];
 
     const form = reactive({
+      profileUrl: "",
       mbti: tmpmemberinfo.value.mbti,
       nickname: tmpmemberinfo.value.nickname,
       gender: {},
@@ -238,6 +238,9 @@ export default {
 </script>
 
 <style>
+.logo {
+  width: 250px;
+}
 .el-row {
   display: flex;
   flex-wrap: wrap;

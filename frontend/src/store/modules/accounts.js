@@ -55,7 +55,20 @@ export const accounts = {
         },
       });
     },
-
+    profileUpload({ state }, upfile) {
+      console.log("ProfileUpload 확인", upfile);
+      let formData = new FormData();
+      formData.append("upfile", upfile);
+      return axios.post(
+        `${base.baseUrl}/users/userprofile/${state.member.email}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    },
     getMemberinfo() {
       let jwt = sessionStorage.getItem("access-token");
       console.log("jwt", jwt);
@@ -65,25 +78,18 @@ export const accounts = {
     updateMemberinfo({ state }) {
       const params = {
         email: state.member.email,
-        nickname: state.member.nickname,
-        sido: state.member.sido,
+        interests: state.member.interests,
         mbti: state.member.mbti,
+        nickname: state.member.nickname,
         profileUrl: state.member.profileUrl,
+        sido: state.member.sido,
       };
       let jwt = sessionStorage.getItem("access-token");
       console.log(jwt);
       console.log("updateparams", params);
-      return axios.put(`${base.baseUrl}/users`, params, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      return axios.put(`${base.baseUrl}/users`, params);
     },
-    // 주석추가.
     deleteMemberinfo({ state }) {
-      // const params = {
-      //   email: state.member.email,
-      // };
       console.log(state.member.email);
       return axios.delete(`${base.baseUrl}/users/?email=${state.member.email}`);
     },

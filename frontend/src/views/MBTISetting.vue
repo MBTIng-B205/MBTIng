@@ -74,7 +74,7 @@
         </el-button-group>
       </el-form>
       <div>자신의 MBTI를 모르시나요?</div>
-      <router-link to="/MBTITest">간단검사 하러가기</router-link>
+      <router-link to="/mymbtitest">간단검사 하러가기</router-link>
       <el-footer>
         <el-button
           type="warning"
@@ -141,6 +141,9 @@ export default {
 </script>
 
 <style>
+.logo {
+  width: 250px;
+}
 .el-button-group .el-button {
   font-size: xx-large;
   width: 100px;
