@@ -6,6 +6,7 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.api.service.OpenviduService;
 import com.ssafy.mbting.common.util.JwtTokenUtil;
+import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
 import com.ssafy.mbting.ws.model.stompMessageHeader.ConnectHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingRoom;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.util.UUID;
 
 @Service
@@ -62,11 +64,14 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     public void subscribe(String sessionId, MeetingUser meetingUser) {
         waitingMeetingUserRepository.saveMeetingUser(sessionId, meetingUser);
         waitingMeetingUserRepository.joinToQueue(sessionId);
+        applicationEventPublisher.publishEvent(new WaitingMeetingUserQueuedEvent(
+                this,
+                Clock.systemDefaultZone()
+        ));
     }
 
     @Override
     public MeetingUser saveAndGetMatchedMeetingUser(String subjectSessionId, String matchedSessionId) {
-        // Todo ...
         waitingMeetingUserRepository.findBySessionId(subjectSessionId)
                 .setMatchedMeetingUserSessionId(matchedSessionId);
         return waitingMeetingUserRepository.findBySessionId(matchedSessionId)
@@ -102,6 +107,23 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     @Override
     public void rejoin(String sessionId) {
         waitingMeetingUserRepository.joinToQueue(sessionId);
+    }
+
+    @Override
+    public int getQueueSize() {
+        return waitingMeetingUserRepository.getQueueSize();
+    }
+
+    @Override
+    public String getFirstSessionId() {
+        String firstSessionId = waitingMeetingUserRepository.getFirstSessionId().get();
+        waitingMeetingUserRepository.leaveFromQueue(firstSessionId);
+        return firstSessionId;
+    }
+
+    @Override
+    public StompUser getStompUserBySessionId(String sessionId) {
+        return waitingMeetingUserRepository.findBySessionId(sessionId);
     }
 
     private boolean identicalTokenAndEmail(String accessToken, String email) {

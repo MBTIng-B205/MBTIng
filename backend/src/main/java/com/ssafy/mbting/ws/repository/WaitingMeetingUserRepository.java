@@ -5,6 +5,8 @@ import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import com.ssafy.mbting.ws.model.vo.StompUser;
 import com.ssafy.mbting.ws.model.vo.StompUserStatus;
 
+import java.util.Optional;
+
 public interface WaitingMeetingUserRepository {
 
     StompUser createSession(String sessionId, StompUser stompUser);
@@ -17,4 +19,6 @@ public interface WaitingMeetingUserRepository {
     StompUser findBySessionId(String sessionId);
     void addSessionIdToFeatureUserTables(String sessionId, MeetingUser meetingUser);
     void removeSessionIdFromFeatureUserTables(String sessionId, MeetingUser meetingUser);
+    int getQueueSize();
+    Optional<String> getFirstSessionId();
 }

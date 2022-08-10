@@ -2,7 +2,6 @@ package com.ssafy.mbting.ws.repository;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.ssafy.mbting.api.request.AnalysisRegisterRequest;
 import com.ssafy.mbting.db.enums.Gender;
 import com.ssafy.mbting.ws.model.vo.MeetingRoom;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
@@ -13,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -97,5 +96,15 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
         sidoSessionIdMap.get(meetingUser.getSido()).remove(sessionId);
         meetingUser.getInterests().forEach(
                 interest -> interestSessionIdMap.get(interest).remove(sessionId));
+    }
+
+    @Override
+    public int getQueueSize() {
+        return sessionIdStompUserMap.size();
+    }
+
+    @Override
+    public Optional<String> getFirstSessionId() {
+        return waitingMeetingUserQueue.stream().findFirst();
     }
 }
