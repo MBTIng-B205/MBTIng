@@ -1,8 +1,8 @@
 <template>
-  <el-container>
+  <el-container style="display: flex">
     <div class="cam">
       <div class="mbtiinfo">
-        <div div class="mbtic"></div>
+        <div class="mbtic"></div>
         <user-video
           class="userVideo-you"
           v-for="sub in state.subscribers"
@@ -23,21 +23,21 @@
         </div>
       </div>
     </div>
-
+    <!-- 
     <div class="chatdiv">
       <room-chat
         ref="chat"
         @message="sendMessage"
         :subscribers="subscribers"
-        style="
-          border-color: deeppink;
-          width: 300px;
-          height: 300px;
-          border-radius: 5px;
-        "
+        style="width: 300px; height: 600px; border-radius: 5px"
       ></room-chat>
+    </div> -->
+    <div class="bardiv">
+      <bottom-bar
+        @videoOnOff="videoOnOff"
+        @audioOnOff="audioOnOff"
+      ></bottom-bar>
     </div>
-    <bottom-bar @videoOnOff="videoOnOff" @audioOnOff="audioOnOff"></bottom-bar>
   </el-container>
 </template>
 
@@ -53,7 +53,7 @@ import {
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/UserVideo.vue";
-import RoomChat from "@/components/RoomChat.vue";
+// import RoomChat from "@/components/RoomChat.vue";
 import BottomBar from "@/components/bottom-bar.vue";
 import { reactive, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -64,7 +64,11 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 export default {
-  components: { UserVideo, RoomChat, BottomBar },
+  components: {
+    UserVideo,
+    //  RoomChat,
+    BottomBar,
+  },
   setup() {
     const router = useRouter();
     const store = useStore();
@@ -364,13 +368,6 @@ export default {
   display: flex;
   justify-content: center;
 }
-.timer {
-  background-color: deeppink;
-  height: 100px;
-  width: 300px;
-  margin-right: 10px;
-  margin-left: 10px;
-}
 .right {
   display: flex;
   justify-content: center;
@@ -380,5 +377,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.bardiv {
+  bottom: 0;
 }
 </style>

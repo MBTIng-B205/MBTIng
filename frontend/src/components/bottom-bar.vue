@@ -5,9 +5,6 @@
       <el-button type="danger" :icon="BellFilled" circle />
       <el-button type="info" :icon="QuestionFilled" circle />
       <span>라이트를 눌러 화상여부를 선택하세요</span>
-    </div>
-    <div class="timer"></div>
-    <div class="right">
       <el-button
         type="danger"
         :icon="WarningFilled"
@@ -95,4 +92,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.controller {
+  width: 100%;
+}
+</style>
