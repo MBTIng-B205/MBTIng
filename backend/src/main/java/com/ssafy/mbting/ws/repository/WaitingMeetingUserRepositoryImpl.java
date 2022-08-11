@@ -50,13 +50,6 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     }
 
     @Override
-    public StompUserStatus getStompUserStatus(String sessionId) {
-        StompUserStatus stompUserStatus = sessionIdStompUserMap.get(sessionId).getStompUserStatus();
-        logger.debug("\n\n세션 \"{}\" 현재 상태: {}\n", sessionId, stompUserStatus);
-        return stompUserStatus;
-    }
-
-    @Override
     public void saveMeetingUser(String sessionId, MeetingUser meetingUser) {
         StompUser stompUser = sessionIdStompUserMap.get(sessionId);
         if (stompUser == null) {
@@ -93,9 +86,9 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     }
 
     @Override
-    public void setProposalAccepted(String sessionId, Boolean proposalAccepted) {
-        sessionIdStompUserMap.get(sessionId).setProposalAccepted(proposalAccepted);
-        logger.debug("\n\n세션 \"{}\" 에 제안 수락 여부를 {} 로 세팅\n", sessionId, proposalAccepted);
+    public void setProposalAccepted(String sessionId, Boolean accepted) {
+        sessionIdStompUserMap.get(sessionId).setProposalAccepted(accepted);
+        logger.debug("\n\n세션 \"{}\" 에 제안 수락 여부를 {} 로 세팅\n", sessionId, accepted);
     }
 
     @Override
@@ -117,9 +110,9 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     }
 
     @Override
-    public StompUser findBySessionId(String sessionId) {
-        StompUser stompUser = sessionIdStompUserMap.get(sessionId);
-        logger.debug("\n\nStompUser found\n({}, {})\n", sessionId, stompUser);
+    public Optional<StompUser> findBySessionId(String sessionId) {
+        Optional<StompUser> stompUser = Optional.ofNullable(sessionIdStompUserMap.get(sessionId));
+        stompUser.ifPresent(user -> logger.debug("\n\nStompUser found\n({}, {})\n", sessionId, user));
         return stompUser;
     }
 

@@ -32,7 +32,8 @@ public class MeetingController {
     public void receiveProposalResult(@Payload Message<Boolean> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
         String sessionId = header.getSessionId();
-        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
+        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
         String email = stompUser.getEmail();
         applicationEventPublisher.publishEvent(new ProposalResultArriveEvent(
                 this,
@@ -45,7 +46,8 @@ public class MeetingController {
     public void receiveRejoin(@Payload Message message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
         String sessionId = header.getSessionId();
-        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
+        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(email).toString(),
@@ -56,7 +58,8 @@ public class MeetingController {
     public void receiveAudioStarted(@Payload Message<String> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
         String sessionId = header.getSessionId();
-        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
+        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(email).toString(),
@@ -68,7 +71,8 @@ public class MeetingController {
     public void receiveGreenLight(@Payload Message<String> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
         String sessionId = header.getSessionId();
-        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
+        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(email).toString(),
@@ -79,7 +83,8 @@ public class MeetingController {
     public void receiveRedLight(@Payload Message<String> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
         String sessionId = header.getSessionId();
-        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
+        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
         String email = stompUser.getEmail();
 
         simpMessagingTemplate.convertAndSend(

@@ -21,7 +21,12 @@ public class SendHandler implements StompCommandHandler {
         // 메시지 처리 : 사용자 구독 확인
         logger.info("\n\n* {} *\n", stompCommand);
 
-        if (waitingMeetingService.getStompUserBySessionId(stompHeaderAccessor.getSessionId()).getMeetingUser() == null)
+        if (waitingMeetingService
+                .getStompUserBySessionId(stompHeaderAccessor
+                        .getSessionId())
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                .getMeetingUser() == null) {
             throw new RuntimeException("Bad Request!");
+        }
     }
 }

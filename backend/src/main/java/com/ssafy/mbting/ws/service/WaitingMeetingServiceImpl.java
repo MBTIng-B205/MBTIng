@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -57,14 +58,13 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
 
     @Override
     public void disconnect(String sessionId) {
-        StompUserStatus status;
-        try {
-            status = waitingMeetingUserRepository.getStompUserStatus(sessionId);
-        } catch (NullPointerException e) {
+        Optional<StompUser> stompUser = waitingMeetingUserRepository.findBySessionId(sessionId);
+        if (!stompUser.isPresent()) {
             logger.debug("\n\n세션이 이미 없어졌습니다. 아무 일도 하지 않습니다.\n");
             return;
         }
-        logger.debug("\n\ndisconnect 시도...");
+        StompUserStatus status = stompUser.get().getStompUserStatus();
+        logger.debug("\n\ndisconnect 시도...\n현재 상태: {}", status);
         switch (status) {
             case UNSUBSCRIBED:
                 // 여기서는 할 게 없음
@@ -142,7 +142,7 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     }
 
     @Override
-    public StompUser getStompUserBySessionId(String sessionId) {
+    public Optional<StompUser> getStompUserBySessionId(String sessionId) {
         return waitingMeetingUserRepository.findBySessionId(sessionId);
     }
 

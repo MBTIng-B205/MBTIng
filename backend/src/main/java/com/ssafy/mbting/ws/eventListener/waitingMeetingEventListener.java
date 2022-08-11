@@ -74,8 +74,10 @@ public class waitingMeetingEventListener {
 
         waitingMeetingService.setMatchedMeetingUsers(sessionId1, sessionId2);
 
-        StompUser stompUser1 = waitingMeetingService.getStompUserBySessionId(sessionId1);
-        StompUser stompUser2 = waitingMeetingService.getStompUserBySessionId(sessionId2);
+        StompUser stompUser1 = waitingMeetingService.getStompUserBySessionId(sessionId1)
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
+        StompUser stompUser2 = waitingMeetingService.getStompUserBySessionId(sessionId2)
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
 
         simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(stompUser1.getEmail()).toString(),

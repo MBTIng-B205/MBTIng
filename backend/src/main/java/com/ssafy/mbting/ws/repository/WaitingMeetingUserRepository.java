@@ -11,15 +11,14 @@ public interface WaitingMeetingUserRepository {
 
     StompUser createSession(String sessionId, StompUser stompUser);
     void removeSession(String sessionId);
-    StompUserStatus getStompUserStatus(String sessionId);
     void saveMeetingUser(String sessionId, MeetingUser meetingUser);
     void joinToQueue(String sessionId);
     void leaveFromQueue(String sessionId);
     void setMatchedMeetingUser(String subjectSessionId, String matchedSessionId);
-    void setProposalAccepted(String sessionId, Boolean proposalAccepted);
+    void setProposalAccepted(String sessionId, Boolean accepted);
     void saveMeetingRoom(String meetingRoomId, MeetingRoom meetingRoom);
     void setMeetingRoomIdAndIndex(String sessionId, String meetingRoomId, Integer indexOnRoom);
-    StompUser findBySessionId(String sessionId);
+    Optional<StompUser> findBySessionId(String sessionId);
     int getQueueSize();
     Optional<String> getFirstSessionId();
 }

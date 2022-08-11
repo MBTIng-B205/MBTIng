@@ -4,6 +4,8 @@ import com.ssafy.mbting.ws.model.stompMessageHeader.ConnectHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import com.ssafy.mbting.ws.model.vo.StompUser;
 
+import java.util.Optional;
+
 public interface WaitingMeetingService {
 
     void connect(String sessionId, ConnectHeader connectHeader);
@@ -14,6 +16,6 @@ public interface WaitingMeetingService {
     void rejoin(String sessionId);
     int getQueueSize();
     String getFirstSessionId();
-    StompUser getStompUserBySessionId(String sessionId);
-    void setProposalAccepted(String sessionId, Boolean accepted);
+    Optional<StompUser> getStompUserBySessionId(String sessionId);
+    void setProposalAcceptedAndHandleIt(String sessionId, Boolean accepted);
 }
