@@ -31,20 +31,18 @@
     </div>
     <!-- 메시지 작성 -->
     <div style="position: absolute; margin-left: 5px">
-      <div class="">
-        <el-input
-          v-model="state.message"
-          @keydown.enter="sendMessage"
-          style="width: 230px; margin-right: 3px"
-        >
-        </el-input>
-        <el-button
-          type="warning"
-          plain
-          :icon="Promotion"
-          @click="sendMessage()"
-        />
-      </div>
+      <el-input
+        v-model="state.message"
+        @keydown.enter="sendMessage"
+        style="width: 230px; margin-right: 3px"
+      >
+      </el-input>
+      <el-button
+        type="warning"
+        plain
+        :icon="Promotion"
+        @click="sendMessage()"
+      />
     </div>
   </div>
 </template>
@@ -79,11 +77,10 @@ export default {
         to: state.selectedUser,
       });
 
-      state.chats.append({
-        content: strippeddMessage,
-      });
       event.preventDefault(); // enter키 누를 때 줄바꿈 방지
+      console.log(state.message, "보내기");
       state.message = ""; // 메시지 창 초기화
+      console.log(state.message, "보낸후");
 
       console.log(state.subscribers);
     };
@@ -130,7 +127,7 @@ export default {
 }
 .wrapper::-webkit-scrollbar-thumb {
   height: 30%;
-  background: #ff889c;
+  background: rgb(255, 189, 207);
   border-radius: 10px;
 }
 .wrapper::-webkit-scrollbar-track {
