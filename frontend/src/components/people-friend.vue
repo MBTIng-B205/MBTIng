@@ -20,27 +20,39 @@
       style="flex-direction: row; justify-content: flex-start"
     >
       <el-col :span="8" v-for="friend in state.friends" :key="friend">
-        <el-card @click="onFriendProfile(friend)">
-          <el-popconfirm
-            confirm-button-text="삭제"
-            cancel-button-text="취소"
-            title="친구를 삭제하시겠습니까?"
-            @confirm="deleteFriend(friend)"
-          >
-            <template #reference>
-              <el-button
-                @click.stop
-                class="delete"
-                :icon="CircleCloseFilled"
-              ></el-button>
-            </template>
-          </el-popconfirm>
+        <el-card
+          style="
+            cursor: pointer;
+            padding: 20px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
+          "
+          @click="onFriendProfile(friend)"
+        >
+          <div>
+            <el-popconfirm
+              confirm-button-text="삭제"
+              cancel-button-text="취소"
+              title="친구를 삭제하시겠습니까?"
+              @confirm="deleteFriend(friend)"
+            >
+              <template #reference>
+                <el-button @click.stop class="delete"
+                  ><img src="@/assets/x.png"
+                /></el-button>
+              </template>
+            </el-popconfirm>
+          </div>
+
           <img class="friendProfile" :src="friend.profileUrl" />
           <div style="font-weight: bold">
             <p>{{ friend.nickname }}</p>
             <p>{{ friend.mbti }}</p>
           </div>
-          <el-button @click.stop="messageOpen(friend)">쪽지 보내기</el-button>
+          <button class="buttonStyle" @click.stop="messageOpen(friend)">
+            쪽지 보내기
+          </button>
         </el-card>
       </el-col>
     </el-row>
@@ -50,7 +62,7 @@
 
     <el-dialog v-model="messageDialog" @close="messageClose">
       <el-header style="text-align: left; padding-top: 10px">
-        <span class="to"> TO. </span>
+        <span class="to"> To. </span>
         <span class="toFriend"> {{ state.toFriend.nickname }}</span>
         <img class="friendIcon" src="@/assets/friends.png" />
       </el-header>
@@ -61,7 +73,9 @@
         rows="10"
       />
       <div style="margin-top: 20px">
-        <el-button type="success" @click="clickSend">전송</el-button>
+        <el-button style="background-color: deeppink" @click="clickSend"
+          >전송</el-button
+        >
         <el-button @click="messageClose">취소</el-button>
       </div>
     </el-dialog>
@@ -144,7 +158,6 @@
 <script>
 import { useStore } from "vuex";
 import { ref, reactive, onMounted, computed } from "vue";
-import { CircleCloseFilled, UserFilled } from "@element-plus/icons-vue";
 export default {
   setup() {
     const key = ref("");
@@ -281,8 +294,6 @@ export default {
       key,
       messageDialog,
       message,
-      CircleCloseFilled,
-      UserFilled,
       onFriendProfile,
       friendProfileClose,
       onSearch,
@@ -295,9 +306,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-header {
-  background-color: #9dd098;
+  background-color: rgb(255, 189, 207);
 }
 .friendProfile {
   width: 100px;
@@ -314,12 +325,12 @@ export default {
 .el-card {
   width: 250px;
   margin: 20px;
+  font-size: 20px;
 }
 .to {
   font-size: 30px;
   color: #cc3366;
   font-weight: bolder;
-  text-shadow: 2px 4px 2px gray;
 }
 .toFriend {
   font-size: 20px;
@@ -329,10 +340,31 @@ export default {
   width: 25px;
   height: 25px;
   margin-left: 15px;
+  vertical-align: middle;
+  margin-bottom: 10px;
 }
 .profile {
   border-radius: 50%;
   width: 200px;
   height: 200px;
+}
+.buttonStyle {
+  cursor: pointer;
+  width: 200px;
+  background-color: rgb(255, 189, 207);
+  padding: 10px;
+  border-radius: 10px;
+  border: solid rgb(255, 189, 207);
+}
+.buttonStyle:active {
+  background-color: rgb(255, 91, 136);
+  color: white;
+}
+.buttonStyle:hover {
+  background-color: rgb(255, 91, 136);
+  color: white;
+}
+.activeCard .el-card__body {
+  background-color: rgb(255, 91, 136);
 }
 </style>

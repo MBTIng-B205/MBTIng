@@ -196,19 +196,13 @@ export default {
   z-index: 1;
 }
 
-.navbar {
-  background-color: #fff4b8;
-  display: flex;
-  justify-content: space-between;
-}
-
 .bg {
   position: relative;
 }
 .bg0 {
   height: 400px;
   width: 100%;
-  background-color: #fff4b8;
+  background-color: #fadce1;
 }
 .bg1 {
   height: 60px;

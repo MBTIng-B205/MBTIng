@@ -200,9 +200,6 @@ export default {
 </script>
 
 <style>
-.logo {
-  width: 250px;
-}
 .small {
   width: 200px;
   height: 250px;
@@ -215,7 +212,7 @@ export default {
   padding: 10px;
   height: 275px;
   width: 600px;
-  border: 20px solid deeppink;
+  border: 20px solid rgb(255, 91, 136);
   background-color: white;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
 }

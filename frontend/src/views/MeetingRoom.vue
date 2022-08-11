@@ -1,39 +1,50 @@
 <template>
-  <el-container style="display: flex; flex-direction: column">
+  <el-container
+    style="display: flex; flex-direction: column; background-color: #fadce1"
+  >
     <!-- cam -->
-    <div
-      class="cam"
-      style="display: flex; flex-direction: row; justify-content: space-between"
-    >
-      <div
-        class="video2-wrapper"
-        style="margin: auto auto 0 0; align-self: flex-start"
-      >
+    <div class="cam" style="display: flex; flex-direction: row">
+      <div class="video2-wrapper" style="margin: auto auto 0 0; z-index: 2">
         <user-video
           class="userVideo-me"
           :stream-manager="state.publisher"
           @click="updateMainVideoStreamManager(state.publisher)"
         />
       </div>
-      <div class="video1-wrapper" style="posiotion: absolute">
-        <user-video
-          class="uservideo-you"
-          v-for="sub in state.subscribers"
-          :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-          style="width: 100%; height: 100%"
-        />
-        <video-controller
-          @videoOnOff="videoOnOff"
-          @audioOnOff="audioOnOff"
-        ></video-controller>
+      <div v-if="state.subscribers.length">
+        <div
+          class="video1-wrapper"
+          style="
+            position: absolute;
+            left: 24%;
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 940px;
+            height: 600px;
+          "
+        >
+          <user-video
+            class="uservideo-you"
+            v-for="sub in state.subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+            style="width: 100%; height: 100%; margin-top: 0; margin-bottom: 0"
+          />
+          <video-controller
+            @videoOnOff="videoOnOff"
+            @audioOnOff="audioOnOff"
+          ></video-controller>
+        </div>
+      </div>
+      <div v-else>
+        <div class="mbtiinfo"></div>
       </div>
 
       <div
         v-if="state.flag === true"
         class="chatdiv"
-        style="float: right; border-radius: 5px"
+        style="position: absolute; right: 0; border-radius: 5px"
       >
         <room-chat
           ref="chat"
@@ -373,26 +384,25 @@ export default {
 
 <style scoped>
 .el-container {
-  margin-top: 40px;
   display: flex;
   justify-content: center;
 }
 .cam {
   display: inline-flex;
-  background-color: #7d7d7d;
+  background-color: #fadce1;
   height: 600px;
   margin-bottom: 34px;
   justify-content: space-between;
   align-items: auto;
 }
 .mbtiinfo {
-  background-color: #908d8d;
+  background-color: rgb(255, 189, 207);
   border-radius: 50%;
   width: 500px;
   height: 500px;
-  align-items: center;
-  display: flex;
-  position: relative;
+  position: absolute;
+  left: 35%;
+  top: 15%;
 }
 .video-wrapper {
   width: 10rem;
@@ -407,13 +417,17 @@ export default {
   z-index: 1;
 }
 ::v-deep .uservideo-you video {
-  width: 840px;
-  height: 580px;
+  width: 820px;
+  height: 545px;
+  border-radius: 20px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 ::v-deep .userVideo-me {
   display: flex;
   margin-top: auto;
   margin-right: auto;
   align-self: flex-start;
+  border-radius: 100px;
 }
 </style>
