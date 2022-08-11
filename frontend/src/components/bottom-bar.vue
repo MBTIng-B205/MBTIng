@@ -6,7 +6,7 @@
       <el-button type="info" :icon="QuestionFilled" circle />
     </div>
     <div class="rightside" style="margin-right: 2rem">
-      <button>친구추가</button>
+      <button @click="addFriend">친구추가</button>
       <el-button
         type="danger"
         :icon="WarningFilled"
@@ -65,9 +65,12 @@ export default {
       });
     };
 
+    const addFriend = () => {};
+
     return {
       data,
       chatOnOff,
+      addFriend,
       BellFilled,
       QuestionFilled,
       WarningFilled,

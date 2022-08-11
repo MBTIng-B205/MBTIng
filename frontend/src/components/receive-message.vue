@@ -11,9 +11,7 @@
           <el-input v-model="search" />
         </el-col>
         <el-col :span="6">
-          <el-button style="font-family: 'DalseoBold'" @click="onSearch"
-            >검색</el-button
-          >
+          <el-button @click="onSearch">검색</el-button>
         </el-col>
       </el-row>
     </el-header>
