@@ -18,6 +18,7 @@
     <div class="rightside" style="margin-right: 2rem">
       <button>친구추가</button>
       <el-button
+        class="custom-icon"
         type="danger"
         :icon="WarningFilled"
         round
@@ -27,9 +28,7 @@
         "
         >신고하기</el-button
       >
-      <el-button @click="chatOnOff" type="info" :icon="ChatDotSquare" round
-        >채팅</el-button
-      >
+      <el-button @click="chatOnOff" type="info" :icon="ChatDotSquare" round />
     </div>
     <!-- report dialog -->
     <el-dialog v-model="sirenDialog" @close="sirenClose">
@@ -93,5 +92,8 @@ export default {
   width: 100%;
   height: 50px;
   background-color: #fadce1;
+}
+.custom-icon {
+  font-size: 1.5rem;
 }
 </style>

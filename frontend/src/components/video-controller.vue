@@ -1,18 +1,56 @@
 <template>
   <div class="controller" style="display: flex; justify-content: center">
-    <el-button @click="videoOnOff">화면끄기</el-button>
-    <el-button @click="audioOnOff">소리끄기</el-button>
+    <el-button
+      v-if="state.video === true"
+      class="custom-icon"
+      @click="videoOnOff"
+      size="large"
+      round
+      :icon="View"
+    />
+    <el-button
+      v-else
+      class="custom-icon"
+      @click="videoOnOff"
+      size="large"
+      round
+      :icon="Hide"
+    />
+    <el-button
+      v-if="state.audio === true"
+      class="custom-icon"
+      @click="audioOnOff"
+      size="large"
+      round
+      :icon="Microphone"
+    />
+    <el-button
+      v-else
+      class="custom-icon"
+      @click="audioOnOff"
+      size="large"
+      round
+      :icon="Mute"
+    />
+
     <el-button
       @click="leaveSession"
       type="danger"
-      :icon="Close"
+      size="large"
+      :icon="CloseBold"
       round
     ></el-button>
   </div>
 </template>
 
 <script>
-import { Close } from "@element-plus/icons-vue";
+import {
+  CloseBold,
+  Microphone,
+  View,
+  Hide,
+  Mute,
+} from "@element-plus/icons-vue";
 import { reactive } from "vue";
 export default {
   setup(props, { emit }) {
@@ -54,10 +92,18 @@ export default {
       videoOnOff,
       audioOnOff,
       leaveSession,
-      Close,
+      CloseBold,
+      Microphone,
+      View,
+      Hide,
+      Mute,
     };
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.custom-icon {
+  font-size: 1.5rem;
+}
+</style>
