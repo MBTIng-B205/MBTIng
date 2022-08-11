@@ -81,6 +81,8 @@ export default {
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
+      state.mtsocket.disconnect();
+      store.commit("meetings/SET_SOCKET", null);
       router.push({ name: "MeetingWait" });
     };
     const goHome = function () {
