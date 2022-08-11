@@ -50,19 +50,22 @@
 <script>
 import { reactive } from "vue";
 import { Promotion } from "@element-plus/icons-vue";
+import { useStore } from "vuex";
 export default {
   props: {
     subscribers: Object,
   },
 
   setup(props, { emit }) {
+    const store = useStore();
     const state = reactive({
       // right: true,
       isSidebarOpen: true,
       selectedUser: "all",
       message: "",
       subscribers: props.subscribers,
-      chats: [],
+      chats: store.getters["meetings/getChats"],
+      chat: [],
     });
 
     const sendMessage = () => {
@@ -98,12 +101,15 @@ export default {
         chatBar.scrollHeight - chatBar.scrollTop <= chatBar.clientHeight + 2;
 
       // await 키워드 => 새로운 채팅 메시지 추가 완료 후 스크롤바가 아래로 이동되도록 함.
-      await state.chats.push({
+      await state.chat.push({
         userId: message.sender,
         content: message.content,
         isMyMessage: isMyMessage,
       });
-
+      state.chats = state.chat;
+      store.commit("meetings/SAVE_CHAT", {
+        chats: state.chats,
+      });
       // 채팅 스크롤이 끝까지 내려가 있는 경우 => 스크롤바 맨 아래로 이동시키기
       if (isScrollBottom) {
         chatBar.scrollTo({ top: chatBar.scrollHeight, behavior: "smooth" });
