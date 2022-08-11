@@ -24,7 +24,7 @@ import java.time.Clock;
 import java.util.Optional;
 import java.util.UUID;
 
-import static java.util.Optional.ofNullable;
+import static java.util.Optional.*;
 
 @Service
 @RequiredArgsConstructor
@@ -157,19 +157,31 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
                 .orElseThrow(() -> new RuntimeException("Session Not Found!"))
                 .getMatchedMeetingUserSessionId();
 
-        ofNullable(waitingMeetingUserRepository
-                        .getProposalAccepted(waitingMeetingUserRepository
-                                .findBySessionId(matchedSessionId)
-                                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
-                                .getMatchedMeetingUserSessionId()))
-                .ifPresent(opponentAccepted -> applicationEventPublisher
-                        .publishEvent(new ProposalResultsMadeEvent(
-                                this,
-                                Clock.systemDefaultZone(),
-                                sessionId,
-                                accepted,
-                                matchedSessionId,
-                                opponentAccepted)));
+        logger.debug("\n\nsubject: {}\nmatched: {}\n", sessionId, matchedSessionId);
+
+        Boolean opponentAccepted = waitingMeetingUserRepository.findBySessionId(matchedSessionId)
+                .orElseThrow(() -> {
+                    logger.debug("\n\n이미 상대가 떠났습니다.\n");
+                    applicationEventPublisher.publishEvent(new ProposalResultsMadeEvent(
+                            this,
+                            Clock.systemDefaultZone(),
+                            sessionId,
+                            accepted,
+                            matchedSessionId,
+                            false));
+                    return new RuntimeException("Session Not Found!");
+                }).getProposalAccepted();
+
+        logger.debug("\n\n상대 수락 여부: {}\n", opponentAccepted);
+
+        ofNullable(opponentAccepted).ifPresent(oppoA -> applicationEventPublisher
+                .publishEvent(new ProposalResultsMadeEvent(
+                        this,
+                        Clock.systemDefaultZone(),
+                        sessionId,
+                        accepted,
+                        matchedSessionId,
+                        oppoA)));
     }
 
     private boolean identicalTokenAndEmail(String accessToken, String email) {

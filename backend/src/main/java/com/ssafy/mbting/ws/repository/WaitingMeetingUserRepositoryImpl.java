@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static java.util.Optional.ofNullable;
+import static java.util.Optional.*;
 
 @Repository
 public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepository {
