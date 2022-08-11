@@ -40,8 +40,8 @@ public class MeetingController {
         StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
-                WsDestination.of(email).getDestination(),
-                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+                IndividualDestination.of(email).toString(),
+                "{\"command\":\"test\",\"data\":{\"rejoin\":\"rejoin\"}}");
     }
     @MessageMapping("/indi/meetingAudioStarted")
     public void receiveAudioStarted(@Payload Message<String> message) {
@@ -50,8 +50,8 @@ public class MeetingController {
         StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
-                WsDestination.of(email).getDestination(),
-                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+                IndividualDestination.of(email).toString(),
+                "{\"command\":\"test\",\"data\":{\"meetingAudioStarted\":\"meetingAudioStarted\"}}");
     }
 
 
@@ -62,8 +62,8 @@ public class MeetingController {
         StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
-                WsDestination.of(email).getDestination(),
-                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+                IndividualDestination.of(email).toString(),
+                "{\"command\":\"test\",\"data\":{\"greenlight\":\"greenlight\"}}");
     }
 
     @MessageMapping("/indi/redlight")
@@ -74,7 +74,7 @@ public class MeetingController {
         String email = stompUser.getEmail();
 
         simpMessagingTemplate.convertAndSend(
-                WsDestination.of(email).getDestination(),
-                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+                IndividualDestination.of(email).toString(),
+                "{\"command\":\"test\",\"data\":{\"redlight\":\"redlight\"}}");
     }
 }

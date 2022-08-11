@@ -124,16 +124,18 @@ export default {
     ];
     const goHome = function () {
       router.push({ name: "HomeView" });
+      state.mtsocket.disconnect();
+      store.commit("meetings/SET_SOCKET", null);
     };
 
     const connect = function () {
       let testemail = Math.random().toString(36).substring(2, 12);
       const serverURL = process.env.VUE_APP_WS_SERVER_BASE_URL + "/ws/connect";
       let socket = new SockJS(serverURL);
-      state.stompClient = Stomp.over(socket);
-      store.commit("meetings/SET_SOCKET", state.stompClient);
+      const stompClient = Stomp.over(socket);
+      store.commit("meetings/SET_SOCKET", stompClient);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
-      state.stompClient.connect(
+      state.mtsocket.connect(
         {
           email: `${testemail}`,
           // accessToken: sessionStorage.getItem("access-token"),
@@ -141,12 +143,12 @@ export default {
         },
         (frame) => {
           // 소켓 연결 성공
-          state.stompClient.connected = true;
+          state.mtsocket.connected = true;
           console.log("소켓 연결 성공", frame);
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
           // console.log(state.memberinfo.email);
-          state.stompClient.subscribe(
+          state.mtsocket.subscribe(
             `/ws/sub/indi/${testemail}`,
             // `/ws/sub/indi/${state.memberinfo.email}`,
             (res) => {
