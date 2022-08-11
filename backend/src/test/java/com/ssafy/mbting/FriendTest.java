@@ -2,6 +2,7 @@ package com.ssafy.mbting;
 
 import com.ssafy.mbting.db.entity.Friend;
 import com.ssafy.mbting.db.entity.Member;
+import com.ssafy.mbting.db.enums.Gender;
 import com.ssafy.mbting.db.repository.FriendRepository;
 import com.ssafy.mbting.db.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,13 @@ public class FriendTest {
             Member m1 = new Member();
             m1.setNickname("손님" + i);
             m1.setEmail("test" + i + "@test.com");
-            m1.setGender(true);
+            m1.setGender(Gender.MALE);
             m1.setMbti("ISFJ");
             memberRepository.save(m1);
             Member m2 = new Member();
             m2.setNickname("정훈" + i);
             m2.setEmail("hun" + i + "@test.com");
-            m2.setGender(false);
+            m2.setGender(Gender.FEMALE);
             m2.setMbti("ENTP");
             memberRepository.save(m2);
             Friend friend = new Friend(m1, m2);

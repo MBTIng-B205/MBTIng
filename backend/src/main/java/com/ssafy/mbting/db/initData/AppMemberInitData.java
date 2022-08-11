@@ -97,22 +97,22 @@ public class AppMemberInitData {
         List<Interest> interests = new ArrayList<>();
 
         Interest i1 = Interest.builder()
-                .iname("Java")
+                .iname("TV/영화")
                 .build();
         Interest i2 = Interest.builder()
-                .iname("JavaScript")
+                .iname("코딩")
                 .build();
         Interest i3 = Interest.builder()
-                .iname("VSCode")
+                .iname("술")
                 .build();
         Interest i4 = Interest.builder()
-                .iname("Spring")
+                .iname("음악")
                 .build();
         Interest i5 = Interest.builder()
-                .iname("Vue")
+                .iname("캠핑")
                 .build();
         Interest i6 = Interest.builder()
-                .iname("OpenVidu")
+                .iname("맛집탐방")
                 .build();
 
         interests.add(i1);

@@ -34,7 +34,7 @@
         <div>
           <span>{{ contents[index].title }}</span>
           <div class="bottom">
-            <el-link :href="contents[index].site" target="_blank"
+            <el-link :href="contents[index].site"
               ><el-button
                 class="testbutton"
                 style="background: rgb(227, 122, 128)"
@@ -112,14 +112,14 @@ export default {
       {
         thumb:
           "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkOzMl%2FbtqESXEhYI3%2FgKvKEjw5aioz06wwW0wkP0%2Fimg.png",
-        title: "연애 능력치 테스트",
-        site: "http://16types.glam.am/intro",
+        title: "나의 MBTI 테스트",
+        site: "/mymbtitest",
       },
       {
         thumb:
           "https://www.simcong.com/thumb/upfiles/quiz/202011/03_f7ab17586c219cfa2eac45aa651f18d3441378_5206.jpg?w=640&h=",
-        title: "연애유형 테스트",
-        site: "https://www.simcong.com/quiz/393",
+        title: "나의 이상형 MBTI 테스트",
+        site: "/yourmbtitest",
       },
       {
         thumb:
@@ -171,12 +171,6 @@ export default {
   left: 25%;
   bottom: -5%;
   z-index: 1;
-}
-
-.logo {
-  display: flex;
-  height: 80px;
-  width: 80px;
 }
 
 .navbar {

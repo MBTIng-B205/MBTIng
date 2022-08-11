@@ -2,10 +2,7 @@
   <el-container style="background-color: #fff4b8">
     <el-header>
       <img @click="goHome" class="logo" src="@/assets/logo.png" />
-      <el-button
-        style="float: right; vertical-align: middle"
-        type="danger"
-        round
+      <el-button style="float: right; margin-top: 25px" type="danger" round
         >소개팅종료</el-button
       >
     </el-header>
@@ -55,8 +52,8 @@ export default {
     const store = useStore();
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
-      proposal: null,
-      stompClient: null,
+      proposal: computed(() => store.getters["meetings/getProposal"]),
+      mtsocket: computed(() => store.getters["meetings/getSocket"]),
     });
     onMounted(() => {
       connect();
@@ -81,13 +78,15 @@ export default {
     };
 
     const connect = function () {
-      const serverURL = "http://localhost:8080/ws/connect";
+      let testemail = Math.random().toString(36).substring(2, 12);
+      const serverURL = process.env.VUE_APP_WS_SERVER_BASE_URL + "/ws/connect";
       let socket = new SockJS(serverURL);
       state.stompClient = Stomp.over(socket);
+      store.commit("meetings/SET_SOCKET", state.stompClient);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
       state.stompClient.connect(
         {
-          email: Math.random().toString(36).substring(2, 12),
+          email: `${testemail}`,
           // accessToken: sessionStorage.getItem("access-token"),
           // email: state.memberinfo.email,
         },
@@ -99,12 +98,24 @@ export default {
           // 이런형태를 pub sub 구조라고 합니다.
           // console.log(state.memberinfo.email);
           state.stompClient.subscribe(
-            "/ws/sub/indi/abc",
+            `/ws/sub/indi/${testemail}`,
             // `/ws/sub/indi/${state.memberinfo.email}`,
             (res) => {
               //prop
+              console.log(res);
               console.log("받은 메시지", res.body);
-              state.proposal = res.body.proposal;
+              console.log(res.body);
+              const obj = JSON.parse(res.body);
+              console.log(obj);
+              if (obj.command == "proposal") {
+                store.commit("meetings/SET_PROPOSAL", obj);
+                router.push({ path: "/meetingmatch" });
+              }
+              if (obj.command == "accept") {
+                store.commit("meetings/SET_TOKEN", obj.token);
+                console.log(obj.token);
+                router.push({ path: "/room" });
+              }
             },
             {
               gender: "MALE",
@@ -115,6 +126,15 @@ export default {
               // interests: state.memberinfo.interests,
             }
           );
+          const msg = {
+            command: `${testemail}`,
+            data: "",
+          };
+          console.log(msg);
+          store.dispatch("meetings/send", msg);
+          // console.log(testemail);
+          // const testres = { testemail, test: "hello" };
+          // store.dispatch("meetings/send", testres);
         },
         (error) => {
           // 소켓 연결 실패
@@ -123,7 +143,7 @@ export default {
         }
       );
     };
-
+    /*
     const send = function () {
       console.log("send 실행");
       const data = {
@@ -136,13 +156,16 @@ export default {
         { email: `${state.memberinfo.email}` },
         JSON.stringify({ msg: "" })
       );
-    };
-    return { loading, svg, Info, goHome, connect, send };
+    };*/
+    return { loading, svg, Info, goHome, connect };
   },
 };
 </script>
 
 <style>
+.logo {
+  width: 250px;
+}
 .small {
   width: 200px;
   height: 250px;
@@ -155,7 +178,7 @@ export default {
   padding: 10px;
   height: 275px;
   width: 600px;
-  border: 20px solid #e3842d;
+  border: 20px solid deeppink;
   background-color: white;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
 }
