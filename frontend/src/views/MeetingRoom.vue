@@ -42,7 +42,7 @@
       </div>
 
       <div
-        v-if="state.flag === true"
+        v-show="state.flag === true"
         class="chatdiv"
         style="position: absolute; right: 0; border-radius: 5px"
       >
@@ -61,6 +61,7 @@
         @reportOnOff="reportOnOff"
       ></bottom-bar>
     </div>
+    <hr />
   </el-container>
 
   <!-- report dialog -->
@@ -414,6 +415,7 @@ export default {
 }
 .chatdiv {
   background-color: white;
+  border-radius: 1px;
   z-index: 1;
 }
 ::v-deep .uservideo-you video {

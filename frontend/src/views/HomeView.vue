@@ -9,7 +9,12 @@
       src="@/assets/heart.png"
       alt="example"
     />
-    <img class="mainimg" src="@/assets/main.png" alt="" />
+    <img
+      class="mainimg"
+      src="@/assets/main.png"
+      alt=""
+      style="object-fit: contain; width: 100%; height: 100%"
+    />
     <div class="bg1"></div>
     <div class="bg2"></div>
   </div>
