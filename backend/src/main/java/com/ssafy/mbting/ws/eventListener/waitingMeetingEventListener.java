@@ -4,7 +4,7 @@ import com.ssafy.mbting.ws.model.event.RequestToJoinQueueEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserMatchedEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
-import com.ssafy.mbting.ws.model.stompMessageBody.BaseMessageBody;
+import com.ssafy.mbting.ws.model.stompMessageBody.msg.BaseMessageBody;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import com.ssafy.mbting.ws.model.vo.WsDestination;
 import com.ssafy.mbting.ws.service.WaitingMeetingService;
