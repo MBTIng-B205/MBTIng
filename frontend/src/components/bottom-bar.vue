@@ -1,8 +1,18 @@
 <template>
   <div class="controller" style="display: flex; justify-content: space-between">
     <div class="leftside" style="margin-left: 2rem">
-      <el-button type="success" :icon="BellFilled" circle />
-      <el-button type="danger" :icon="BellFilled" circle />
+      <el-button
+        type="success"
+        style="margin-right: 7px"
+        :icon="BellFilled"
+        circle
+      />
+      <el-button
+        type="danger"
+        style="margin-right: 7px"
+        :icon="BellFilled"
+        circle
+      />
       <el-button type="info" :icon="QuestionFilled" circle />
     </div>
     <div class="rightside" style="margin-right: 2rem">

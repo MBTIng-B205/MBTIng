@@ -4,10 +4,15 @@
     style="display: flex; flex-direction: column-reverse; overflow-y: auto"
   >
     <!-- chat-bar -->
-    <div ref="content" style="background-color: white">
+    <div ref="content" style="background-color: white; margin-bottom: 20px">
       <!-- 채팅 내용 -->
       <ul id="chat-bar" style="list-style-type: none; overflow-y: auto">
-        <li class="" v-for="(chat, idx) in state.chats" :key="idx">
+        <li
+          class=""
+          v-for="(chat, idx) in state.chats"
+          :key="idx"
+          style="border-radius: 1px"
+        >
           <!-- 내가 보낸 채팅인 경우 -->
           <div v-if="chat.isMyMessage" class="">
             <div>
@@ -34,15 +39,10 @@
       <el-input
         v-model="state.message"
         @keydown.enter="sendMessage"
-        style="width: 240px; margin-right: 3px"
+        style="width: 230px; margin-right: 3px"
       >
       </el-input>
-      <el-button
-        type="warning"
-        plain
-        :icon="Promotion"
-        @click="sendMessage()"
-      />
+      <el-button type="danger" plain :icon="Promotion" @click="sendMessage()" />
     </div>
   </div>
 </template>
