@@ -81,5 +81,6 @@ export default {
 .controller {
   width: 100%;
   height: 50px;
+  background-color: #fadce1;
 }
 </style>
