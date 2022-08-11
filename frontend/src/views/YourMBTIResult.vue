@@ -46,7 +46,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .logo {
   width: 250px;
 }
@@ -60,12 +60,14 @@ export default {
   display: inline-block;
   text-align: center;
   font-weight: bold;
-  font-size: x-large;
+  font-size: xx-large;
   height: 275px;
   line-height: 275px;
   width: 600px;
   border: 20px solid deeppink;
+  border-radius: 1rem;
   background-color: white;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
+  font-family: "Dalseo";
 }
 </style>

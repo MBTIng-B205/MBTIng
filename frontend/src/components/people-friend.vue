@@ -11,7 +11,7 @@
           <el-input v-model="search" />
         </el-col>
         <el-col :span="6">
-          <el-button @click="onSearch">검색</el-button>
+          <el-button @click="onSearch"> 검색 </el-button>
         </el-col>
       </el-row>
     </el-header>
@@ -305,6 +305,7 @@ export default {
   margin-left: 40px;
   border-radius: 100%;
   background-color: white;
+  font-family: "Dalseo";
 }
 .delete {
   float: right;
