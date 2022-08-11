@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
@@ -27,12 +28,14 @@ public class waitingMeetingEventListener {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final WaitingMeetingService waitingMeetingService;
 
+    @Async
     @EventListener
     public void onRequestToJoin(RequestToJoinQueueEvent event) {
         logger.debug("\n\nRequestToJoin 이벤트 발생함\n");
         waitingMeetingService.subscribe(event.getSessionId(), event.getMeetingUser());
     }
 
+    @Async
     @EventListener
     public void onQueued(WaitingMeetingUserQueuedEvent event) {
         logger.debug("\n\nQueued 이벤트 발생함\n");
@@ -47,6 +50,7 @@ public class waitingMeetingEventListener {
         ));
     }
 
+    @Async
     @EventListener
     public void onEnough(WaitingMeetingUserQueueSizeEnoughEvent event) {
         logger.debug("\n\nEnough 이벤트 발생함\n");
@@ -64,6 +68,7 @@ public class waitingMeetingEventListener {
         ));
     }
 
+    @Async
     @EventListener
     public void onMatched(WaitingMeetingUserMatchedEvent event) {
         logger.debug("\n\nMatched 이벤트 발생함\n");
