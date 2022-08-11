@@ -50,7 +50,7 @@ public class MeetingController {
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(email).toString(),
-                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+                "{\"command\":\"test\",\"data\":{\"rejoin\":\"rejoin\"}}");
     }
 
     @MessageMapping("/indi/meetingAudioStarted")
@@ -62,7 +62,7 @@ public class MeetingController {
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(email).toString(),
-                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+                "{\"command\":\"test\",\"data\":{\"meetingAudioStarted\":\"meetingAudioStarted\"}}");
     }
 
 
@@ -75,7 +75,7 @@ public class MeetingController {
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(email).toString(),
-                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+                "{\"command\":\"test\",\"data\":{\"greenlight\":\"greenlight\"}}");
     }
 
     @MessageMapping("/indi/redlight")
@@ -88,6 +88,6 @@ public class MeetingController {
 
         simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(email).toString(),
-                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+                "{\"command\":\"test\",\"data\":{\"redlight\":\"redlight\"}}");
     }
 }

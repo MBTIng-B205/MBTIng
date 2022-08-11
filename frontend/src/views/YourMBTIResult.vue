@@ -1,12 +1,12 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card
       style="
         text-align: center;
-        background-color: #fff4b8;
+        background-color: #fadce1;
         box-shadow: none;
         border: none;
       "
@@ -19,7 +19,9 @@
         />
         <span class="result"
           >당신의 이상형 MBTI는
-          <span style="color: deeppink"> {{ $route.params.mbti }} </span>
+          <span style="color: rgb(255, 91, 136)">
+            {{ $route.params.mbti }}
+          </span>
           입니다.</span
         >
         <img class="small" src="@/assets/smallblue.png" />
@@ -47,9 +49,6 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  width: 250px;
-}
 .small {
   width: 200px;
   height: 250px;
@@ -64,7 +63,7 @@ export default {
   height: 275px;
   line-height: 275px;
   width: 600px;
-  border: 20px solid deeppink;
+  border: 20px solid rgb(255, 91, 136);
   border-radius: 1rem;
   background-color: white;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);

@@ -1,9 +1,13 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
-    <el-row><div class="title">내가 힘들 때 필요한 말은?</div></el-row>
+    <el-row
+      ><div class="title" style="margin-top: 35px">
+        내가 힘들 때 필요한 말은?
+      </div></el-row
+    >
     <el-row style="flex-direction: row; justify-content: center">
       <el-card
         :class="{ activeCard: active == 'left' }"
@@ -98,30 +102,34 @@ export default {
       }
     };
 
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
+
     return {
       left,
       right,
       active,
       card,
       game,
+      goHome,
     };
   },
 };
 </script>
 
-<style scoped>
+<style>
 .el-container {
   height: 100vh;
 }
 .title {
-  margin-top: 35px;
   font-size: xx-large;
   background-color: white;
   width: 1100px;
   text-align: center;
-  color: deeppink;
+  color: rgb(255, 91, 136);
   border-radius: 30px;
-  border: solid deeppink;
+  border: solid rgb(255, 91, 136);
 }
 .card {
   cursor: pointer;
@@ -131,36 +139,15 @@ export default {
   width: 400px;
   height: 450px;
   line-height: 350px;
-  border: 10px solid deeppink;
+  border: 10px solid rgb(255, 91, 136);
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
 }
 .activeCard .el-card__body {
-  background-color: deeppink;
+  background-color: rgb(255, 91, 136);
 }
 .vs {
   font-weight: bold;
   font-size: xx-large;
-  color: deeppink;
-}
-.logo {
-  width: 250px;
-}
-.answerBtn {
-  width: 700px;
-  font-size: 20px;
-  background-color: white;
-  color: deeppink;
-  padding: 5px;
-  border: 1px solid deeppink;
-}
-
-.answerBtn:active {
-  background-color: deeppink;
-  color: white;
-}
-
-.answerBtn:hover {
-  background-color: deeppink;
-  color: white;
+  color: rgb(255, 91, 136);
 }
 </style>

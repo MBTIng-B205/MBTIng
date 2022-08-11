@@ -30,11 +30,11 @@
       </ul>
     </div>
     <!-- 메시지 작성 -->
-    <div style="position: absolute; margin-left: 5px">
+    <div style="position: absolute; margin-left: 5px; margin-bottom: 2px">
       <el-input
         v-model="state.message"
         @keydown.enter="sendMessage"
-        style="width: 230px; margin-right: 3px"
+        style="width: 240px; margin-right: 3px"
       >
       </el-input>
       <el-button
