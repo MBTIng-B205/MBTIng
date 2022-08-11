@@ -32,10 +32,10 @@
 
   <el-dialog v-model="state.mypageDialog" @close="handleClose">
     <div style="text-align: center">
-      <el-row>
+      <el-row class="filebox">
         <img class="profile" :src="state.memberinfo.profileUrl" />
-        <input type="file" @change="onFileSelected" />
-        <el-button style="margin-top: 10px" size="large">프로필 변경</el-button>
+        <label for="file">프로필 사진 변경</label>
+        <input type="file" id="file" @change="onFileSelected" />
       </el-row>
       <el-row>
         <el-form
@@ -71,8 +71,8 @@
           </el-form-item>
           <el-form-item label="성별">
             <el-radio-group v-model="state.memberinfo.gender" disabled>
-              <el-radio :label="Male" :value="Male">남자</el-radio>
-              <el-radio :label="Female" :value="Female">여자</el-radio>
+              <el-radio label="MALE">남자</el-radio>
+              <el-radio label="FEMALE">여자</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="생년월일">
@@ -434,9 +434,41 @@ export default {
   width: 200px;
   height: 200px;
 }
-button {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+.filebox label {
+  display: inline-block;
+  padding: 10px 20px;
+  color: black;
+  background-color: #fafafa;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.filebox label:hover {
+  background-color: #ecf5ff;
+  color: #409eff;
+  border-color: #409eff;
+}
+#checkButton {
+  display: inline-block;
+  padding: 5px 10px;
+  color: black;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 5px;
+  outline: 0;
+  border: 0;
+}
+/* #checkButton:hover {
+  background-color: #ecf5ff;
+  color: #409eff;
+  border-color: #409eff;
+} */
+.filebox input[type="file"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 </style>

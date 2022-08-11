@@ -35,26 +35,32 @@
         <img class="small" src="@/assets/smallgreen.png" />
       </div>
       <el-row style="flex-direction: row; justify-content: space-evenly">
-        <el-button type="success" size="large" @click="accept">수락</el-button>
-        <el-button type="danger" size="large">거절</el-button>
+        <el-button type="success" size="large" @click="proposalAccept"
+          >수락</el-button
+        >
+        <el-button type="danger" size="large" @click="proposalRefuse"
+          >거절</el-button
+        >
       </el-row>
     </el-card>
   </el-container>
 </template>
 
 <script>
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { reactive, computed } from "vue";
 export default {
   setup() {
     const store = useStore();
+    const router = useRouter();
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       proposal: computed(() => store.getters["meetings/getProposal"]),
       mtsocket: computed(() => store.getters["meetings/getSocket"]),
     });
-    const accept = function () {
-      console.log("accept 실행");
+    const proposalAccept = function () {
+      console.log("proposalAccept 실행");
       const msg = {
         command: "proposalResult",
         data: {
@@ -64,7 +70,18 @@ export default {
       console.log(msg);
       store.dispatch("meetings/send", msg);
     };
-    return { state, accept };
+
+    const proposalRefuse = function () {
+      console.log("proposalRefuse 실행");
+      const msg = {
+        command: "rejoin",
+        data: {},
+      };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+      router.push({ name: "MeetingWait" });
+    };
+    return { state, proposalAccept, proposalRefuse };
   },
 };
 </script>
