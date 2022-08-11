@@ -9,6 +9,12 @@
       src="@/assets/heart.png"
       alt="example"
     />
+    <img
+      v-show="state.memberinfo"
+      class="startbtnlogin"
+      src="@/assets/heart_login.png"
+      alt=""
+    />
     <img class="mainimg" src="@/assets/main.png" alt="" />
     <div class="bg1"></div>
     <div class="bg2"></div>
@@ -32,43 +38,11 @@
       >
         <img :src="contents1[index].thumb" class="image" />
         <div>
-          <span>{{ contents1[index].title }}</span>
           <div class="bottom">
             <el-link :href="contents1[index].site"
-              ><el-button class="testbutton" style="background: #e37a80"
-                >테스트시작</el-button
-              ></el-link
-            >
-          </div>
-        </div>
-      </el-card>
-    </el-col>
-    <el-col>
-      <div class="content-name">
-        <h1>MBTI Contents Links</h1>
-      </div></el-col
-    >
-    <el-col
-      v-for="(o, index) in 4"
-      :key="o"
-      :span="4"
-      :offset="index > 0 ? 2 : 0"
-    >
-      <el-card
-        :body-style="{ padding: '0px' }"
-        class="card-body"
-        :href="contents2[index].site"
-      >
-        <img :src="contents2[index].thumb" class="image" fit="cover" />
-        <div>
-          <el-link :href="contents2[index].site"
-            ><span>{{ contents2[index].title }}</span></el-link
-          >
-          <div class="bottom">
-            <el-link :href="contents2[index].site" target="_blank"
-              ><el-button class="testbutton" style="background: #afe49a"
-                >테스트시작</el-button
-              ></el-link
+              ><button class="testbutton" style="background: #e37a80">
+                테스트시작
+              </button></el-link
             >
           </div>
         </div>
@@ -83,7 +57,6 @@ import { useRouter } from "vue-router";
 import { Avatar, Comment, Right } from "@element-plus/icons-vue";
 import { computed, reactive } from "@vue/runtime-core";
 import { ref } from "vue";
-// import axios from "axios";
 import MainHeader from "@/components/main-header.vue";
 export default {
   components: {
@@ -106,54 +79,24 @@ export default {
 
     const contents1 = [
       {
-        thumb:
-          "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkOzMl%2FbtqESXEhYI3%2FgKvKEjw5aioz06wwW0wkP0%2Fimg.png",
+        thumb: require("@/assets/mbti001.png"),
         title: "나의 MBTI 테스트",
         site: "/mymbtitest",
       },
       {
-        thumb:
-          "https://www.simcong.com/thumb/upfiles/quiz/202011/03_f7ab17586c219cfa2eac45aa651f18d3441378_5206.jpg?w=640&h=",
+        thumb: require("@/assets/mbti002.png"),
         title: "나의 이상형 MBTI 테스트",
         site: "/yourmbtitest",
       },
       {
-        thumb:
-          "https://d3d45df40onv5v.cloudfront.net/mbti/assets/img/maincat.gif",
+        thumb: require("@/assets/mbti003.png"),
         title: "MBTI 월드컵",
         site: "/mbtiworldcup",
       },
       {
-        thumb:
-          "https://mbti.theblessedmoon.com/static/media/intro_logo.d0ce37d8.gif",
-        title: "썸 추진력 MBTI",
-        site: "https://mbti.theblessedmoon.com/",
-      },
-    ];
-    const contents2 = [
-      {
-        thumb:
-          "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkOzMl%2FbtqESXEhYI3%2FgKvKEjw5aioz06wwW0wkP0%2Fimg.png",
-        title: "연애 능력치 테스트",
-        site: "http://16types.glam.am/intro",
-      },
-      {
-        thumb:
-          "https://www.simcong.com/thumb/upfiles/quiz/202011/03_f7ab17586c219cfa2eac45aa651f18d3441378_5206.jpg?w=640&h=",
-        title: "연애유형 테스트",
-        site: "https://www.simcong.com/quiz/393",
-      },
-      {
-        thumb:
-          "https://d3d45df40onv5v.cloudfront.net/mbti/assets/img/maincat.gif",
-        title: "연애 유형 테스트",
-        site: "https://mbti.amanda.co.kr/",
-      },
-      {
-        thumb:
-          "https://mbti.theblessedmoon.com/static/media/intro_logo.d0ce37d8.gif",
-        title: "썸 추진력 MBTI",
-        site: "https://mbti.theblessedmoon.com/",
+        thumb: require("@/assets/mbti004.png"),
+        title: "MBTI 별 매칭 성공률",
+        site: "/mbtichart",
       },
     ];
     return {
@@ -164,7 +107,6 @@ export default {
       Right,
       state,
       contents1,
-      contents2,
     };
   },
 };
@@ -180,13 +122,22 @@ export default {
 .startbtn {
   height: 100px;
   width: 100px;
+  margin: 200px 350px 200px 350px;
   cursor: pointer;
   position: absolute;
-  left: 48%;
-  top: 50%;
+  left: 25%;
+  top: -30%;
   z-index: 2;
 }
-
+.startbtnlogin {
+  height: 100px;
+  width: 200px;
+  margin: 200px 300px 200px 300px;
+  position: absolute;
+  left: 25%;
+  top: -45%;
+  z-index: 2;
+}
 .mainimg {
   height: 500px;
   width: 800px;
@@ -195,12 +146,11 @@ export default {
   bottom: -5%;
   z-index: 1;
 }
-
 .bg {
   position: relative;
 }
 .bg0 {
-  height: 400px;
+  height: 250px;
   width: 100%;
   background-color: #fadce1;
 }
@@ -227,21 +177,6 @@ export default {
 .el-card__body {
   width: 10px;
 }
-/* .el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 200px;
-  margin: 0;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-} */
 .time {
   font-size: 12px;
   color: #999;
@@ -274,7 +209,7 @@ export default {
 }
 .card-body {
   border: top 100px;
-  padding: 0px;
+  padding: 5px;
   margin: 0px;
   text-align: center;
 }
@@ -283,5 +218,9 @@ export default {
 }
 .testbutton {
   color: black;
+  width: 15vw;
+  border-radius: 0.5rem;
+  border-color: white;
+  box-shadow: 0;
 }
 </style>
