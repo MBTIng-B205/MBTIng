@@ -194,7 +194,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-container {
   height: 100vh;
 }
@@ -202,23 +202,27 @@ export default {
 .question {
   text-align: center;
   font-weight: bold;
-  font-size: large;
+  font-size: 30px;
   height: 150px;
   line-height: 150px;
   margin: 50px;
   border: 10px solid deeppink;
+  border-radius: 1rem;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
+  font-family: "Dalseo";
 }
 .logo {
   width: 250px;
 }
 .answerBtn {
   width: 700px;
-  font-size: 20px;
+  font-size: 25px;
   background-color: white;
   color: deeppink;
   padding: 5px;
   border: 1px solid deeppink;
+  border-radius: 1rem;
+  font-family: "Dalseo";
 }
 
 .answerBtn:active {

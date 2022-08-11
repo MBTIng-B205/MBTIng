@@ -28,16 +28,14 @@
       <el-card
         :body-style="{ padding: '0px' }"
         class="card-body"
-        :href="contents[index].site"
+        :href="contents1[index].site"
       >
-        <img :src="contents[index].thumb" class="image" />
+        <img :src="contents1[index].thumb" class="image" />
         <div>
-          <span>{{ contents[index].title }}</span>
+          <span>{{ contents1[index].title }}</span>
           <div class="bottom">
-            <el-link :href="contents[index].site"
-              ><el-button
-                class="testbutton"
-                style="background: rgb(227, 122, 128)"
+            <el-link :href="contents1[index].site"
+              ><el-button class="testbutton" style="background: #e37a80"
                 >테스트시작</el-button
               ></el-link
             >
@@ -59,18 +57,16 @@
       <el-card
         :body-style="{ padding: '0px' }"
         class="card-body"
-        :href="contents[index].site"
+        :href="contents2[index].site"
       >
-        <img :src="contents[index].thumb" class="image" fit="cover" />
+        <img :src="contents2[index].thumb" class="image" fit="cover" />
         <div>
-          <el-link :href="contents[index].site"
-            ><span>{{ contents[index].title }}</span></el-link
+          <el-link :href="contents2[index].site"
+            ><span>{{ contents2[index].title }}</span></el-link
           >
           <div class="bottom">
-            <el-link :href="contents[index].site" target="_blank"
-              ><el-button
-                class="testbutton"
-                style="background: rgb(175, 228, 154)"
+            <el-link :href="contents2[index].site" target="_blank"
+              ><el-button class="testbutton" style="background: #afe49a"
                 >테스트시작</el-button
               ></el-link
             >
@@ -108,7 +104,7 @@ export default {
       router.push({ name: "MeetingWait" });
     };
 
-    const contents = [
+    const contents1 = [
       {
         thumb:
           "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkOzMl%2FbtqESXEhYI3%2FgKvKEjw5aioz06wwW0wkP0%2Fimg.png",
@@ -124,7 +120,33 @@ export default {
       {
         thumb:
           "https://d3d45df40onv5v.cloudfront.net/mbti/assets/img/maincat.gif",
-        title: "동물로 알아보는 연애 유형 테스트",
+        title: "MBTI 월드컵",
+        site: "/mbtiworldcup",
+      },
+      {
+        thumb:
+          "https://mbti.theblessedmoon.com/static/media/intro_logo.d0ce37d8.gif",
+        title: "썸 추진력 MBTI",
+        site: "https://mbti.theblessedmoon.com/",
+      },
+    ];
+    const contents2 = [
+      {
+        thumb:
+          "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkOzMl%2FbtqESXEhYI3%2FgKvKEjw5aioz06wwW0wkP0%2Fimg.png",
+        title: "연애 능력치 테스트",
+        site: "http://16types.glam.am/intro",
+      },
+      {
+        thumb:
+          "https://www.simcong.com/thumb/upfiles/quiz/202011/03_f7ab17586c219cfa2eac45aa651f18d3441378_5206.jpg?w=640&h=",
+        title: "연애유형 테스트",
+        site: "https://www.simcong.com/quiz/393",
+      },
+      {
+        thumb:
+          "https://d3d45df40onv5v.cloudfront.net/mbti/assets/img/maincat.gif",
+        title: "연애 유형 테스트",
         site: "https://mbti.amanda.co.kr/",
       },
       {
@@ -141,7 +163,8 @@ export default {
       Comment,
       Right,
       state,
-      contents,
+      contents1,
+      contents2,
     };
   },
 };

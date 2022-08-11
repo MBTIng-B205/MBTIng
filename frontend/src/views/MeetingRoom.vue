@@ -1,42 +1,51 @@
 <template>
-  <el-container style="display: flex">
-    <div class="cam">
-      <div class="mbtiinfo">
-        <div class="mbtic"></div>
-        <user-video
-          class="userVideo-you"
-          v-for="sub in state.subscribers"
-          :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-          style=""
-        />
+  <el-container style="display: flex; flex-direction: column">
+    <!-- cam -->
+    <div
+      class="cam"
+      style="display: flex; flex-direction: row; justify-content: space-between"
+    >
+      <div
+        class="video2-wrapper"
+        style="margin: auto auto 0 0; align-self: flex-start"
+      >
         <user-video
           class="userVideo-me"
           :stream-manager="state.publisher"
           @click="updateMainVideoStreamManager(state.publisher)"
         />
-        <div id="session">
-          <div id="session-header">
-            <h1 id="seesion-title">{{ mySessionId }}</h1>
-          </div>
-        </div>
+      </div>
+      <div class="video1-wrapper" style="posiotion: absolute">
+        <user-video
+          class="uservideo-you"
+          v-for="sub in state.subscribers"
+          :key="sub.stream.connection.connectionId"
+          :stream-manager="sub"
+          @click="updateMainVideoStreamManager(sub)"
+          style="width: 100%; height: 100%"
+        />
+        <video-controller
+          @videoOnOff="videoOnOff"
+          @audioOnOff="audioOnOff"
+        ></video-controller>
+      </div>
+
+      <div
+        v-if="state.flag === true"
+        class="chatdiv"
+        style="float: right; border-radius: 5px"
+      >
+        <room-chat
+          ref="chat"
+          @message="sendMessage"
+          :subscribers="subscribers"
+          style="width: 300px; height: 600px"
+        ></room-chat>
       </div>
     </div>
-    <!-- 
-    <div class="chatdiv">
-      <room-chat
-        ref="chat"
-        @message="sendMessage"
-        :subscribers="subscribers"
-        style="width: 300px; height: 600px; border-radius: 5px"
-      ></room-chat>
-    </div> -->
-    <div class="bardiv">
-      <bottom-bar
-        @videoOnOff="videoOnOff"
-        @audioOnOff="audioOnOff"
-      ></bottom-bar>
+
+    <div class="bar-wrapper" style="display: flex">
+      <bottom-bar @chatOnOff="chatOnOff"></bottom-bar>
     </div>
   </el-container>
 </template>
@@ -53,9 +62,13 @@ import {
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/UserVideo.vue";
-// import RoomChat from "@/components/RoomChat.vue";
+import RoomChat from "@/components/RoomChat.vue";
 import BottomBar from "@/components/bottom-bar.vue";
+
 import { reactive, ref, onMounted, computed } from "vue";
+
+import VideoController from "@/components/video-controller.vue";
+
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -66,8 +79,9 @@ const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 export default {
   components: {
     UserVideo,
-    //  RoomChat,
+    RoomChat,
     BottomBar,
+    VideoController,
   },
   setup() {
     const router = useRouter();
@@ -79,7 +93,11 @@ export default {
       publisher: undefined,
       subscribers: [],
       token: computed(() => store.getters["meetings/getToken"]),
+      mySessionId: "SessionA",
+      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      flag: false,
     });
+
     onMounted(() => {
       joinSession();
     });
@@ -115,7 +133,6 @@ export default {
           false
         );
       });
-
       state.session
         .connect(state.token, { clientData: state.myUserName })
         .then(() => {
@@ -143,10 +160,6 @@ export default {
         });
       window.addEventListener("beforeunload", leaveSession);
     };
-    // const audioOnOff = ({ audio }) => {
-    //   console.log("audio");
-    //   this.publisher.publishAudio(audio);
-    // };
 
     const videoOnOff = ({ video }) => {
       console.log("video");
@@ -160,6 +173,10 @@ export default {
     const audioOnOff = ({ audio }) => {
       console.log("audio");
       state.publisher.publishAudio(audio);
+    };
+
+    const chatOnOff = ({ flag }) => {
+      state.flag = flag;
     };
 
     const leaveSession = () => {
@@ -308,6 +325,7 @@ export default {
       leaveSession,
       videoOnOff,
       audioOnOff,
+      chatOnOff,
       updateMainVideoStreamManager,
       getToken,
       createSession,
@@ -336,13 +354,12 @@ export default {
   justify-content: center;
 }
 .cam {
-  display: flex;
+  display: inline-flex;
   background-color: #7d7d7d;
-  width: 80%;
   height: 600px;
   margin-bottom: 34px;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: auto;
 }
 .mbtiinfo {
   background-color: #908d8d;
@@ -353,31 +370,26 @@ export default {
   display: flex;
   position: relative;
 }
-.mbtic {
+.video-wrapper {
+  width: 10rem;
+  height: 10rem;
+}
+.uservideo-you {
+  width: 100%;
+  height: 100%;
+}
+.chatdiv {
+  background-color: white;
+  z-index: 1;
+}
+::v-deep .uservideo-you video {
+  width: 840px;
+  height: 580px;
+}
+::v-deep .userVideo-me {
   display: flex;
-}
-.mbti {
-  left: 39%;
-  position: absolute;
-}
-
-.controller {
-  background-color: #fff4b8;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-}
-.right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.left {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.bardiv {
-  bottom: 0;
+  margin-top: auto;
+  margin-right: auto;
+  align-self: flex-start;
 }
 </style>
