@@ -15,10 +15,11 @@ public interface WaitingMeetingUserRepository {
     void saveMeetingUser(String sessionId, MeetingUser meetingUser);
     void joinToQueue(String sessionId);
     void leaveFromQueue(String sessionId);
+    void setMatchedMeetingUser(String subjectSessionId, String matchedSessionId);
+    void setProposalAccepted(String sessionId, Boolean proposalAccepted);
     void saveMeetingRoom(String meetingRoomId, MeetingRoom meetingRoom);
+    void setMeetingRoomIdAndIndex(String sessionId, String meetingRoomId, Integer indexOnRoom);
     StompUser findBySessionId(String sessionId);
-    void addSessionIdToFeatureUserTables(String sessionId, MeetingUser meetingUser);
-    void removeSessionIdFromFeatureUserTables(String sessionId, MeetingUser meetingUser);
     int getQueueSize();
     Optional<String> getFirstSessionId();
 }

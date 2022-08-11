@@ -5,8 +5,8 @@ import com.ssafy.mbting.ws.model.event.WaitingMeetingUserMatchedEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
-import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import com.ssafy.mbting.ws.model.vo.IndividualDestination;
+import com.ssafy.mbting.ws.model.vo.StompUser;
 import com.ssafy.mbting.ws.service.WaitingMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -71,28 +71,29 @@ public class waitingMeetingEventListener {
     @Async
     @EventListener
     public void onMatched(WaitingMeetingUserMatchedEvent event) {
-        logger.debug("\n\nMatched 이벤트 발생함\n");
 
         String sessionId1 = event.getSessionId1();
         String sessionId2 = event.getSessionId2();
+        logger.debug("\n\nMatched 이벤트 발생함\n({}, {})\n", sessionId1, sessionId2);
 
-        MeetingUser meetingUser2 = waitingMeetingService.saveAndGetMatchedMeetingUser(sessionId1, sessionId2);
-        MeetingUser meetingUser1 = waitingMeetingService.saveAndGetMatchedMeetingUser(sessionId2, sessionId1);
+        waitingMeetingService.setMatchedMeetingUsers(sessionId1, sessionId2);
 
-        String email1 = waitingMeetingService.getStompUserBySessionId(sessionId1).getEmail();
-        String email2 = waitingMeetingService.getStompUserBySessionId(sessionId2).getEmail();
+        StompUser stompUser1 = waitingMeetingService.getStompUserBySessionId(sessionId1);
+        StompUser stompUser2 = waitingMeetingService.getStompUserBySessionId(sessionId2);
 
         simpMessagingTemplate.convertAndSend(
-                IndividualDestination.of(email1).toString(),
+                IndividualDestination.of(stompUser1.getEmail()).toString(),
                 BaseMessageBody.builder()
                         .command("proposal")
-                        .data(meetingUser2)
+                        // Todo: Proposal 타입으로 of 하기
+                        .data(stompUser2.getMeetingUser())
                         .build());
         simpMessagingTemplate.convertAndSend(
-                IndividualDestination.of(email2).toString(),
+                IndividualDestination.of(stompUser2.getEmail()).toString(),
                 BaseMessageBody.builder()
                         .command("proposal")
-                        .data(meetingUser1)
+                        // Todo: Proposal 타입으로 of 하기
+                        .data(stompUser1.getMeetingUser())
                         .build());
     }
 }

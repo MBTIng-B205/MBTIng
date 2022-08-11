@@ -90,36 +90,25 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     }
 
     @Override
-    public MeetingUser saveAndGetMatchedMeetingUser(String subjectSessionId, String matchedSessionId) {
-        waitingMeetingUserRepository.findBySessionId(subjectSessionId)
-                .setMatchedMeetingUserSessionId(matchedSessionId);
-        return waitingMeetingUserRepository.findBySessionId(matchedSessionId)
-                .getMeetingUser();
+    public void setMatchedMeetingUsers(String sessionId1, String sessionId2) {
+        waitingMeetingUserRepository.setMatchedMeetingUser(sessionId1, sessionId2);
+        waitingMeetingUserRepository.setMatchedMeetingUser(sessionId2, sessionId1);
     }
 
     @Override
-    public String[] getTokensForTwoUsers(String sessionId1, String sessionId2) {
-        waitingMeetingUserRepository.leaveFromQueue(sessionId1);
-        waitingMeetingUserRepository.leaveFromQueue(sessionId2);
-
-        String openviduSessionName = UUID.randomUUID().toString();
-        String token1 = openviduService.getToken(openviduSessionName);
-        String token2 = openviduService.getToken(openviduSessionName);
-        String[] tokens = {token1, token2};
+    public String[] setMeetingRoomAndGetTokensForTwoUsers(String sessionId1, String sessionId2) {
 
         String meetingRoomId = UUID.randomUUID().toString();
-        MeetingRoom meetingRoom = MeetingRoom.builder()
-                .openviduSessionName(openviduSessionName)
-                .sessionIds(new String[]{sessionId1, sessionId2})
-                .meetingRoomStatus(new Boolean[]{true, true})
-                .build();
+        String openviduSessionName = UUID.randomUUID().toString();
+        String[] tokens = {
+                openviduService.getToken(openviduSessionName),
+                openviduService.getToken(openviduSessionName)};
 
-        waitingMeetingUserRepository.saveMeetingRoom(meetingRoomId, meetingRoom);
+        waitingMeetingUserRepository.saveMeetingRoom(meetingRoomId,
+                MeetingRoom.newMeetingRoom(openviduSessionName, sessionId1, sessionId2));
 
-        waitingMeetingUserRepository.findBySessionId(sessionId1).setIndexOnRoom(0);
-        waitingMeetingUserRepository.findBySessionId(sessionId2).setIndexOnRoom(1);
-        waitingMeetingUserRepository.findBySessionId(sessionId1).setStompUserStatus(StompUserStatus.INROOM);
-        waitingMeetingUserRepository.findBySessionId(sessionId2).setStompUserStatus(StompUserStatus.INROOM);
+        waitingMeetingUserRepository.setMeetingRoomIdAndIndex(sessionId1, meetingRoomId, 0);
+        waitingMeetingUserRepository.setMeetingRoomIdAndIndex(sessionId2, meetingRoomId, 1);
         return tokens;
     }
 

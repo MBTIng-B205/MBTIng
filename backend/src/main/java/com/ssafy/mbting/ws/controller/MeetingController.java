@@ -30,7 +30,7 @@ public class MeetingController {
         StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
-                IndividualDestination.of(email).getDestination(),
+                IndividualDestination.of(email).toString(),
                 "{\"command\":\"accept\",\"data\":{\"token\":\"someTokTok\"}}");
     }
 }
