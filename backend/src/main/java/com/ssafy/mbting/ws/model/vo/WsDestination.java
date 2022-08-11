@@ -15,6 +15,6 @@ public class WsDestination {
     }
 
     public String getDestination() {
-        return DESTINATION_PREFIX + "/indi" + email;
+        return DESTINATION_PREFIX + "/indi/" + email;
     }
 }
