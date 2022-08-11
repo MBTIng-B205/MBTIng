@@ -81,36 +81,38 @@
     </el-dialog>
 
     <el-dialog v-model="state.friendProfileDialog" @close="friendProfileClose">
-      <img class="profile" :src="state.friend.profileUrl" />
-      <table>
-        <tbody>
-          <tr>
-            <td class="label">MBTI</td>
-            <td>{{ state.friend.mbti }}</td>
-          </tr>
-          <tr>
-            <td class="label">닉네임</td>
-            <td>{{ state.friend.nickname }}</td>
-          </tr>
-          <tr>
-            <td class="label">성별</td>
-            <td v-if="state.friend.gender == 'MALE'">남자</td>
-            <td v-else>여자</td>
-          </tr>
-          <tr>
-            <td class="label">생년월일</td>
-            <td>{{ state.friend.birth }}</td>
-          </tr>
-          <tr>
-            <td class="label">사는지역</td>
-            <td>{{ state.friend.sido }}</td>
-          </tr>
-          <tr>
-            <td class="label">관심사</td>
-            <td>{{ interests }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <img class="profile" :src="state.friend.profileUrl" />
+        <table>
+          <tbody>
+            <tr>
+              <td class="label">MBTI</td>
+              <td>{{ state.friend.mbti }}</td>
+            </tr>
+            <tr>
+              <td class="label">닉네임</td>
+              <td>{{ state.friend.nickname }}</td>
+            </tr>
+            <tr>
+              <td class="label">성별</td>
+              <td v-if="state.friend.gender == 'MALE'">남자</td>
+              <td v-else>여자</td>
+            </tr>
+            <tr>
+              <td class="label">생년월일</td>
+              <td>{{ state.friend.birth }}</td>
+            </tr>
+            <tr>
+              <td class="label">사는지역</td>
+              <td>{{ state.friend.sido }}</td>
+            </tr>
+            <tr>
+              <td class="label">관심사</td>
+              <td>{{ interests }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </el-dialog>
   </el-container>
 </template>
@@ -292,7 +294,6 @@ export default {
   margin-left: 40px;
   border-radius: 100%;
   background-color: white;
-  font-family: "Dalseo";
 }
 .friendInfo {
   font-size: large;
@@ -311,9 +312,6 @@ table {
 .label {
   width: 130px;
   color: rgb(255, 91, 136);
-}
-.backColor {
-  background-color: rgb(255, 189, 207);
 }
 .delete {
   float: right;
