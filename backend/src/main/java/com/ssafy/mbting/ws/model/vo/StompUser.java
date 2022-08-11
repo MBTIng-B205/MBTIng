@@ -4,6 +4,8 @@ import lombok.*;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StompUser {
 
     private String email;
@@ -13,6 +15,13 @@ public class StompUser {
     private Boolean proposalAccepted;
     private String meetingRoomId;
     private Integer indexOnRoom;
+
+    public void cleanForJoiningToQueue() {
+        setMatchedMeetingUserSessionId(null);
+        setProposalAccepted(null);
+        setMeetingRoomId(null);
+        setIndexOnRoom(null);
+    }
 
     public static StompUser ofBeforeSubscribe(String email) {
         return StompUser.builder()

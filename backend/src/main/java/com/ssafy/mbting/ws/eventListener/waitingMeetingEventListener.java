@@ -5,8 +5,9 @@ import com.ssafy.mbting.ws.model.event.WaitingMeetingUserMatchedEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
-import com.ssafy.mbting.ws.model.vo.MeetingUser;
-import com.ssafy.mbting.ws.model.vo.WsDestination;
+import com.ssafy.mbting.ws.model.stompMessageBody.sub.Proposal;
+import com.ssafy.mbting.ws.model.vo.IndividualDestination;
+import com.ssafy.mbting.ws.model.vo.StompUser;
 import com.ssafy.mbting.ws.service.WaitingMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
@@ -27,12 +29,14 @@ public class waitingMeetingEventListener {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final WaitingMeetingService waitingMeetingService;
 
+    @Async
     @EventListener
     public void onRequestToJoin(RequestToJoinQueueEvent event) {
         logger.debug("\n\nRequestToJoin 이벤트 발생함\n");
         waitingMeetingService.subscribe(event.getSessionId(), event.getMeetingUser());
     }
 
+    @Async
     @EventListener
     public void onQueued(WaitingMeetingUserQueuedEvent event) {
         logger.debug("\n\nQueued 이벤트 발생함\n");
@@ -45,6 +49,7 @@ public class waitingMeetingEventListener {
         ));
     }
 
+    @Async
     @EventListener
     public void onEnough(WaitingMeetingUserQueueSizeEnoughEvent event) {
         logger.debug("\n\nEnough 이벤트 발생함\n");
@@ -62,30 +67,30 @@ public class waitingMeetingEventListener {
         ));
     }
 
+    @Async
     @EventListener
     public void onMatched(WaitingMeetingUserMatchedEvent event) {
-        logger.debug("\n\nMatched 이벤트 발생함\n");
 
         String sessionId1 = event.getSessionId1();
         String sessionId2 = event.getSessionId2();
+        logger.debug("\n\nMatched 이벤트 발생함\n({}, {})\n", sessionId1, sessionId2);
 
-        MeetingUser meetingUser2 = waitingMeetingService.saveAndGetMatchedMeetingUser(sessionId1, sessionId2);
-        MeetingUser meetingUser1 = waitingMeetingService.saveAndGetMatchedMeetingUser(sessionId2, sessionId1);
+        waitingMeetingService.setMatchedMeetingUsers(sessionId1, sessionId2);
 
-        String email1 = waitingMeetingService.getStompUserBySessionId(sessionId1).getEmail();
-        String email2 = waitingMeetingService.getStompUserBySessionId(sessionId2).getEmail();
+        StompUser stompUser1 = waitingMeetingService.getStompUserBySessionId(sessionId1);
+        StompUser stompUser2 = waitingMeetingService.getStompUserBySessionId(sessionId2);
 
         simpMessagingTemplate.convertAndSend(
-                WsDestination.of(email1).getDestination(),
+                IndividualDestination.of(stompUser1.getEmail()).toString(),
                 BaseMessageBody.builder()
                         .command("proposal")
-                        .data(meetingUser2)
+                        .data(Proposal.of(stompUser2.getMeetingUser()))
                         .build());
         simpMessagingTemplate.convertAndSend(
-                WsDestination.of(email2).getDestination(),
+                IndividualDestination.of(stompUser2.getEmail()).toString(),
                 BaseMessageBody.builder()
                         .command("proposal")
-                        .data(meetingUser1)
+                        .data(Proposal.of(stompUser1.getMeetingUser()))
                         .build());
     }
 }

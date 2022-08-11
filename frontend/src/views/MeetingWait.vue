@@ -177,10 +177,6 @@ export default {
               // interests: state.memberinfo.interests,
             }
           );
-
-          // console.log(testemail);
-          // const testres = { testemail, test: "hello" };
-          // store.dispatch("meetings/send", testres);
         },
         (error) => {
           // 소켓 연결 실패
