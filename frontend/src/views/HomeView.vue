@@ -10,6 +10,7 @@
       alt="example"
     />
     <img class="mainimg" src="@/assets/main.png" alt="" />
+
     <div class="bg1"></div>
     <div class="bg2"></div>
   </div>
@@ -180,10 +181,11 @@ export default {
 .startbtn {
   height: 100px;
   width: 100px;
+  margin: 200px 350px 200px 350px;
   cursor: pointer;
   position: absolute;
-  left: 48%;
-  top: 50%;
+  left: 25%;
+  top: -5%;
   z-index: 2;
 }
 
