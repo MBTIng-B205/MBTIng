@@ -18,13 +18,10 @@ public class DisconnectHandler implements StompCommandHandler {
 
     @Override
     public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor, MessageChannel messageChannel) {
-        if (stompHeaderAccessor.getHeartbeat().length != 0) {
-            // 클라이언트로부터의 연결 해제 메시지 옴 : Nothing to do
-            logger.info("\n\n* {} *\n", stompCommand);
-            return;
-        }
         // 연결 해제 처리 : 사용자 제거
-        logger.info("\n\n* {} *\n", stompCommand);
+        logger.info("\n\n* {} *\nSession ID: {}\n"
+                , stompCommand
+                , stompHeaderAccessor.getSessionId());
 
         waitingMeetingService.disconnect(stompHeaderAccessor.getSessionId());
     }

@@ -36,50 +36,71 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
 
     @Override
     public StompUser createSession(String sessionId, StompUser stompUser) {
-        return sessionIdStompUserMap.put(sessionId, stompUser);
+        StompUser oldValue = sessionIdStompUserMap.put(sessionId, stompUser);
+        logger.debug("\n\nsessionIdStompUserMap에 ({}, {}) 넣음\n"
+                , sessionId
+                , stompUser);
+        return oldValue;
     }
 
     @Override
     public void removeSession(String sessionId) {
         sessionIdStompUserMap.remove(sessionId);
+        logger.debug("\n\nsessionIdStompUserMap에서 세션 \"{}\" 제거함\n", sessionId);
     }
 
     @Override
     public StompUserStatus getStompUserStatus(String sessionId) {
-        return null;
+        StompUserStatus stompUserStatus = sessionIdStompUserMap.get(sessionId).getStompUserStatus();
+        logger.debug("\n\n세션 \"{}\" 현재 상태: {}\n", sessionId, stompUserStatus);
+        return stompUserStatus;
     }
 
     @Override
     public void saveMeetingUser(String sessionId, MeetingUser meetingUser) {
         StompUser stompUser = sessionIdStompUserMap.get(sessionId);
+        if (stompUser == null) {
+            logger.error("\n\n세션이 존재하지 않음\nSession ID: {}\n", sessionId);
+            throw new RuntimeException("No Session!");
+        }
         stompUser.setMeetingUser(meetingUser);
         stompUser.setStompUserStatus(StompUserStatus.INPROGRESS);
+        logger.debug("\n\n세션 \"{}\" 추가 후 상태 변경함 INPROGRESS\n", sessionId);
     }
 
     @Override
     public void joinToQueue(String sessionId) {
-        waitingMeetingUserQueue.add(sessionId);
+        if (waitingMeetingUserQueue.add(sessionId)) {
+            logger.debug("\n\n대기열에 세션을 추가함\nSession ID: {}\n", sessionId);
+        } else {
+            logger.debug("\n\n대기열에 이미 \"{}\"세션이 존재함\n", sessionId);
+        }
         sessionIdStompUserMap.get(sessionId).setStompUserStatus(StompUserStatus.INQUEUE);
+        logger.debug("\n\n상태 변경함 INQUEUE\n");
     }
 
     @Override
     public void leaveFromQueue(String sessionId) {
         waitingMeetingUserQueue.remove(sessionId);
         sessionIdStompUserMap.get(sessionId).setStompUserStatus(StompUserStatus.INPROGRESS);
+        logger.debug("\n\n대기열에서 \"{}\" 제거 후 상태 변경함 INPROGRESS\n", sessionId);
     }
 
     @Override
     public void saveMeetingRoom(String meetingRoomId, MeetingRoom meetingRoom) {
         meetingRoomIdMeetingRoomMap.put(meetingRoomId, meetingRoom);
+        logger.debug("\n\nmeetingRoomIdMeetingRoomMap에\n({}, {}) 추가함\n", meetingRoomId, meetingRoom);
     }
 
     @Override
     public StompUser findBySessionId(String sessionId) {
+        // Todo: 로그 찍기
         return sessionIdStompUserMap.get(sessionId);
     }
 
     @Override
     public void addSessionIdToFeatureUserTables(String sessionId, MeetingUser meetingUser) {
+        // Todo: 로그 찍기
         genderSessionIdMap.get(meetingUser.getGender()).add(sessionId);
         String sido = meetingUser.getSido();
         sidoSessionIdMap.putIfAbsent(sido, Sets.newHashSet());
@@ -92,6 +113,7 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
 
     @Override
     public void removeSessionIdFromFeatureUserTables(String sessionId, MeetingUser meetingUser) {
+        // Todo: 로그 찍기
         genderSessionIdMap.get(meetingUser.getGender()).remove(sessionId);
         sidoSessionIdMap.get(meetingUser.getSido()).remove(sessionId);
         meetingUser.getInterests().forEach(
@@ -100,11 +122,13 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
 
     @Override
     public int getQueueSize() {
+        // Todo: 로그 찍기
         return sessionIdStompUserMap.size();
     }
 
     @Override
     public Optional<String> getFirstSessionId() {
+        // Todo: 로그 찍기
         return waitingMeetingUserQueue.stream().findFirst();
     }
 }

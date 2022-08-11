@@ -3,8 +3,7 @@ package com.ssafy.mbting.ws.model.vo;
 import com.ssafy.mbting.api.request.AnalysisRegisterRequest;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

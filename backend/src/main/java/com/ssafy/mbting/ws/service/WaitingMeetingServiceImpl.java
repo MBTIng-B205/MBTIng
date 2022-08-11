@@ -57,6 +57,25 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
 
     @Override
     public void disconnect(String sessionId) {
+        StompUserStatus status = waitingMeetingUserRepository.getStompUserStatus(sessionId);
+        logger.debug("\n\ndisconnect 시도...");
+        switch (status) {
+            case UNSUBSCRIBED:
+                // 여기서는 할 게 없음
+                break;
+            case INPROGRESS:
+                // 여기서도 할 게 없음
+                break;
+            case INQUEUE:
+                waitingMeetingUserRepository.leaveFromQueue(sessionId);
+                break;
+            case INROOM:
+                // Todo: 룸에서 빼는 거 구현해야 함
+                break;
+            default:
+                // 미지의 세계, 해결할 수 없는 상태
+                break;
+        }
         waitingMeetingUserRepository.removeSession(sessionId);
     }
 
@@ -116,9 +135,15 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
 
     @Override
     public String getFirstSessionId() {
-        String firstSessionId = waitingMeetingUserRepository.getFirstSessionId().get();
-        waitingMeetingUserRepository.leaveFromQueue(firstSessionId);
-        return firstSessionId;
+        logger.debug("\n\n대기열의 맨 앞 꺼내기 시도...\n");
+        String sessionId = waitingMeetingUserRepository.getFirstSessionId()
+                .orElseThrow(() -> {
+                    logger.error("\n\n!!! No Element !!!\n대기열이 비어 있음\n");
+                    return new RuntimeException("Internal Server Error!");
+                });
+        waitingMeetingUserRepository.leaveFromQueue(sessionId);
+        logger.debug("\n\n잘 꺼냄\nsessionId: {}\n", sessionId);
+        return sessionId;
     }
 
     @Override
