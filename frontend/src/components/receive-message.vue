@@ -131,7 +131,7 @@
     </el-dialog>
     <el-dialog v-model="state.sendDialog" @close="sendClose">
       <el-header style="text-align: left; padding-top: 10px">
-        <span class="to"> TO. </span>
+        <span class="to"> To. </span>
         <span class="toFriend"> {{ state.message.sender.nickname }}</span>
         <img
           v-if="state.friendFlag"
@@ -537,6 +537,8 @@ td {
   width: 25px;
   height: 25px;
   margin-left: 15px;
+  vertical-align: middle;
+  margin-bottom: 10px;
 }
 .fromDate {
   float: right;

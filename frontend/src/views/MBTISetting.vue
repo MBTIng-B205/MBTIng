@@ -1,5 +1,5 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
       <img class="logo" src="@/assets/logo.png" />
     </el-header>
