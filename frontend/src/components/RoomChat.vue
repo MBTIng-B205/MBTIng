@@ -1,9 +1,12 @@
 <template>
-  <div class="wrapper" style="display: flex; flex-direction: column">
+  <div
+    class="wrapper"
+    style="display: flex; flex-direction: column-reverse; overflow-y: auto"
+  >
     <!-- chat-bar -->
-    <div ref="content" class="background-color: white; overflow-y: scroll">
+    <div ref="content" style="background-color: white">
       <!-- 채팅 내용 -->
-      <ul id="chat-bar" style="list-style-type: none; overflow-y: scroll">
+      <ul id="chat-bar" style="list-style-type: none; overflow-y: auto">
         <li class="" v-for="(chat, idx) in state.chats" :key="idx">
           <!-- 내가 보낸 채팅인 경우 -->
           <div v-if="chat.isMyMessage" class="">
@@ -27,23 +30,19 @@
       </ul>
     </div>
     <!-- 메시지 작성 -->
-    <div
-      style="position: absolute; bottom: 0; margin-left: 5px; margin-top: 10px"
-    >
-      <div class="">
-        <el-input
-          v-model="state.message"
-          @keydown.enter="sendMessage"
-          style="width: 230px; margin-right: 3px"
-        >
-        </el-input>
-        <el-button
-          type="warning"
-          plain
-          :icon="Promotion"
-          @click="sendMessage()"
-        />
-      </div>
+    <div style="position: absolute; margin-left: 5px">
+      <el-input
+        v-model="state.message"
+        @keydown.enter="sendMessage"
+        style="width: 230px; margin-right: 3px"
+      >
+      </el-input>
+      <el-button
+        type="warning"
+        plain
+        :icon="Promotion"
+        @click="sendMessage()"
+      />
     </div>
   </div>
 </template>
@@ -79,7 +78,9 @@ export default {
       });
 
       event.preventDefault(); // enter키 누를 때 줄바꿈 방지
+      console.log(state.message, "보내기");
       state.message = ""; // 메시지 창 초기화
+      console.log(state.message, "보낸후");
 
       console.log(state.subscribers);
     };
@@ -96,7 +97,6 @@ export default {
       let isScrollBottom =
         chatBar.scrollHeight - chatBar.scrollTop <= chatBar.clientHeight + 2;
 
-      console.log(chatBar.scrollHeight, "이게뭔데?");
       // await 키워드 => 새로운 채팅 메시지 추가 완료 후 스크롤바가 아래로 이동되도록 함.
       await state.chats.push({
         userId: message.sender,
@@ -112,8 +112,25 @@ export default {
       console.log("메시지 수신 완료");
     };
 
-    return { state, sendMessage, addMessage, Promotion };
+    return {
+      state,
+      sendMessage,
+      addMessage,
+      Promotion,
+    };
   },
 };
 </script>
-<style></style>
+<style>
+.wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+.wrapper::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: rgb(255, 189, 207);
+  border-radius: 10px;
+}
+.wrapper::-webkit-scrollbar-track {
+  background: rgb(33, 122, 244, 0.1);
+}
+</style>
