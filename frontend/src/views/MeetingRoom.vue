@@ -1,15 +1,21 @@
 <template>
   <el-container style="display: flex; flex-direction: column">
     <!-- cam -->
-    <div class="cam">
-      <div class="video2-wrapper">
+    <div
+      class="cam"
+      style="display: flex; flex-direction: row; justify-content: space-between"
+    >
+      <div
+        class="video2-wrapper"
+        style="margin: auto auto 0 0; align-self: flex-start"
+      >
         <user-video
           class="userVideo-me"
           :stream-manager="state.publisher"
           @click="updateMainVideoStreamManager(state.publisher)"
         />
       </div>
-      <div class="video1-wrapper">
+      <div class="video1-wrapper" style="posiotion: absolute">
         <user-video
           class="uservideo-you"
           v-for="sub in state.subscribers"
@@ -24,7 +30,11 @@
         ></video-controller>
       </div>
 
-      <div class="chatdiv" style="float: right; border-radius: 5px">
+      <div
+        v-if="state.flag === true"
+        class="chatdiv"
+        style="float: right; border-radius: 5px"
+      >
         <room-chat
           ref="chat"
           @message="sendMessage"
@@ -35,7 +45,7 @@
     </div>
 
     <div class="bar-wrapper" style="display: flex">
-      <bottom-bar></bottom-bar>
+      <bottom-bar @chatOnOff="chatOnOff"></bottom-bar>
     </div>
   </el-container>
 </template>
@@ -81,7 +91,9 @@ export default {
       subscribers: [],
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
+      flag: false,
     });
+
     onMounted(() => {
       joinSession();
     });
@@ -156,6 +168,10 @@ export default {
     const audioOnOff = ({ audio }) => {
       console.log("audio");
       state.publisher.publishAudio(audio);
+    };
+
+    const chatOnOff = ({ flag }) => {
+      state.flag = flag;
     };
 
     const leaveSession = () => {
@@ -304,6 +320,7 @@ export default {
       leaveSession,
       videoOnOff,
       audioOnOff,
+      chatOnOff,
       updateMainVideoStreamManager,
       getToken,
       createSession,

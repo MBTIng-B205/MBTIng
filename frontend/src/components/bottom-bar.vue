@@ -50,7 +50,7 @@ import {
 import { reactive } from "vue";
 
 export default {
-  setup() {
+  setup(props, { emit }) {
     const data = reactive({
       flag: false,
     });
@@ -58,6 +58,10 @@ export default {
     const chatOnOff = () => {
       data.flag = !data.flag;
       console.log(data.flag);
+
+      emit("chatOnOff", {
+        flag: data.flag,
+      });
     };
 
     return {

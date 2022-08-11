@@ -4,9 +4,9 @@
     style="display: flex; flex-direction: column-reverse; overflow-y: auto"
   >
     <!-- chat-bar -->
-    <div ref="content" class="background-color: white;">
+    <div ref="content" style="background-color: white">
       <!-- 채팅 내용 -->
-      <ul id="chat-bar" style="list-style-type: none">
+      <ul id="chat-bar" style="list-style-type: none; overflow-y: auto">
         <li class="" v-for="(chat, idx) in state.chats" :key="idx">
           <!-- 내가 보낸 채팅인 경우 -->
           <div v-if="chat.isMyMessage" class="">
@@ -30,7 +30,7 @@
       </ul>
     </div>
     <!-- 메시지 작성 -->
-    <div style="position: absolute; margin-left: 5px; margin-top: 10px">
+    <div style="position: absolute; margin-left: 5px">
       <div class="">
         <el-input
           v-model="state.message"
@@ -79,6 +79,9 @@ export default {
         to: state.selectedUser,
       });
 
+      state.chats.append({
+        content: strippeddMessage,
+      });
       event.preventDefault(); // enter키 누를 때 줄바꿈 방지
       state.message = ""; // 메시지 창 초기화
 
@@ -112,8 +115,25 @@ export default {
       console.log("메시지 수신 완료");
     };
 
-    return { state, sendMessage, addMessage, Promotion };
+    return {
+      state,
+      sendMessage,
+      addMessage,
+      Promotion,
+    };
   },
 };
 </script>
-<style></style>
+<style>
+.wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+.wrapper::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: #ff889c;
+  border-radius: 10px;
+}
+.wrapper::-webkit-scrollbar-track {
+  background: rgb(33, 122, 244, 0.1);
+}
+</style>
