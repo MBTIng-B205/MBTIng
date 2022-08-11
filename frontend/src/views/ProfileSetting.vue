@@ -1,7 +1,7 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card style="text-align: center">
       <el-row type="flex" justify="space-around">
@@ -232,7 +232,10 @@ export default {
       }
     };
 
-    return { signup, nameCheck, option, form };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
+    return { signup, nameCheck, goHome, option, form };
   },
 };
 </script>

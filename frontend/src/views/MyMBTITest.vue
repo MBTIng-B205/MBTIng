@@ -1,7 +1,7 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card style="padding: 0px">
       <div class="question">
@@ -179,6 +179,9 @@ export default {
       console.log("mbti : ", mbti.value);
       router.push({ name: "MyMBTIResult", params: { mbti: mbti.value } });
     };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
 
     return {
       cnt,
@@ -187,6 +190,7 @@ export default {
       result,
       upAnswer,
       downAnswer,
+      goHome,
       ArrowLeftBold,
       ArrowRightBold,
     };
