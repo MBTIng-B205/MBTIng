@@ -6,6 +6,7 @@ export const meetings = {
     mtsocket: null,
     proposal: null,
     token: null,
+    chats: [],
   },
   mutations: {
     SET_SOCKET: (state, mtsocket) => {
@@ -17,6 +18,12 @@ export const meetings = {
     SET_TOKEN: (state, token) => {
       state.token = token;
     },
+    SAVE_CHAT: (state, chats) => {
+      console.log(state);
+      console.log(chats.chats);
+
+      state.chats = chats.chats;
+    },
   },
   getters: {
     getProposal(state) {
@@ -27,6 +34,9 @@ export const meetings = {
     },
     getToken(state) {
       return state.token;
+    },
+    getChats(state) {
+      return state.chats;
     },
   },
   // 체크 필요

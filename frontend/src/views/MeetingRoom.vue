@@ -42,7 +42,7 @@
       </div>
 
       <div
-        v-if="state.flag === true"
+        v-show="state.flag === true"
         class="chatdiv"
         style="position: absolute; right: 0; border-radius: 5px"
       >
@@ -414,6 +414,7 @@ export default {
 }
 .chatdiv {
   background-color: white;
+  border-radius: 1px;
   z-index: 1;
 }
 ::v-deep .uservideo-you video {
