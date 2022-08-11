@@ -4,7 +4,10 @@
   >
     <!-- cam -->
     <div class="cam" style="display: flex; flex-direction: row">
-      <div class="video2-wrapper" style="margin: auto auto 0 0; z-index: 2">
+      <div
+        class="video2-wrapper"
+        style="margin: auto auto 0 0; margin-left: 30px; z-index: 2"
+      >
         <user-video
           class="userVideo-me"
           :stream-manager="state.publisher"
@@ -19,8 +22,8 @@
             left: 24%;
             margin-top: 0;
             margin-bottom: 0;
-            width: 940px;
-            height: 600px;
+            width: 840px;
+            height: 550px;
           "
         >
           <user-video
@@ -44,7 +47,12 @@
       <div
         v-show="state.flag === true"
         class="chatdiv"
-        style="position: absolute; right: 0; border-radius: 5px"
+        style="
+          position: absolute;
+          right: 0;
+          border-radius: 5px;
+          margin-right: 30px;
+        "
       >
         <room-chat
           ref="chat"
@@ -54,7 +62,9 @@
         ></room-chat>
       </div>
     </div>
-
+    <div style="">
+      <hr style="width: 96%" />
+    </div>
     <div class="bar-wrapper" style="display: flex">
       <bottom-bar @chatOnOff="chatOnOff"></bottom-bar>
     </div>
