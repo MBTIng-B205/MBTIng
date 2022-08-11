@@ -1,7 +1,11 @@
 package com.ssafy.mbting.ws.eventListener;
 
+import com.ssafy.mbting.api.response.MemberResponse;
+import com.ssafy.mbting.api.service.MemberService;
+import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.ws.model.event.*;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
+import com.ssafy.mbting.ws.model.stompMessageBody.sub.MeetingRoom;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.Proposal;
 import com.ssafy.mbting.ws.model.vo.IndividualDestination;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
@@ -17,7 +21,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 @Component
@@ -28,6 +31,7 @@ public class waitingMeetingEventListener {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final WaitingMeetingService waitingMeetingService;
+    private final MemberService memberService;
 
     @Async
     @EventListener
@@ -141,7 +145,7 @@ public class waitingMeetingEventListener {
         }
 
         IntStream.range(0, 2).forEach(i -> {
-           if (accepteds[i]) simpMessagingTemplate.convertAndSend(
+            if (accepteds[i]) simpMessagingTemplate.convertAndSend(
                     IndividualDestination.of(waitingMeetingService
                             .getStompUserBySessionId(sessionIds[i])
                             .orElseThrow(() -> new RuntimeException("Session Not Found!"))
@@ -162,6 +166,33 @@ public class waitingMeetingEventListener {
                 , sessionIds
                 , openviduTokens);
 
-        // Todo: 미팅 입장 정보 제공 메시지 전송
+        StompUser[] stompUsers = new StompUser[]{
+                waitingMeetingService
+                        .getStompUserBySessionId(sessionIds[0])
+                        .orElseThrow(() -> new RuntimeException("Session Not Found!")),
+                waitingMeetingService
+                        .getStompUserBySessionId(sessionIds[1])
+                        .orElseThrow(() -> new RuntimeException("Session Not Found!"))};
+
+        logger.debug("\n\nemail1: {}\nemail2: {}\n"
+                , stompUsers[1].getEmail()
+                , stompUsers[0].getEmail());
+
+        // Todo: 하드코딩 되어 있음!!!
+        Member[] opponents = new Member[]{
+                memberService.getUserByEmail("wp29dud@naver.com"),
+                memberService.getUserByEmail("rlwls1101@hanmail.net")};
+
+        IntStream.range(0, 2).forEach(i -> {
+            simpMessagingTemplate.convertAndSend(
+                    IndividualDestination.of(stompUsers[i].getEmail()).toString(),
+                    BaseMessageBody.builder()
+                            .command("accept")
+                            .data(MeetingRoom.builder()
+                                    .openviduToken(openviduTokens[i])
+                                    .opponent(MemberResponse.of(opponents[i]))
+                                    .build())
+                            .build());
+        });
     }
 }
