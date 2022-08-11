@@ -1,7 +1,7 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-row
       ><div class="title" style="margin-top: 35px">
@@ -102,12 +102,17 @@ export default {
       }
     };
 
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
+
     return {
       left,
       right,
       active,
       card,
       game,
+      goHome,
     };
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card style="text-align: center">
       <el-header style="font-size: xx-large"
@@ -134,8 +134,10 @@ export default {
       document.getElementById(inactive).style.color = "black";
       // console.log(form.mbti[idx]);
     };
-
-    return { form, image, clickSetting, clickValue };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
+    return { form, image, clickSetting, clickValue, goHome };
   },
 };
 </script>
