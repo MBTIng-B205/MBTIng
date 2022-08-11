@@ -1,7 +1,7 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
       <el-button style="float: right; margin-top: 25px" type="danger" round
         >소개팅종료</el-button
       >
@@ -39,22 +39,23 @@
 </template>
 
 <script>
+import { useRouter } from "vue-router";
 export default {
   setup() {
+    const router = useRouter();
     const user = {
       gender: true,
       mbti: "ENFP",
     };
-    //     //const user = computed(());
-    return { user };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
+    return { user, goHome };
   },
 };
 </script>
 
 <style>
-.logo {
-  width: 250px;
-}
 .small {
   width: 200px;
   height: 250px;
@@ -72,7 +73,7 @@ export default {
   padding: 10px;
   height: 275px;
   width: 600px;
-  border: 20px solid deeppink;
+  border: 20px solid rgb(255, 91, 136);
   background-color: white;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
 }

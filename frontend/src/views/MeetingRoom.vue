@@ -14,8 +14,14 @@
       <div v-if="state.subscribers.length">
         <div
           class="video1-wrapper"
-          style="position: absolute; left: 24%; margin-top: 0; margin-bottom: 0 width: 950px;
-  height: 600px;"
+          style="
+            position: absolute;
+            left: 24%;
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 940px;
+            height: 600px;
+          "
         >
           <user-video
             class="uservideo-you"

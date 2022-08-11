@@ -11,7 +11,9 @@
           <el-input v-model="search" />
         </el-col>
         <el-col :span="6">
-          <el-button @click="onSearch">검색</el-button>
+          <el-button style="font-family: 'DalseoBold'" @click="onSearch"
+            >검색</el-button
+          >
         </el-col>
       </el-row>
     </el-header>
@@ -475,7 +477,7 @@ export default {
 
 <style>
 .el-header {
-  background-color: #9dd098;
+  background-color: rgb(255, 189, 207);
 }
 .row {
   flex-direction: row;
@@ -517,7 +519,6 @@ td {
   font-size: 30px;
   color: #cc3366;
   font-weight: bolder;
-  text-shadow: 2px 4px 2px gray;
 }
 .toFriend {
   font-size: 20px;
@@ -527,7 +528,6 @@ td {
   font-size: 30px;
   color: #12a9db;
   font-weight: bolder;
-  text-shadow: 2px 4px 2px gray;
 }
 .fromFriend {
   font-size: 20px;
