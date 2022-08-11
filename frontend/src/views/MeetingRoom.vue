@@ -153,6 +153,10 @@ export default {
       state.publisher.publishVideo(video);
     };
 
+    //button video -> v-if ->
+    //화상
+    //greenlight 2개 video cam on
+    //send
     const audioOnOff = ({ audio }) => {
       console.log("audio");
       state.publisher.publishAudio(audio);

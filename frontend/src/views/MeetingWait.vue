@@ -127,12 +127,7 @@ export default {
               // interests: state.memberinfo.interests,
             }
           );
-          const msg = {
-            command: `${testemail}`,
-            data: "",
-          };
-          console.log(msg);
-          store.dispatch("meetings/send", msg);
+
           // console.log(testemail);
           // const testres = { testemail, test: "hello" };
           // store.dispatch("meetings/send", testres);

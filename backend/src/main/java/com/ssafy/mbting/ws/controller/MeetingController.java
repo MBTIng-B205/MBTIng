@@ -23,7 +23,6 @@ public class MeetingController {
     private final OpenviduService openviduService ;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final WaitingMeetingService waitingMeetingService;
-
     @MessageMapping("/indi/proposalResult")
     public void receiveProposalResult(@Payload Message<String> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
@@ -33,5 +32,50 @@ public class MeetingController {
         simpMessagingTemplate.convertAndSend(
                 WsDestination.of(email).getDestination(),
                 "{\"command\":\"accept\",\"data\":{\"token\":\"someTokTok\"}}");
+    }
+
+    @MessageMapping("/indi/rejoin")
+    public void receiveRejoin(@Payload Message message) {
+        StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
+        String sessionId = header.getSessionId();
+        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
+        String email = stompUser.getEmail();
+        simpMessagingTemplate.convertAndSend(
+                WsDestination.of(email).getDestination(),
+                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+    }
+    @MessageMapping("/indi/meetingAudioStarted")
+    public void receiveAudioStarted(@Payload Message<String> message) {
+        StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
+        String sessionId = header.getSessionId();
+        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
+        String email = stompUser.getEmail();
+        simpMessagingTemplate.convertAndSend(
+                WsDestination.of(email).getDestination(),
+                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+    }
+
+
+    @MessageMapping("/indi/greenlight")
+    public void receiveGreenLight(@Payload Message<String> message) {
+        StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
+        String sessionId = header.getSessionId();
+        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
+        String email = stompUser.getEmail();
+        simpMessagingTemplate.convertAndSend(
+                WsDestination.of(email).getDestination(),
+                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
+    }
+
+    @MessageMapping("/indi/redlight")
+    public void receiveRedLight(@Payload Message<String> message) {
+        StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
+        String sessionId = header.getSessionId();
+        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
+        String email = stompUser.getEmail();
+
+        simpMessagingTemplate.convertAndSend(
+                WsDestination.of(email).getDestination(),
+                "{\"command\":\"test\",\"data\":{\"token\":\"someTokTok\"}}");
     }
 }

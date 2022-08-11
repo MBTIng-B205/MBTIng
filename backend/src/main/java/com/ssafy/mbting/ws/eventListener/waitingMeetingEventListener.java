@@ -37,10 +37,8 @@ public class waitingMeetingEventListener {
     public void onQueued(WaitingMeetingUserQueuedEvent event) {
         logger.debug("\n\nQueued 이벤트 발생함\n");
         // Todo: 매치 시작 트리거 조건 체크...
-
         // 임시로 세 명 오면 시작
         if (waitingMeetingService.getQueueSize() < 3) return;
-
         applicationEventPublisher.publishEvent(new WaitingMeetingUserQueueSizeEnoughEvent(
                 this,
                 Clock.systemDefaultZone()
