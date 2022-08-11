@@ -1,7 +1,7 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card style="padding: 0px">
       <div class="question">
@@ -67,7 +67,7 @@ export default {
       {
         type: 3,
         Q: "놀러 가기로 했을 때 나의 이상형은?",
-        U: "하루 전 날 미리 준비하고 짐을 싸두며 필요한 것 리스트 작성하는 사람",
+        U: "하루 전 날 미리 준비하고 짐을 싸두며 필요한 리스트 작성하는 사람",
         D: "미리 챙기지 않아 한 두개 놓고 왔지만 웃으며 사러가자고 하는 사람",
       },
       {
@@ -179,6 +179,9 @@ export default {
       console.log("mbti : ", mbti.value);
       router.push({ name: "YourMBTIResult", params: { mbti: mbti.value } });
     };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
 
     return {
       cnt,
@@ -187,6 +190,7 @@ export default {
       result,
       upAnswer,
       downAnswer,
+      goHome,
       ArrowLeftBold,
       ArrowRightBold,
     };
@@ -194,7 +198,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-container {
   height: 100vh;
 }
@@ -202,32 +206,34 @@ export default {
 .question {
   text-align: center;
   font-weight: bold;
-  font-size: large;
+  font-size: 30px;
   height: 150px;
   line-height: 150px;
   margin: 50px;
-  border: 10px solid deeppink;
+  border: 10px solid rgb(255, 91, 136);
+  border-radius: 1rem;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
+  font-family: "Dalseo";
 }
-.logo {
-  width: 250px;
-}
+
 .answerBtn {
   width: 700px;
-  font-size: 20px;
+  font-size: 25px;
   background-color: white;
-  color: deeppink;
+  color: rgb(255, 91, 136);
   padding: 5px;
-  border: 1px solid deeppink;
+  border: 1px solid rgb(255, 91, 136);
+  font-family: "Dalseo";
+  border-radius: 1rem;
 }
 
 .answerBtn:active {
-  background-color: deeppink;
+  background-color: rgb(255, 91, 136);
   color: white;
 }
 
 .answerBtn:hover {
-  background-color: deeppink;
+  background-color: rgb(255, 91, 136);
   color: white;
 }
 </style>

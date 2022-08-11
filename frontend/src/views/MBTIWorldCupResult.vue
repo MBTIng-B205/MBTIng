@@ -15,16 +15,16 @@
         <img
           class="small"
           style="width: 250px; height: 250px"
-          src="@/assets/smallyellow.png"
+          src="@/assets/smallpurple.png"
         />
         <span class="result"
-          >당신의 이상형 MBTI는
+          >MBTI 월드컵 우승자는
           <span style="color: rgb(255, 91, 136)">
             {{ $route.params.mbti }}
           </span>
-          입니다.</span
+          입니다!</span
         >
-        <img class="small" src="@/assets/smallblue.png" />
+        <img class="small" src="@/assets/smallorange.png" />
       </div>
       <el-footer style="margin-top: 50px">
         <el-button type="warning" plain size="large" @click="goHome"
@@ -48,7 +48,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .small {
   width: 200px;
   height: 250px;
