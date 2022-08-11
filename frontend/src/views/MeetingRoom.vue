@@ -359,13 +359,13 @@ export default {
 }
 
 .controller {
-  background-color: #fff4b8;
+  background-color: #fadce1;
   height: 100px;
   display: flex;
   justify-content: center;
 }
 .timer {
-  background-color: deeppink;
+  background-color: rgb(255, 91, 136);
   height: 100px;
   width: 300px;
   margin-right: 10px;

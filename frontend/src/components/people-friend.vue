@@ -61,7 +61,9 @@
         rows="10"
       />
       <div style="margin-top: 20px">
-        <el-button type="success" @click="clickSend">전송</el-button>
+        <el-button style="background-color: deeppink" @click="clickSend"
+          >전송</el-button
+        >
         <el-button @click="messageClose">취소</el-button>
       </div>
     </el-dialog>
@@ -297,7 +299,7 @@ export default {
 
 <style>
 .el-header {
-  background-color: #9dd098;
+  background-color: rgb(255, 189, 207);
 }
 .friendProfile {
   width: 100px;
@@ -319,7 +321,6 @@ export default {
   font-size: 30px;
   color: #cc3366;
   font-weight: bolder;
-  text-shadow: 2px 4px 2px gray;
 }
 .toFriend {
   font-size: 20px;

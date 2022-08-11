@@ -36,4 +36,8 @@ body {
 .el-container {
   height: 100vh;
 }
+.logo {
+  width: 200px;
+  margin-left: 20px;
+}
 </style>

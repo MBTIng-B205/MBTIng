@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
-    <div class="logo">
-      <img @click="goHome" src="@/assets/logo.png" alt="logo" />
+    <div>
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </div>
 
     <el-dropdown v-if="state.memberinfo">
@@ -404,11 +404,6 @@ export default {
   width: 100px;
   cursor: pointer;
 }
-.logo {
-  display: flex;
-  height: 80px;
-  width: 80px;
-}
 
 .el-dropdown {
   display: flex;
@@ -425,7 +420,7 @@ export default {
 }
 
 .navbar {
-  background-color: #fff4b8;
+  background-color: #fadce1;
   display: flex;
   justify-content: space-between;
 }

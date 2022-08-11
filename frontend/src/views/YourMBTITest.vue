@@ -1,5 +1,5 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
       <img class="logo" src="@/assets/logo.png" />
     </el-header>
@@ -206,32 +206,30 @@ export default {
   height: 150px;
   line-height: 150px;
   margin: 50px;
-  border: 10px solid deeppink;
+  border: 10px solid rgb(255, 91, 136);
   border-radius: 1rem;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
   font-family: "Dalseo";
 }
-.logo {
-  width: 250px;
-}
+
 .answerBtn {
   width: 700px;
   font-size: 25px;
   background-color: white;
-  color: deeppink;
+  color: rgb(255, 91, 136);
   padding: 5px;
-  border: 1px solid deeppink;
+  border: 1px solid rgb(255, 91, 136);
   font-family: "Dalseo";
   border-radius: 1rem;
 }
 
 .answerBtn:active {
-  background-color: deeppink;
+  background-color: rgb(255, 91, 136);
   color: white;
 }
 
 .answerBtn:hover {
-  background-color: deeppink;
+  background-color: rgb(255, 91, 136);
   color: white;
 }
 </style>

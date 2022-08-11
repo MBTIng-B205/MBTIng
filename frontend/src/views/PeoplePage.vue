@@ -56,7 +56,6 @@ export default {
   height: 100vh;
   width: 100%;
   padding-bottom: 0;
-  font-family: "DalseoBold";
 }
 
 .el-aside {

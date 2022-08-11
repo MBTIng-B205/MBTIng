@@ -1,12 +1,12 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
       <img class="logo" src="@/assets/logo.png" />
     </el-header>
-    <div>
+    <el-card style="padding: 0">
       <el-row><div class="title">MBTI 별 매칭 성공률</div></el-row>
       <div style="margin-top: 10px">
-        <div style="margin-left: 250px; display: inline-block">
+        <div style="margin-left: 200px; display: inline-block">
           <el-select v-model="mbti" @change="changeChart">
             <el-option
               v-for="item in options"
@@ -16,9 +16,11 @@
             />
           </el-select>
         </div>
-        <span class="rank"
-          >Rank : 1.{{ first }} 2.{{ second }} 3.{{ third }}</span
-        >
+        <span class="rank">
+          1. <span class="rank-mbti"> {{ first }} </span> 2.
+          <span class="rank-mbti">{{ second }} </span> 3.
+          <span class="rank-mbti">{{ third }} </span>
+        </span>
       </div>
       <div class="chart">
         <vue3-chart-js
@@ -28,7 +30,7 @@
           :data="lineChart.data"
         ></vue3-chart-js>
       </div>
-    </div>
+    </el-card>
   </el-container>
 </template>
 
@@ -816,36 +818,33 @@ export default {
 };
 </script>
 
-<style>
-.logo {
-  width: 250px;
-}
+<style scoped>
 .title {
   font-size: x-large;
   font-weight: bold;
   background-color: white;
   text-align: center;
-  color: deeppink;
+  color: rgb(255, 91, 136);
   border-radius: 30px;
-  border: solid deeppink;
+  border: solid rgb(255, 91, 136);
 }
-.small {
-  width: 200px;
-  height: 250px;
-  vertical-align: bottom;
-}
+
 .rank {
   background-color: white;
   font-size: large;
   font-weight: bold;
-  color: deeppink;
   float: right;
-  margin-right: 250px;
+  margin-right: 200px;
   padding: 5px;
+  color: rgb(255, 91, 136);
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
 }
+.rank-mbti {
+  color: black;
+  font-weight: bold;
+}
 .chart {
-  width: 1100px;
+  width: 1000px;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
