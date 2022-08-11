@@ -8,12 +8,12 @@ import java.time.Clock;
 @Getter
 public class ProposalResultArriveEvent extends ApplicationEvent {
 
-    private final String email;
+    private final String sessionId;
     private final Boolean accepted;
 
-    public ProposalResultArriveEvent(Object source, Clock clock, String email, Boolean accepted) {
+    public ProposalResultArriveEvent(Object source, Clock clock, String sessionId, Boolean accepted) {
         super(source, clock);
-        this.email = email;
+        this.sessionId = sessionId;
         this.accepted = accepted;
     }
 }

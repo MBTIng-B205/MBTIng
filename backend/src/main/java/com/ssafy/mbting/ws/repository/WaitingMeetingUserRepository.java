@@ -15,6 +15,7 @@ public interface WaitingMeetingUserRepository {
     void joinToQueue(String sessionId);
     void leaveFromQueue(String sessionId);
     void setMatchedMeetingUser(String subjectSessionId, String matchedSessionId);
+    Boolean getProposalAccepted(String sessionId);
     void setProposalAccepted(String sessionId, Boolean accepted);
     void saveMeetingRoom(String meetingRoomId, MeetingRoom meetingRoom);
     void setMeetingRoomIdAndIndex(String sessionId, String meetingRoomId, Integer indexOnRoom);

@@ -6,6 +6,7 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.api.service.OpenviduService;
 import com.ssafy.mbting.common.util.JwtTokenUtil;
+import com.ssafy.mbting.ws.model.event.ProposalResultsMadeEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
 import com.ssafy.mbting.ws.model.stompMessageHeader.ConnectHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingRoom;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.util.Optional;
 import java.util.UUID;
+
+import static java.util.Optional.ofNullable;
 
 @Service
 @RequiredArgsConstructor
@@ -147,8 +150,26 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     }
 
     @Override
-    public void setProposalAccepted(String sessionId, Boolean accepted) {
-        // Todo: 구현
+    public void setProposalAcceptedAndHandleIt(String sessionId, Boolean accepted) {
+        waitingMeetingUserRepository.setProposalAccepted(sessionId, accepted);
+
+        String matchedSessionId = waitingMeetingUserRepository.findBySessionId(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                .getMatchedMeetingUserSessionId();
+
+        ofNullable(waitingMeetingUserRepository
+                        .getProposalAccepted(waitingMeetingUserRepository
+                                .findBySessionId(matchedSessionId)
+                                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                                .getMatchedMeetingUserSessionId()))
+                .ifPresent(opponentAccepted -> applicationEventPublisher
+                        .publishEvent(new ProposalResultsMadeEvent(
+                                this,
+                                Clock.systemDefaultZone(),
+                                sessionId,
+                                accepted,
+                                matchedSessionId,
+                                opponentAccepted)));
     }
 
     private boolean identicalTokenAndEmail(String accessToken, String email) {

@@ -31,14 +31,13 @@ public class MeetingController {
     @MessageMapping("/indi/proposalResult")
     public void receiveProposalResult(@Payload Message<Boolean> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
-        String sessionId = header.getSessionId();
-        StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
-        String email = stompUser.getEmail();
+
+        logger.debug("\n\n제안 결과 메시지 도착\nMessage: {}\n", message.getPayload());
+
         applicationEventPublisher.publishEvent(new ProposalResultArriveEvent(
                 this,
                 Clock.systemDefaultZone(),
-                email,
+                header.getSessionId(),
                 message.getPayload()));
     }
 

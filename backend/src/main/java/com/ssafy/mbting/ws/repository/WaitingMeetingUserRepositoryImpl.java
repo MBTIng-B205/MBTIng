@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Optional.ofNullable;
+
 @Repository
 public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepository {
 
@@ -51,7 +53,8 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
 
     @Override
     public void saveMeetingUser(String sessionId, MeetingUser meetingUser) {
-        StompUser stompUser = sessionIdStompUserMap.get(sessionId);
+        StompUser stompUser = ofNullable(sessionIdStompUserMap.get(sessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
         if (stompUser == null) {
             logger.error("\n\n세션이 존재하지 않음\nSession ID: {}\n", sessionId);
             throw new RuntimeException("No Session!");
@@ -63,7 +66,8 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
 
     @Override
     public void joinToQueue(String sessionId) {
-        StompUser stompUser = sessionIdStompUserMap.get(sessionId);
+        StompUser stompUser = ofNullable(sessionIdStompUserMap.get(sessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
         stompUser.cleanForJoiningToQueue();
         waitingMeetingUserQueue.add(sessionId);
         addSessionIdToFeatureUserTables(sessionId);
@@ -75,19 +79,34 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     public void leaveFromQueue(String sessionId) {
         waitingMeetingUserQueue.remove(sessionId);
         removeSessionIdFromFeatureUserTables(sessionId);
-        sessionIdStompUserMap.get(sessionId).setStompUserStatus(StompUserStatus.INPROGRESS);
+        ofNullable(sessionIdStompUserMap.get(sessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                .setStompUserStatus(StompUserStatus.INPROGRESS);
         logger.debug("\n\nQueue, FeatureTables 에서 \"{}\" 제거 후 상태 변경함 INPROGRESS\n", sessionId);
     }
 
     @Override
     public void setMatchedMeetingUser(String subjectSessionId, String matchedSessionId) {
-        sessionIdStompUserMap.get(subjectSessionId).setMatchedMeetingUserSessionId(matchedSessionId);
+        ofNullable(sessionIdStompUserMap.get(subjectSessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                .setMatchedMeetingUserSessionId(matchedSessionId);
         logger.debug("\n\n세션 \"{}\" 에 \"{}\" 제안됨 세팅\n", subjectSessionId, matchedSessionId);
     }
 
     @Override
+    public Boolean getProposalAccepted(String sessionId) {
+        Boolean proposalAccepted = ofNullable(sessionIdStompUserMap.get(sessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                .getProposalAccepted();
+        logger.debug("\n\n세션 \"{}\" 의 제안 수락 여부: {}\n", sessionId, proposalAccepted);
+        return proposalAccepted;
+    }
+
+    @Override
     public void setProposalAccepted(String sessionId, Boolean accepted) {
-        sessionIdStompUserMap.get(sessionId).setProposalAccepted(accepted);
+        ofNullable(sessionIdStompUserMap.get(sessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                .setProposalAccepted(accepted);
         logger.debug("\n\n세션 \"{}\" 에 제안 수락 여부를 {} 로 세팅\n", sessionId, accepted);
     }
 
@@ -99,7 +118,8 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
 
     @Override
     public void setMeetingRoomIdAndIndex(String sessionId, String meetingRoomId, Integer indexOnRoom) {
-        StompUser stompUser = sessionIdStompUserMap.get(sessionId);
+        StompUser stompUser = ofNullable(sessionIdStompUserMap.get(sessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
         stompUser.setMeetingRoomId(meetingRoomId);
         stompUser.setIndexOnRoom(indexOnRoom);
         stompUser.setStompUserStatus(StompUserStatus.INROOM);
@@ -111,7 +131,7 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
 
     @Override
     public Optional<StompUser> findBySessionId(String sessionId) {
-        Optional<StompUser> stompUser = Optional.ofNullable(sessionIdStompUserMap.get(sessionId));
+        Optional<StompUser> stompUser = ofNullable(sessionIdStompUserMap.get(sessionId));
         stompUser.ifPresent(user -> logger.debug("\n\nStompUser found\n({}, {})\n", sessionId, user));
         return stompUser;
     }
@@ -131,7 +151,9 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     }
 
     private void addSessionIdToFeatureUserTables(String sessionId) {
-        MeetingUser meetingUser = sessionIdStompUserMap.get(sessionId).getMeetingUser();
+        MeetingUser meetingUser = ofNullable(sessionIdStompUserMap.get(sessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                .getMeetingUser();
         genderSessionIdMap.get(meetingUser.getGender()).add(sessionId);
         String sido = meetingUser.getSido();
         sidoSessionIdMap.putIfAbsent(sido, Sets.newConcurrentHashSet());
@@ -144,7 +166,9 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     }
 
     private void removeSessionIdFromFeatureUserTables(String sessionId) {
-        MeetingUser meetingUser = sessionIdStompUserMap.get(sessionId).getMeetingUser();
+        MeetingUser meetingUser = ofNullable(sessionIdStompUserMap.get(sessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                .getMeetingUser();
         genderSessionIdMap.get(meetingUser.getGender()).remove(sessionId);
         sidoSessionIdMap.get(meetingUser.getSido()).remove(sessionId);
         meetingUser.getInterests().forEach(
