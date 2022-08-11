@@ -6,7 +6,7 @@ import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
-import com.ssafy.mbting.ws.model.vo.WsDestination;
+import com.ssafy.mbting.ws.model.vo.IndividualDestination;
 import com.ssafy.mbting.ws.service.WaitingMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -83,13 +83,13 @@ public class waitingMeetingEventListener {
         String email2 = waitingMeetingService.getStompUserBySessionId(sessionId2).getEmail();
 
         simpMessagingTemplate.convertAndSend(
-                WsDestination.of(email1).getDestination(),
+                IndividualDestination.of(email1).toString(),
                 BaseMessageBody.builder()
                         .command("proposal")
                         .data(meetingUser2)
                         .build());
         simpMessagingTemplate.convertAndSend(
-                WsDestination.of(email2).getDestination(),
+                IndividualDestination.of(email2).toString(),
                 BaseMessageBody.builder()
                         .command("proposal")
                         .data(meetingUser1)

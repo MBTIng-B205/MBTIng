@@ -2,7 +2,7 @@ package com.ssafy.mbting.ws.controller;
 
 import com.ssafy.mbting.api.service.OpenviduService;
 import com.ssafy.mbting.ws.model.vo.StompUser;
-import com.ssafy.mbting.ws.model.vo.WsDestination;
+import com.ssafy.mbting.ws.model.vo.IndividualDestination;
 import com.ssafy.mbting.ws.service.WaitingMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,7 @@ public class MeetingController {
         StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
         String email = stompUser.getEmail();
         simpMessagingTemplate.convertAndSend(
-                WsDestination.of(email).getDestination(),
+                IndividualDestination.of(email).getDestination(),
                 "{\"command\":\"accept\",\"data\":{\"token\":\"someTokTok\"}}");
     }
 }

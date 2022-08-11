@@ -19,17 +19,20 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
+    public static final String BROKER_DESTINATION_PREFIX = "/ws/sub";
+    public static final String APP_DESTINATION_PREFIX = "/ws/msg";
+    public static final String ENDPOINT_PATH = "/ws/connect";
     private final ChannelInterceptor channelInterceptor;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/ws/sub");
-        config.setApplicationDestinationPrefixes("/ws/msg");
+        config.enableSimpleBroker(BROKER_DESTINATION_PREFIX);
+        config.setApplicationDestinationPrefixes(APP_DESTINATION_PREFIX);
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws/connect").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint(ENDPOINT_PATH).setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
