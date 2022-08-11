@@ -1,7 +1,14 @@
 <template>
   <el-container style="display: flex; flex-direction: column">
     <!-- cam -->
-    <div class="cam" style="">
+    <div class="cam">
+      <div class="video2-wrapper">
+        <user-video
+          class="userVideo-me"
+          :stream-manager="state.publisher"
+          @click="updateMainVideoStreamManager(state.publisher)"
+        />
+      </div>
       <div class="video1-wrapper">
         <user-video
           class="uservideo-you"
@@ -11,23 +18,13 @@
           @click="updateMainVideoStreamManager(sub)"
           style="width: 100%; height: 100%"
         />
-      </div>
-      <div class="video2-wrapper">
-        <user-video
-          class="userVideo-me"
-          :stream-manager="state.publisher"
-          @click="updateMainVideoStreamManager(state.publisher)"
-        />
         <video-controller
           @videoOnOff="videoOnOff"
           @audioOnOff="audioOnOff"
         ></video-controller>
       </div>
 
-      <div
-        class="chatdiv"
-        style="float: right; background-color: black; border-radius: 5px"
-      >
+      <div class="chatdiv" style="float: right; border-radius: 5px">
         <room-chat
           ref="chat"
           @message="sendMessage"
@@ -130,7 +127,7 @@ export default {
               videoSource: undefined, // The source of video. If undefined default webcam
               publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
               publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: "320x240", // The resolution of your video
+              resolution: "300x200", // The resolution of your video
               frameRate: 30, // The frame rate of your video
               insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
               mirror: true, // Whether to mirror your local video or not
@@ -335,10 +332,12 @@ export default {
   justify-content: center;
 }
 .cam {
-  display: flex;
+  display: inline-flex;
   background-color: #7d7d7d;
   height: 600px;
   margin-bottom: 34px;
+  justify-content: space-between;
+  align-items: auto;
 }
 .mbtiinfo {
   background-color: #908d8d;
@@ -358,12 +357,12 @@ export default {
   height: 100%;
 }
 .chatdiv {
-  background-color: black;
+  background-color: white;
   z-index: 1;
 }
 ::v-deep .uservideo-you video {
-  width: 500px;
-  height: 500px;
+  width: 840px;
+  height: 580px;
 }
 ::v-deep .userVideo-me {
   display: flex;
