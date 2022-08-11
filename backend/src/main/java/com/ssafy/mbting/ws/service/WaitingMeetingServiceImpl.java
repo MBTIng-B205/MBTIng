@@ -140,6 +140,11 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
         return waitingMeetingUserRepository.findBySessionId(sessionId);
     }
 
+    @Override
+    public void setProposalAccepted(String sessionId, Boolean accepted) {
+        // Todo: 구현
+    }
+
     private boolean identicalTokenAndEmail(String accessToken, String email) {
         try {
             JWTVerifier verifier = JwtTokenUtil.getVerifier();
