@@ -109,14 +109,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-container {
   height: 100vh;
 }
 .title {
+  margin-top: 35px;
   font-size: xx-large;
-  font-weight: bold;
-  margin-top: 40px;
   background-color: white;
   width: 1100px;
   text-align: center;
