@@ -61,6 +61,7 @@
         @reportOnOff="reportOnOff"
       ></bottom-bar>
     </div>
+    <hr />
   </el-container>
 
   <!-- report dialog -->

@@ -166,6 +166,11 @@ export default {
                 meetingAudioStarted();
                 router.push({ path: "/room" });
               }
+              if (obj.command == "opponentRefusal") {
+                state.mtsocket.disconnect();
+                store.commit("meetings/SET_SOCKET", null);
+                router.push({ name: "MeetingWait" });
+              }
             },
             {
               mbti: "ISTP",
