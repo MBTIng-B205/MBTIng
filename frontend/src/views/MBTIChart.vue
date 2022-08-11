@@ -1,7 +1,7 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card style="padding: 0">
       <el-row><div class="title">MBTI 별 매칭 성공률</div></el-row>
