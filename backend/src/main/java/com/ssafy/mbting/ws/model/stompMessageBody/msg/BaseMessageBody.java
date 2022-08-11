@@ -1,4 +1,4 @@
-package com.ssafy.mbting.ws.model.stompMessageBody;
+package com.ssafy.mbting.ws.model.stompMessageBody.msg;
 
 import lombok.*;
 
