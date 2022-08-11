@@ -20,7 +20,7 @@
           <div style="margin-top: 20px">
             <img
               class="gender"
-              v-if="state.proposal.gender == `Male`"
+              v-if="state.proposal.gender == `MALE`"
               src="@/assets/male.png"
             />
             <img class="gender" v-else src="@/assets/female.png" />

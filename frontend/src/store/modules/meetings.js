@@ -36,7 +36,7 @@ export const meetings = {
       console.log(data);
       state.mtsocket.send(
         `/ws/msg/indi/${data.command}`,
-        JSON.stringify(data),
+        JSON.stringify(data.data),
         {}
         // data,
         // JSON.stringify({ msg: "" })

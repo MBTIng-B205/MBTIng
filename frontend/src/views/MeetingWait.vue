@@ -108,16 +108,17 @@ export default {
               const obj = JSON.parse(res.body);
               console.log(obj);
               if (obj.command == "proposal") {
-                store.commit("meetings/SET_PROPOSAL", obj);
+                store.commit("meetings/SET_PROPOSAL", obj.data);
                 router.push({ path: "/meetingmatch" });
               }
               if (obj.command == "accept") {
-                store.commit("meetings/SET_TOKEN", obj.token);
+                store.commit("meetings/SET_TOKEN", obj.data.token);
                 console.log(obj.token);
                 router.push({ path: "/room" });
               }
             },
             {
+              mbti: "ISTP",
               gender: "MALE",
               sido: "서울",
               interests: [],
