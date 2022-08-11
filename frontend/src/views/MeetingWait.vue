@@ -133,6 +133,7 @@ export default {
   border: 20px solid rgb(255, 91, 136);
   background-color: white;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 1rem;
 }
 
 .el-loading-text {
