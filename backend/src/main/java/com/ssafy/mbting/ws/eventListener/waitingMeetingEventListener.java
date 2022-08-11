@@ -1,9 +1,6 @@
 package com.ssafy.mbting.ws.eventListener;
 
-import com.ssafy.mbting.ws.model.event.RequestToJoinQueueEvent;
-import com.ssafy.mbting.ws.model.event.WaitingMeetingUserMatchedEvent;
-import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
-import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
+import com.ssafy.mbting.ws.model.event.*;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.Proposal;
 import com.ssafy.mbting.ws.model.vo.IndividualDestination;
@@ -92,5 +89,17 @@ public class waitingMeetingEventListener {
                         .command("proposal")
                         .data(Proposal.of(stompUser1.getMeetingUser()))
                         .build());
+    }
+
+    @Async
+    @EventListener
+    public void onArriveProposalResult(ProposalResultArriveEvent event) {
+        // Todo: 구현
+    }
+
+    @Async
+    @EventListener
+    public void onResolveProposalResult(ProposalResultResolveEvent event) {
+        // Todo: 구현
     }
 }

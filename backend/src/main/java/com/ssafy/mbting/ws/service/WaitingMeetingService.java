@@ -15,4 +15,5 @@ public interface WaitingMeetingService {
     int getQueueSize();
     String getFirstSessionId();
     StompUser getStompUserBySessionId(String sessionId);
+    void setProposalAccepted(String sessionId, Boolean accepted);
 }

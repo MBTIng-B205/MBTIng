@@ -57,7 +57,13 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
 
     @Override
     public void disconnect(String sessionId) {
-        StompUserStatus status = waitingMeetingUserRepository.getStompUserStatus(sessionId);
+        StompUserStatus status;
+        try {
+            status = waitingMeetingUserRepository.getStompUserStatus(sessionId);
+        } catch (NullPointerException e) {
+            logger.debug("\n\n세션이 이미 없어졌습니다. 아무 일도 하지 않습니다.\n");
+            return;
+        }
         logger.debug("\n\ndisconnect 시도...");
         switch (status) {
             case UNSUBSCRIBED:
@@ -138,6 +144,11 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     @Override
     public StompUser getStompUserBySessionId(String sessionId) {
         return waitingMeetingUserRepository.findBySessionId(sessionId);
+    }
+
+    @Override
+    public void setProposalAccepted(String sessionId, Boolean accepted) {
+        // Todo: 구현
     }
 
     private boolean identicalTokenAndEmail(String accessToken, String email) {
