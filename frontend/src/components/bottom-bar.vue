@@ -6,6 +6,7 @@
       <el-button type="info" :icon="QuestionFilled" circle />
     </div>
     <div class="rightside" style="margin-right: 2rem">
+      <button>친구추가</button>
       <el-button
         type="danger"
         :icon="WarningFilled"
@@ -81,5 +82,6 @@ export default {
 .controller {
   width: 100%;
   height: 50px;
+  background-color: #fadce1;
 }
 </style>
