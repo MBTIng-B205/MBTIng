@@ -163,6 +163,7 @@ export default {
               if (obj.command == "accept") {
                 store.commit("meetings/SET_TOKEN", obj.data.token);
                 console.log(obj.token);
+                meetingAudioStarted();
                 router.push({ path: "/room" });
               }
             },
@@ -188,21 +189,16 @@ export default {
         }
       );
     };
-    /*
-    const send = function () {
-      console.log("send 실행");
-      const data = {
-        email: state.memberinfo.email,
-        //jwt 추가로 줘야함
+    const meetingAudioStarted = function () {
+      console.log("proposalRefuse 실행");
+      const msg = {
+        command: "meetingAudioStarted",
+        data: {},
       };
-      console.log(data);
-      state.stompClient.send(
-        `/ws/msg/indi/${state.memberinfo.email}`,
-        { email: `${state.memberinfo.email}` },
-        JSON.stringify({ msg: "" })
-      );
-    };*/
-    return { loading, svg, Info, goHome, connect };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+    };
+    return { loading, svg, Info, goHome, connect, meetingAudioStarted };
   },
 };
 </script>

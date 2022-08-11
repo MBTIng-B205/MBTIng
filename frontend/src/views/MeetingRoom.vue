@@ -48,6 +48,23 @@
       <bottom-bar @chatOnOff="chatOnOff"></bottom-bar>
     </div>
   </el-container>
+
+  <!-- report dialog -->
+  <el-dialog v-model="sirenDialog" @close="sirenClose">
+    <div style="font-weight: bold; float: left; margin: 10px">
+      신고대상자 : {{}}
+    </div>
+    <el-input
+      v-model="sirenMsg"
+      type="textarea"
+      placeholder="신고사유를 입력해주세요"
+      rows="5"
+    ></el-input>
+    <div style="margin-top: 20px">
+      <el-button type="danger" @click="clickSiren">신고하기</el-button>
+      <el-button @click="sirenClose">취소</el-button>
+    </div>
+  </el-dialog>
 </template>
 
 <script>

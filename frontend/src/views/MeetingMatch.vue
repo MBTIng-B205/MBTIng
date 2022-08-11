@@ -63,9 +63,7 @@ export default {
       console.log("proposalAccept 실행");
       const msg = {
         command: "proposalResult",
-        data: {
-          proposalResult: true,
-        },
+        data: true,
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
@@ -74,8 +72,8 @@ export default {
     const proposalRefuse = function () {
       console.log("proposalRefuse 실행");
       const msg = {
-        command: "rejoin",
-        data: {},
+        command: "proposalResult",
+        data: false,
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
