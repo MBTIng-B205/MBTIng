@@ -45,7 +45,10 @@
     </div>
 
     <div class="bar-wrapper" style="display: flex">
-      <bottom-bar @chatOnOff="chatOnOff"></bottom-bar>
+      <bottom-bar
+        @chatOnOff="chatOnOff"
+        @reportOnOff="reportOnOff"
+      ></bottom-bar>
     </div>
   </el-container>
 
@@ -114,7 +117,6 @@ export default {
       myUserName: "Participant" + Math.floor(Math.random() * 100),
       flag: false,
     });
-
     onMounted(() => {
       joinSession();
     });
@@ -194,6 +196,10 @@ export default {
 
     const chatOnOff = ({ flag }) => {
       state.flag = flag;
+    };
+
+    const reportOnOff = ({ flag }) => {
+      sirenDialog.value = flag;
     };
 
     const leaveSession = () => {
@@ -340,6 +346,7 @@ export default {
       chat,
       joinSession,
       leaveSession,
+      reportOnOff,
       videoOnOff,
       audioOnOff,
       chatOnOff,

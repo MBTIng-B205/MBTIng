@@ -34,11 +34,16 @@ public class MeetingController {
         String sessionId = header.getSessionId();
         StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId);
         String email = stompUser.getEmail();
+        /*
         applicationEventPublisher.publishEvent(new ProposalResultArriveEvent(
                 this,
                 Clock.systemDefaultZone(),
                 email,
-                message.getPayload()));
+                message.getPayload()));*/
+        simpMessagingTemplate.convertAndSend(
+                IndividualDestination.of(email).toString(),
+
+                "{\"command\":\"accept\",\"data\":{\"token\":\"tokentoken\"}}");
     }
 
     @MessageMapping("/indi/rejoin")

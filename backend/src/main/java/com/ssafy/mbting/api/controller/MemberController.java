@@ -11,6 +11,7 @@ import com.ssafy.mbting.common.auth.MemberDetails;
 import com.ssafy.mbting.common.util.BaseResponseUtil;
 import com.ssafy.mbting.db.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -31,14 +32,13 @@ import java.util.UUID;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class MemberController {
-
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final MemberService memberService;
     private final ResourceLoader resLoader;
     private final BaseResponseUtil baseResponseUtil;
     private final InterestService interestService;
     private final InterestMemberService interestMemberService;
-
+    @Value("${com.mbting.fileupload_uri}") private String fileuri;
     @PostMapping()
     @Transactional
     public ResponseEntity<?> register(@RequestBody MemberRegisterRequest registerInfo) {
@@ -106,11 +106,10 @@ public class MemberController {
                 String filename = uuid.toString() + extension;
 
                 file.transferTo(new File(folder, filename));
-                member.setProfileUrl("http://localhost:8080/static/upload/" + today + "/" + filename);
+                member.setProfileUrl(fileuri + today + "/" + filename);
                 memberService.updateMember(MemberUpdateRequest.of(member));
             }
         } catch (Exception e) {
-            System.out.println(e);
             return baseResponseUtil.fail("file upload fail");
         }
         return baseResponseUtil.success(MemberRegisterResponse.builder()

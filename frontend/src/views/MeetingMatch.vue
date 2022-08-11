@@ -1,8 +1,12 @@
 <template>
   <el-container style="background-color: #fff4b8">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
-      <el-button style="float: right; margin-top: 25px" type="danger" round
+      <img @click="goHome" class="logo" src="@/assets/logo.png" />
+      <el-button
+        style="float: right; margin-top: 25px"
+        type="danger"
+        round
+        @click="goHome"
         >소개팅종료</el-button
       >
     </el-header>
@@ -79,7 +83,12 @@ export default {
       store.dispatch("meetings/send", msg);
       router.push({ name: "MeetingWait" });
     };
-    return { state, proposalAccept, proposalRefuse };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+      state.mtsocket.disconnect();
+      store.commit("meetings/SET_SOCKET", null);
+    };
+    return { state, proposalAccept, proposalRefuse, goHome };
   },
 };
 </script>

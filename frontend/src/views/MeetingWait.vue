@@ -153,9 +153,7 @@ export default {
             // `/ws/sub/indi/${state.memberinfo.email}`,
             (res) => {
               //prop
-              console.log(res);
               console.log("받은 메시지", res.body);
-              console.log(res.body);
               const obj = JSON.parse(res.body);
               console.log(obj);
               if (obj.command == "proposal") {
