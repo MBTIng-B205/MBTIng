@@ -5,6 +5,7 @@ import com.ssafy.mbting.ws.model.event.WaitingMeetingUserMatchedEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueueSizeEnoughEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
+import com.ssafy.mbting.ws.model.stompMessageBody.sub.Proposal;
 import com.ssafy.mbting.ws.model.vo.IndividualDestination;
 import com.ssafy.mbting.ws.model.vo.StompUser;
 import com.ssafy.mbting.ws.service.WaitingMeetingService;
@@ -85,15 +86,13 @@ public class waitingMeetingEventListener {
                 IndividualDestination.of(stompUser1.getEmail()).toString(),
                 BaseMessageBody.builder()
                         .command("proposal")
-                        // Todo: Proposal 타입으로 of 하기
-                        .data(stompUser2.getMeetingUser())
+                        .data(Proposal.of(stompUser2.getMeetingUser()))
                         .build());
         simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(stompUser2.getEmail()).toString(),
                 BaseMessageBody.builder()
                         .command("proposal")
-                        // Todo: Proposal 타입으로 of 하기
-                        .data(stompUser1.getMeetingUser())
+                        .data(Proposal.of(stompUser1.getMeetingUser()))
                         .build());
     }
 }
