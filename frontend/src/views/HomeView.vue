@@ -4,6 +4,12 @@
   <div class="bg">
     <div class="bg0"></div>
     <img
+      v-show="state.memberinfo"
+      class="pushtitle"
+      src="@/assets/push_title.png"
+      alt=""
+    />
+    <img
       @click="meetingStart"
       class="startbtn"
       src="@/assets/heart.png"
@@ -177,7 +183,15 @@ export default {
   width: 100px;
   cursor: pointer;
 }
-
+.pushtitle {
+  height: 100px;
+  width: 200px;
+  margin: 200px 300px 200px 300px;
+  position: absolute;
+  left: 25%;
+  top: 0%;
+  z-index: 2;
+}
 .startbtn {
   height: 100px;
   width: 100px;
@@ -185,7 +199,7 @@ export default {
   cursor: pointer;
   position: absolute;
   left: 25%;
-  top: -5%;
+  top: 8%;
   z-index: 2;
 }
 
