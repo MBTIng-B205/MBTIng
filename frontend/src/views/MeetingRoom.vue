@@ -15,7 +15,7 @@
           @click="updateMainVideoStreamManager(state.publisher)"
         />
       </div>
-      <div v-if="state.subscribers.length">
+      <div v-if="state.videoflag">
         <div
           class="video1-wrapper"
           style="
@@ -51,7 +51,7 @@
       </div>
 
       <div
-        v-show="state.flag === true"
+        v-show="state.chatflag === true"
         class="chatdiv"
         style="
           position: absolute;
@@ -144,7 +144,8 @@ export default {
       token: computed(() => store.getters["meetings/getToken"]),
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
-      flag: false,
+      chatflag: false,
+      videoflag: false,
     });
     onMounted(() => {
       joinSession();
@@ -223,12 +224,12 @@ export default {
       state.publisher.publishAudio(audio);
     };
 
-    const chatOnOff = ({ flag }) => {
-      state.flag = flag;
+    const chatOnOff = ({ chatflag }) => {
+      state.chatflag = chatflag;
     };
 
-    const reportOnOff = ({ flag }) => {
-      sirenDialog.value = flag;
+    const reportOnOff = ({ reportflag }) => {
+      sirenDialog.value = reportflag;
     };
 
     const leaveSession = () => {

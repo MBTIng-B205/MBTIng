@@ -39,7 +39,6 @@
         ></el-row>
       </el-footer>
     </el-card>
-    <button id="send" @click="send">test</button>
   </el-container>
 </template>
 

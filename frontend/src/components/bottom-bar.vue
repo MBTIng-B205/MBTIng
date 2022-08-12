@@ -15,8 +15,24 @@
         @click="redlight"
         circle
       />
-
+      <el-button
+        type="Water"
+        style="margin-right: 7px"
+        @click="timeout"
+        circle
+      />
       <el-button type="info" :icon="QuestionFilled" circle />
+    </div>
+    <div>
+      <div style="margin-left: 97px">
+        <span>{{ data.timer.minutes }}</span>
+        :<span>{{ data.timer.seconds }}</span>
+      </div>
+      <!--
+        <button @click="data.timer.start()">Start</button>
+        <button @click="data.timer.pause()">Pause</button>
+        <button @click="data.timer.resume()">Resume</button>
+        -->
     </div>
     <div class="rightside" style="margin-right: 2rem">
       <button @click="addFriend">친구추가</button>
@@ -43,14 +59,28 @@ import {
   Close,
   ChatDotSquare,
 } from "@element-plus/icons-vue";
-import { reactive } from "vue";
+import { reactive, watchEffect } from "vue";
 import { useStore } from "vuex";
+import { useTimer } from "vue-timer-hook";
 export default {
   setup(props, { emit }) {
     const data = reactive({
       flag: false,
       reportflag: false,
+      time: null,
+      timer: null,
     });
+    data.time = new Date();
+
+    data.time.setSeconds(data.time.getSeconds() + 10); // 10 minutes timer
+    data.timer = useTimer(data.time);
+    data.timer.start();
+    const restartFive = () => {
+      // Restarts to 10 minutes timer
+      data.time = new Date();
+      data.time.setSeconds(data.time.getSeconds() + 600);
+      data.timer.restart(data.time);
+    };
     const store = useStore();
     const chatOnOff = () => {
       data.flag = !data.flag;
@@ -60,7 +90,10 @@ export default {
         flag: data.flag,
       });
     };
-
+    const stopWatchEffect = watchEffect(() => {
+      if (data.timer.isRunning == false)
+        console.log("타이머 다됨 !!!!!!!!!!!!!!!!!!!!!!!!");
+    });
     const reportOnOff = () => {
       data.reportflag = !data.reportflag;
       console.log(data.reportflag);
@@ -73,7 +106,7 @@ export default {
       console.log("greenlight 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: true,
+        data: "green",
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
@@ -82,7 +115,16 @@ export default {
       console.log("redlight 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: true,
+        data: "red",
+      };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+    };
+    const timeout = function () {
+      console.log("redlight 실행");
+      const msg = {
+        command: "meetingAudioStageResult",
+        data: "timeout",
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
@@ -90,6 +132,9 @@ export default {
     const addFriend = () => {};
     return {
       data,
+      stopWatchEffect,
+      timeout,
+      restartFive,
       greenlight,
       redlight,
       reportOnOff,
