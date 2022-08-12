@@ -1,5 +1,5 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
       <img @click="goHome" class="logo" src="@/assets/logo.png" />
       <el-button
@@ -13,15 +13,22 @@
     <el-card
       style="
         text-align: center;
-        background-color: #fff4b8;
+        background-color: #fadce1;
         box-shadow: none;
         border: none;
       "
     >
       <div>
-        <img class="small" src="@/assets/smallpink.png" />
+        <img
+          class="small"
+          style="width: 250px; height: 250px"
+          src="@/assets/smallpink.png"
+        />
         <div class="infoBox">
-          <div style="font-weight: bold; font-size: xx-large">
+          <div
+            style="font-weight: bold; font-size: xx-large"
+            class="infoBoxTitle"
+          >
             알아두면 좋은 MBTI 정보
           </div>
           <div style="font-size: x-large; margin-top: 50px">
@@ -33,7 +40,7 @@
       <el-footer style="margin-top: 50px">
         <el-row
           v-loading="loading"
-          element-loading-text="MBTI 짝궁을 찾고 있어요..!"
+          element-loading-text="MBTI 짝꿍을 찾고 있어요..!"
           :element-loading-spinner="svg"
           element-loading-svg-view-box="-10, -10, 50, 50"
         ></el-row>
@@ -233,7 +240,9 @@ export default {
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
   border-radius: 1rem;
 }
-
+.infoBoxTitle {
+  padding: 10px;
+}
 .el-loading-text {
   font-weight: bold;
 }

@@ -23,11 +23,6 @@
         <span style="font-size: 3rem">{{ state.timer.minutes }}</span>
         :<span style="font-size: 3rem">{{ state.timer.seconds }}</span>
       </div>
-      <!--
-        <button @click="data.timer.start()">Start</button>
-        <button @click="data.timer.pause()">Pause</button>
-        <button @click="data.timer.resume()">Resume</button>
-        -->
     </div>
     <div class="rightside" style="margin-right: 2rem">
       <button @click="addFriend">친구추가</button>
@@ -70,7 +65,7 @@ export default {
     });
 
     state.time = new Date();
-    state.time.setSeconds(state.time.getSeconds() + 10); // 10 minutes timer
+    state.time.setSeconds(state.time.getSeconds() + 600); // 10 minutes timer
     state.timer = useTimer(state.time);
     state.timer.start();
     const restartFive = () => {
@@ -89,9 +84,10 @@ export default {
       });
     };
     const stopWatchEffect = watchEffect(() => {
-      if (state.timer.isRunning == false)
+      if (state.timer.isRunning == false) {
         console.log("타이머 다됨 !!!!!!!!!!!!!!!!!!!!!!!!");
-      // TODO: router push
+        timeout();
+      }
     });
 
     const reportOnOff = () => {
@@ -103,28 +99,28 @@ export default {
       });
     };
     const greenlight = function () {
-      console.log("greenlight 실행");
+      console.log("GREEN 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: "green",
+        data: { result: "GREEN" },
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     const redlight = function () {
-      console.log("redlight 실행");
+      console.log("RED 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: "red",
+        data: { result: "RED" },
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     const timeout = function () {
-      console.log("redlight 실행");
+      console.log("TIMEOUT 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: "timeout",
+        data: { result: "TIMEOUT" },
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);

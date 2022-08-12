@@ -4,21 +4,16 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnalysisRegisterRequest {
 
-    public enum VoiceResult {
-        GREEN, RED, TIMEOUT
-    }
-
     String fromMbti;
     String toMbti;
     Boolean proposalResult;
-    VoiceResult voiceResult;
+    AudioStageResult voiceResult;
     Boolean friendResult;
     LocalDateTime startTime;
     LocalDateTime middleTime;
