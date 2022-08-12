@@ -89,9 +89,10 @@ export default {
       });
     };
     const stopWatchEffect = watchEffect(() => {
-      if (state.timer.isRunning == false)
+      if (state.timer.isRunning == false) {
         console.log("타이머 다됨 !!!!!!!!!!!!!!!!!!!!!!!!");
-      // TODO: router push
+        timeout();
+      }
     });
 
     const reportOnOff = () => {
@@ -103,28 +104,28 @@ export default {
       });
     };
     const greenlight = function () {
-      console.log("greenlight 실행");
+      console.log("GREEN 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: "green",
+        data: { result: "GREEN" },
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     const redlight = function () {
-      console.log("redlight 실행");
+      console.log("RED 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: "red",
+        data: { result: "RED" },
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     const timeout = function () {
-      console.log("redlight 실행");
+      console.log("TIMEOUT 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: "timeout",
+        data: { result: "TIMEOUT" },
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
