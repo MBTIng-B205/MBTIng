@@ -77,7 +77,7 @@
     <el-row v-else>친구에게 쪽지를 보내보세요!</el-row>
     <el-dialog v-model="state.messageDialog" @close="handleClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
-        <span class="to"> TO. </span>
+        <span class="to"> To. </span>
         <span class="toFriend"> {{ state.message.receiver.nickname }}</span>
         <img class="friendIcon" src="@/assets/friends.png" />
         <span class="toDate">
@@ -342,6 +342,8 @@ td {
   width: 25px;
   height: 25px;
   margin-left: 15px;
+  vertical-align: middle;
+  margin-bottom: 10px;
 }
 .toDate {
   float: right;
