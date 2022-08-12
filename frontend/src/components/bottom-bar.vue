@@ -26,8 +26,8 @@
 
     <div>
       <div style="margin-left: 97px">
-        <span>{{ data.timer.minutes }}</span>
-        :<span>{{ data.timer.seconds }}</span>
+        <span>{{ state.timer.minutes }}</span>
+        :<span>{{ state.timer.seconds }}</span>
       </div>
       <!--
         <button @click="data.timer.start()">Start</button>
@@ -60,47 +60,51 @@ import {
   Close,
   ChatDotSquare,
 } from "@element-plus/icons-vue";
-import { reactive, watchEffect } from "vue";
+import { reactive, watchEffect, computed } from "vue";
 import { useStore } from "vuex";
 import { useTimer } from "vue-timer-hook";
 export default {
   setup(props, { emit }) {
-    const data = reactive({
+    const store = useStore();
+    const state = reactive({
       flag: false,
       reportflag: false,
       time: null,
       timer: null,
+      partner: computed(() => store.getters["meetings/getPartner"]),
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
     });
-    data.time = new Date();
 
-    data.time.setSeconds(data.time.getSeconds() + 10); // 10 minutes timer
-    data.timer = useTimer(data.time);
-    data.timer.start();
+    state.time = new Date();
+
+    state.time.setSeconds(state.time.getSeconds() + 10); // 10 minutes timer
+    state.timer = useTimer(state.time);
+    state.timer.start();
     const restartFive = () => {
       // Restarts to 10 minutes timer
-      data.time = new Date();
-      data.time.setSeconds(data.time.getSeconds() + 600);
-      data.timer.restart(data.time);
+      state.time = new Date();
+      state.time.setSeconds(state.time.getSeconds() + 600);
+      state.timer.restart(state.time);
     };
-    const store = useStore();
+
     const chatOnOff = () => {
-      data.flag = !data.flag;
-      console.log(data.flag);
+      state.flag = !state.flag;
+      console.log(state.flag);
 
       emit("chatOnOff", {
-        flag: data.flag,
+        flag: state.flag,
       });
     };
     const stopWatchEffect = watchEffect(() => {
-      if (data.timer.isRunning == false)
+      if (state.timer.isRunning == false)
         console.log("타이머 다됨 !!!!!!!!!!!!!!!!!!!!!!!!");
     });
     const reportOnOff = () => {
-      data.reportflag = !data.reportflag;
-      console.log(data.reportflag);
+      state.reportflag = !state.reportflag;
+      console.log(state.reportflag);
 
       emit("reportOnOff", {
-        flag: data.reportflag,
+        flag: state.reportflag,
       });
     };
     const greenlight = function () {
@@ -130,9 +134,24 @@ export default {
       console.log(msg);
       store.dispatch("meetings/send", msg);
     };
-    const addFriend = () => {};
+
+    const addFriend = function () {
+      if (confirm("친구추가 하시겠습니까?")) {
+        console.log(state.memberinfo);
+        console.log(state.partner);
+        store
+          .dispatch("friends/addFriend", {
+            from: state.memberinfo.email,
+            to: state.partner.email,
+          })
+          .then(function (result) {
+            console.log("addResult", result);
+            state.friendFlag = true;
+          });
+      }
+    };
     return {
-      data,
+      state,
       stopWatchEffect,
       timeout,
       restartFive,
