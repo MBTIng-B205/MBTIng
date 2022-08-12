@@ -8,6 +8,11 @@ export const meetings = {
     token: null,
     chats: [],
     partner: null,
+    timerTime: {
+      min: 0,
+      sec: 0,
+      count: false,
+    },
   },
   mutations: {
     SET_SOCKET: (state, mtsocket) => {
@@ -44,6 +49,10 @@ export const meetings = {
     },
     getChats(state) {
       return state.chats;
+    },
+
+    getTimerTime(state) {
+      return state.timerTime;
     },
   },
   // 체크 필요
