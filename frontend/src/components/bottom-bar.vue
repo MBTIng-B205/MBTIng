@@ -6,12 +6,18 @@
       <el-button type="info" :icon="QuestionFilled" circle />
     </div>
     <div class="rightside" style="margin-right: 2rem">
-      <el-button type="danger" :icon="WarningFilled" round @click="reportOnOff"
-        >신고하기</el-button
-      >
+      <el-button type="danger" :icon="WarningFilled" round @click="reportOnOff">신고하기</el-button>
+      <button @click="addFriend">친구추가</button>
+      <el-button
+        type="danger"
+        :icon="WarningFilled"
+        round
+        @click="
+          receiveClose();
+          sirenOpen();
+        ">
       <el-button @click="chatOnOff" type="info" :icon="ChatDotSquare" round
-        >채팅</el-button
-      >
+        >채팅</el-button>
     </div>
   </div>
 </template>
@@ -68,12 +74,14 @@ export default {
       console.log(msg);
       store.dispatch("meetings/send", msg);
     };
+    const addFriend = () => {};
     return {
       data,
       greenlight,
       redlight,
       reportOnOff,
       chatOnOff,
+      addFriend,
       BellFilled,
       QuestionFilled,
       WarningFilled,
