@@ -1,21 +1,436 @@
 <template>
-  <div class="container">
-    안녕하세요
-    <el-icon>
-      <Opportunity />
-    </el-icon>
-    <el-icon :size="20">
-      <Edit />
-    </el-icon>
-  </div>
+  <el-container
+    style="display: flex; flex-direction: column; background-color: #fadce1"
+  >
+    <!-- cam -->
+    <div class="cam" style="display: flex; flex-direction: row">
+      <div class="video2-wrapper" style="margin: auto auto 0 0; z-index: 2">
+        <user-video
+          class="userVideo-me"
+          :stream-manager="state.publisher"
+          @click="updateMainVideoStreamManager(state.publisher)"
+        />
+      </div>
+      <div v-if="state.subscribers.length">
+        <div
+          class="video1-wrapper"
+          style="
+            position: absolute;
+            left: 24%;
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 940px;
+            height: 600px;
+          "
+        >
+          <user-video
+            class="uservideo-you"
+            v-for="sub in state.subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+            style="width: 100%; height: 100%; margin-top: 0; margin-bottom: 0"
+          />
+          <video-controller
+            @videoOnOff="videoOnOff"
+            @audioOnOff="audioOnOff"
+          ></video-controller>
+        </div>
+      </div>
+      <div v-else>
+        <div class="mbtiinfo"></div>
+      </div>
+
+      <div
+        v-show="state.flag === true"
+        class="chatdiv"
+        style="position: absolute; right: 0; border-radius: 5px"
+      >
+        <room-chat
+          ref="chat"
+          @message="sendMessage"
+          :subscribers="subscribers"
+          style="width: 300px; height: 600px"
+        ></room-chat>
+      </div>
+    </div>
+
+    <div class="bar-wrapper" style="display: flex">
+      <bottom-bar
+        @chatOnOff="chatOnOff"
+        @reportOnOff="reportOnOff"
+      ></bottom-bar>
+    </div>
+    <hr />
+  </el-container>
+
+  <!-- report dialog -->
+  <el-dialog v-model="sirenDialog" @close="sirenClose">
+    <div style="font-weight: bold; float: left; margin: 10px">
+      신고대상자 : {{ state.partner.nickname }}
+    </div>
+    <el-input
+      v-model="sirenMsg"
+      type="textarea"
+      placeholder="신고사유를 입력해주세요"
+      rows="5"
+    ></el-input>
+    <div style="margin-top: 20px">
+      <el-button type="danger" @click="clickSiren">신고하기</el-button>
+      <el-button @click="sirenClose">취소</el-button>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
+import {
+  Check,
+  QuestionFilled,
+  BellFilled,
+  WarningFilled,
+  ChatDotSquare,
+  Close,
+} from "@element-plus/icons-vue";
+import axios from "axios";
+import { OpenVidu } from "openvidu-browser";
+import UserVideo from "@/components/UserVideo.vue";
+import RoomChat from "@/components/RoomChat.vue";
+import BottomBar from "@/components/bottom-bar.vue";
+
+import { reactive, ref, onMounted, computed } from "vue";
+
+import VideoController from "@/components/video-controller.vue";
+
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+
+axios.defaults.headers.post["Content-Type"] = "application/json";
+
+const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 export default {
+  components: {
+    UserVideo,
+    RoomChat,
+    BottomBar,
+    VideoController,
+  },
   setup() {
-    return {};
+    const router = useRouter();
+    const store = useStore();
+    const state = reactive({
+      OV: undefined,
+      session: undefined,
+      mainStreamManager: undefined,
+      publisher: undefined,
+      subscribers: [],
+      partner: computed(() => store.getters["meetings/getPartner"]),
+      token: computed(() => store.getters["meetings/getToken"]),
+      mySessionId: "SessionA",
+      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      flag: false,
+    });
+    onMounted(() => {
+      joinSession();
+    });
+    const chat = ref(null);
+    const joinSession = () => {
+      state.OV = new OpenVidu();
+      state.session = state.OV.initSession();
+
+      state.session.on("streamCreated", ({ stream }) => {
+        const subscriber = state.session.subscribe(stream);
+        console.log(subscriber, "이거다");
+        state.subscribers.push(subscriber);
+        console.log("streamCreated");
+      });
+
+      state.session.on("streamDestroyed", ({ stream }) => {
+        const index = state.subscribers.indexOf(stream.streamManager, 0);
+        if (index >= 0) {
+          state.subscribers.splice(index, 1);
+          console.log("streamDestroyed");
+        }
+      });
+
+      state.session.on("exception", ({ exception }) => {
+        console.log(exception);
+      });
+
+      // Add chat
+      state.session.on("signal:public-chat", (event) => {
+        chat.value.addMessage(
+          event.data,
+          JSON.parse(event.data).sender === state.myUserName,
+          false
+        );
+      });
+      state.session
+        .connect(state.token, { clientData: state.myUserName })
+        .then(() => {
+          let publisher = state.OV.initPublisher(undefined, {
+            audioSource: undefined, // The source of audio. If undefined default microphone
+            videoSource: undefined, // The source of video. If undefined default webcam
+            publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+            publishVideo: true, // Whether you want to start publishing with your video enabled or not
+            resolution: "320x240", // The resolution of your video
+            frameRate: 30, // The frame rate of your video
+            insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+            mirror: true, // Whether to mirror your local video or not
+          });
+          state.mainStreamManager = publisher;
+          state.publisher = publisher;
+
+          state.session.publish(state.publisher);
+        })
+        .catch((error) => {
+          console.log(
+            "There was an error connecting to the session:",
+            error.code,
+            error.message
+          );
+        });
+      window.addEventListener("beforeunload", leaveSession);
+    };
+
+    const videoOnOff = ({ video }) => {
+      console.log("video");
+      state.publisher.publishVideo(video);
+    };
+
+    //button video -> v-if ->
+    //화상
+    //greenlight 2개 video cam on
+    //send
+    const audioOnOff = ({ audio }) => {
+      console.log("audio");
+      state.publisher.publishAudio(audio);
+    };
+
+    const chatOnOff = ({ flag }) => {
+      state.flag = flag;
+    };
+
+    const reportOnOff = ({ flag }) => {
+      sirenDialog.value = flag;
+    };
+
+    const leaveSession = () => {
+      if (state.session) state.session.disconnect();
+
+      state.session = undefined;
+      state.mainStreamManager = undefined;
+      state.publisher = undefined;
+      state.subscribers = [];
+      state.OV = undefined;
+
+      window.removeEventListener("beforeunload", leaveSession);
+      router.push({ name: "HomeView" });
+    };
+
+    const updateMainVideoStreamManager = (stream) => {
+      if (state.mainStreamManager === stream) return;
+      state.mainStreamManager = stream;
+    };
+
+    const getToken = (mySessionId) => {
+      return createSession(mySessionId).then((sessionId) =>
+        createToken(sessionId)
+      );
+    };
+
+    const createSession = (sessionId) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(
+            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
+            JSON.stringify({
+              customSessionId: sessionId,
+            }),
+            {
+              auth: {
+                username: "OPENVIDUAPP",
+                password: OPENVIDU_SERVER_SECRET,
+              },
+            }
+          )
+          .then((response) => response.data)
+          .then((data) => resolve(data.id))
+          .catch((error) => {
+            if (error.response.status === 409) {
+              resolve(sessionId);
+            } else {
+              console.warn(
+                `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`
+              );
+              if (
+                window.confirm(
+                  `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`
+                )
+              ) {
+                location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
+              }
+              reject(error.response);
+            }
+          });
+      });
+    };
+
+    const createToken = (sessionId) => {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(
+            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
+            {},
+            {
+              auth: {
+                username: "OPENVIDUAPP",
+                password: OPENVIDU_SERVER_SECRET,
+              },
+            }
+          )
+          .then((response) => response.data)
+          .then((data) => resolve(data.token))
+          .catch((error) => reject(error.response));
+      });
+    };
+
+    const sendMessage = (content) => {
+      // let now = new Date();
+      // let current = now.toLocaleTimeString([], {
+      // 	hour: '2-digit',
+      // 	minute: '2-digit',
+      // 	hour12: false, // true인 경우 오후 10:25와 같이 나타냄.
+      // });
+
+      let messageData = {
+        content: content,
+        sender: state.myUserName,
+        // time: current,
+      };
+
+      state.session
+        .signal({
+          data: JSON.stringify(messageData),
+          to: [],
+          type: "public-chat",
+        })
+        .then(() => {
+          console.log(messageData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    // 신고기능
+    const sirenDialog = ref(false);
+    const sirenMsg = ref("");
+    const sirenOpen = function () {
+      sirenDialog.value = true;
+    };
+
+    const sirenClose = function () {
+      sirenMsg.value = "";
+      sirenDialog.value = false;
+    };
+
+    const clickSiren = function () {
+      console.log("신고", sirenMsg.value);
+      if (sirenMsg.value == "") {
+        alert("신고 사유를 입력하세요!");
+      } else {
+        store
+          .dispatch("reports/registerReport", {
+            from: state.memberinfo.email,
+            to: state.message.sender.email,
+            content: sirenMsg.value,
+          })
+          .then(function (result) {
+            console.log("result-report", result);
+            alert("신고가 접수되었습니다.");
+          });
+        sirenClose();
+      }
+    };
+
+    return {
+      state,
+      chat,
+      joinSession,
+      leaveSession,
+      reportOnOff,
+      videoOnOff,
+      audioOnOff,
+      chatOnOff,
+      updateMainVideoStreamManager,
+      getToken,
+      createSession,
+      createToken,
+      sendMessage,
+      sirenDialog,
+      sirenMsg,
+      sirenOpen,
+      sirenClose,
+      clickSiren,
+      Check,
+      QuestionFilled,
+      BellFilled,
+      WarningFilled,
+      ChatDotSquare,
+      Close,
+    };
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.el-container {
+  display: flex;
+  justify-content: center;
+}
+.cam {
+  display: inline-flex;
+  background-color: #fadce1;
+  height: 600px;
+  margin-bottom: 34px;
+  justify-content: space-between;
+  align-items: auto;
+}
+.mbtiinfo {
+  background-color: rgb(255, 189, 207);
+  border-radius: 50%;
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  left: 35%;
+  top: 15%;
+}
+.video-wrapper {
+  width: 10rem;
+  height: 10rem;
+}
+.uservideo-you {
+  width: 100%;
+  height: 100%;
+}
+.chatdiv {
+  background-color: white;
+  border-radius: 1px;
+  z-index: 1;
+}
+::v-deep .uservideo-you video {
+  width: 820px;
+  height: 545px;
+  border-radius: 20px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+::v-deep .userVideo-me {
+  display: flex;
+  margin-top: auto;
+  margin-right: auto;
+  align-self: flex-start;
+  border-radius: 100px;
+}
+</style>

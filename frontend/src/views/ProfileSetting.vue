@@ -1,7 +1,7 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card style="text-align: center">
       <el-row type="flex" justify="space-around">
@@ -37,8 +37,8 @@
             </el-form-item>
             <el-form-item label="성별">
               <el-radio-group v-model="form.gender" style="margin-left: 30px">
-                <el-radio :label="true">남자</el-radio>
-                <el-radio :label="false">여자</el-radio>
+                <el-radio label="MALE">남자</el-radio>
+                <el-radio label="FEMALE">여자</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="생년월일">
@@ -115,7 +115,6 @@ export default {
     const router = useRouter();
     const store = useStore();
     const tmpmemberinfo = computed(() => store.getters["accounts/getMember"]);
-
     const option = [
       {
         value: "서울",
@@ -188,6 +187,7 @@ export default {
     ];
 
     const form = reactive({
+      profileUrl: "",
       mbti: tmpmemberinfo.value.mbti,
       nickname: tmpmemberinfo.value.nickname,
       gender: {},
@@ -232,7 +232,10 @@ export default {
       }
     };
 
-    return { signup, nameCheck, option, form };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
+    return { signup, nameCheck, goHome, option, form };
   },
 };
 </script>
