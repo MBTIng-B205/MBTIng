@@ -75,15 +75,20 @@ export const accounts = {
       axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
       return axios.get(`${base.baseUrl}/users/me`);
     },
-    updateMemberinfo({ state }) {
+    updateMemberinfo(
+      { state },
+      { mbti, interests, nickname, profileUrl, sido }
+    ) {
+      console.log(state);
       const params = {
         email: state.member.email,
-        interests: state.member.interests,
-        mbti: state.member.mbti,
-        nickname: state.member.nickname,
-        profileUrl: state.member.profileUrl,
-        sido: state.member.sido,
+        interests: interests,
+        mbti: mbti,
+        nickname: nickname,
+        profileUrl: profileUrl,
+        sido: sido,
       };
+      console.log(params);
       let jwt = sessionStorage.getItem("access-token");
       console.log(jwt);
       console.log("updateparams", params);
