@@ -30,8 +30,7 @@ public class SendHandler implements StompCommandHandler {
         }
 
         if (waitingMeetingService
-                .getStompUserBySessionId(stompHeaderAccessor
-                        .getSessionId())
+                .getStompUserBySessionId(stompHeaderAccessor.getSessionId())
                 .orElseThrow(() -> new RuntimeException("Session Not Found!"))
                 .getMeetingUser() == null) {
             throw new RuntimeException("Bad Request!");
