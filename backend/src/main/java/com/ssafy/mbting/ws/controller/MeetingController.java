@@ -42,7 +42,7 @@ public class MeetingController {
     }
 
     @MessageMapping("/indi/rejoin")
-    public void receiveRejoin(@Payload Message message) {
+    public void receiveRejoin(@Payload Message<Void> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
         String sessionId = header.getSessionId();
         StompUser stompUser = waitingMeetingService.getStompUserBySessionId(sessionId)
