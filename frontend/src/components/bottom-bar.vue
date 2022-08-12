@@ -18,6 +18,11 @@
 
       <el-button type="info" :icon="QuestionFilled" circle />
     </div>
+
+    <div>
+      <timerfunc></timerfunc>
+    </div>
+
     <div class="rightside" style="margin-right: 2rem">
       <button @click="addFriend">친구추가</button>
       <el-button
@@ -36,6 +41,7 @@
 </template>
 
 <script>
+import timerfunc from "@/components/timer-func.vue";
 import {
   QuestionFilled,
   BellFilled,
@@ -45,7 +51,12 @@ import {
 } from "@element-plus/icons-vue";
 import { reactive } from "vue";
 import { useStore } from "vuex";
+
 export default {
+  components: {
+    timerfunc,
+  },
+
   setup(props, { emit }) {
     const data = reactive({
       flag: false,
