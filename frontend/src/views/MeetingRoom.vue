@@ -148,7 +148,7 @@ export default {
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
       chatflag: false,
-      videoflag: false,
+      videoflag: computed(() => store.getters["meetings/getVideoflag"]),
     });
     onMounted(() => {
       joinSession();

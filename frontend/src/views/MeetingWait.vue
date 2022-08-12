@@ -182,9 +182,12 @@ export default {
               if (obj.command == "noVideoStage") {
                 state.mtsocket.disconnect();
                 store.commit("meetings/SET_SOCKET", null);
-                router.push({ name: "MeetingWait" });
+                router.push({ name: "HomeView" });
               }
-              if (obj.command == "opponentRefusal") {
+              if (obj.command == "goVideoStage") {
+                store.commit("meetings/SET_VIDEOFLAG", true);
+              }
+              if (obj.command == "opponentLeft") {
                 state.mtsocket.disconnect();
                 store.commit("meetings/SET_SOCKET", null);
                 router.push({ name: "MeetingWait" });

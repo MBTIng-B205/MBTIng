@@ -8,6 +8,7 @@ export const meetings = {
     token: null,
     chats: [],
     partner: null,
+    videoflag: false,
   },
   mutations: {
     SET_SOCKET: (state, mtsocket) => {
@@ -28,6 +29,9 @@ export const meetings = {
 
       state.chats = chats.chats;
     },
+    SET_VIDEOFLAG: (state, videoflag) => {
+      state.videoflag = videoflag;
+    },
   },
   getters: {
     getPartner(state) {
@@ -44,6 +48,9 @@ export const meetings = {
     },
     getChats(state) {
       return state.chats;
+    },
+    getVideoflag(state) {
+      return state.videoflag;
     },
   },
   // 체크 필요
