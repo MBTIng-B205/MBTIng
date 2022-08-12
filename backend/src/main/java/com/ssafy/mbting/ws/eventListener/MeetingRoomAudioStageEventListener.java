@@ -85,6 +85,8 @@ public class MeetingRoomAudioStageEventListener {
     public void onMeetingRoomAudioStageBothGreen(MeetingRoomAudioStageBothGreenEvent event) {
         String[] sessionIds = event.getSessionIds();
 
+        // Todo: 화상 시작 시각 세팅
+
         logger.debug("\n\n음성 스테이지 결과 모두 그린라이트 이벤트 발생함\nSession IDs: {}\n"
                 , Arrays.toString(sessionIds));
 
