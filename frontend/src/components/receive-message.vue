@@ -413,8 +413,7 @@ export default {
       }
     };
 
-    const addFriend = function (i) {
-      console.log("친구추가", i);
+    const addFriend = function () {
       if (confirm("친구추가 하시겠습니까?")) {
         store
           .dispatch("friends/addFriend", {
