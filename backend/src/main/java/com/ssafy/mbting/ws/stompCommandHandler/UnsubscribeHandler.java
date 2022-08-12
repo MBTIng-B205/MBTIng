@@ -1,7 +1,6 @@
 package com.ssafy.mbting.ws.stompCommandHandler;
 
-import com.ssafy.mbting.ws.service.WaitingMeetingService;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.MessageChannel;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class UnsubscribeHandler implements StompCommandHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final WaitingMeetingService waitingMeetingService;
 
     @Override
     public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor, MessageChannel messageChannel) {

@@ -6,10 +6,10 @@ import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.ws.model.event.*;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.MeetingRoom;
-import com.ssafy.mbting.ws.model.stompMessageBody.sub.Proposal;
 import com.ssafy.mbting.ws.model.vo.IndividualDestination;
-import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import com.ssafy.mbting.ws.model.vo.StompUser;
+import com.ssafy.mbting.ws.service.AppStompService;
+import com.ssafy.mbting.ws.service.MeetingRoomService;
 import com.ssafy.mbting.ws.service.WaitingMeetingService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -25,91 +25,19 @@ import java.util.stream.IntStream;
 
 @Component
 @RequiredArgsConstructor
-public class waitingMeetingEventListener {
+public class MeetingProposalStageEventListener {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final AppStompService appStompService;
     private final WaitingMeetingService waitingMeetingService;
+    private final MeetingRoomService meetingRoomService;
     private final MemberService memberService;
 
     @Async
     @EventListener
-    public void onRequestToJoin(RequestToJoinQueueEvent event) {
-        String sessionId = event.getSessionId();
-        MeetingUser meetingUser = event.getMeetingUser();
-
-        logger.debug("\n\nRequestToJoin 이벤트 발생함\nSession ID: {}\nMeetingUser: {}\n"
-                , sessionId
-                , meetingUser);
-
-        waitingMeetingService.subscribe(sessionId, meetingUser);
-    }
-
-    @Async
-    @EventListener
-    public void onQueued(WaitingMeetingUserQueuedEvent event) {
-        logger.debug("\n\nQueued 이벤트 발생함\n");
-        // Todo: 매치 시작 트리거 조건 체크...
-
-        // 임시로 세 명 오면 시작
-        if (waitingMeetingService.getQueueSize() < 3) return;
-        applicationEventPublisher.publishEvent(new WaitingMeetingUserQueueSizeEnoughEvent(
-                this,
-                Clock.systemDefaultZone()
-        ));
-    }
-
-    @Async
-    @EventListener
-    public void onEnough(WaitingMeetingUserQueueSizeEnoughEvent event) {
-        logger.debug("\n\nEnough 이벤트 발생함\n");
-        // Todo: 매칭 알고리즘 발동...
-
-        //임시로 먼저 온 두 명을 무조건 꺼냄
-        String sessionId1 = waitingMeetingService.getFirstSessionId();
-        String sessionId2 = waitingMeetingService.getFirstSessionId();
-
-        applicationEventPublisher.publishEvent(new WaitingMeetingUserMatchedEvent(
-                this,
-                Clock.systemDefaultZone(),
-                sessionId1,
-                sessionId2
-        ));
-    }
-
-    @Async
-    @EventListener
-    public void onMatched(WaitingMeetingUserMatchedEvent event) {
-
-        String sessionId1 = event.getSessionId1();
-        String sessionId2 = event.getSessionId2();
-        logger.debug("\n\nMatched 이벤트 발생함\n({}, {})\n", sessionId1, sessionId2);
-
-        waitingMeetingService.setMatchedMeetingUsers(sessionId1, sessionId2);
-
-        StompUser stompUser1 = waitingMeetingService.getStompUserBySessionId(sessionId1)
-                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
-        StompUser stompUser2 = waitingMeetingService.getStompUserBySessionId(sessionId2)
-                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
-
-        simpMessagingTemplate.convertAndSend(
-                IndividualDestination.of(stompUser1.getEmail()).toString(),
-                BaseMessageBody.builder()
-                        .command("proposal")
-                        .data(Proposal.of(stompUser2.getMeetingUser()))
-                        .build());
-        simpMessagingTemplate.convertAndSend(
-                IndividualDestination.of(stompUser2.getEmail()).toString(),
-                BaseMessageBody.builder()
-                        .command("proposal")
-                        .data(Proposal.of(stompUser1.getMeetingUser()))
-                        .build());
-    }
-
-    @Async
-    @EventListener
-    public void onArrive(ProposalResultArriveEvent event) {
+    public void onProposalResultArrive(ProposalResultArriveEvent event) {
         String sessionId = event.getSessionId();
         Boolean accepted = event.getAccepted();
 
@@ -117,14 +45,14 @@ public class waitingMeetingEventListener {
                 , sessionId
                 , accepted ? "수락" : "거절");
 
-        waitingMeetingService.setProposalAcceptedAndHandleIt(
+        meetingRoomService.setProposalAcceptedAndHandleIt(
                 sessionId,
                 accepted);
     }
 
     @Async
     @EventListener
-    public void onMade(ProposalResultsMadeEvent event) {
+    public void onProposalResultsMade(ProposalResultsMadeEvent event) {
         String[] sessionIds = event.getSessionIds();
         Boolean[] accepteds = event.getAccepteds();
 
@@ -146,7 +74,7 @@ public class waitingMeetingEventListener {
 
         IntStream.range(0, 2).forEach(i -> {
             if (accepteds[i]) simpMessagingTemplate.convertAndSend(
-                    IndividualDestination.of(waitingMeetingService
+                    IndividualDestination.of(appStompService
                             .getStompUserBySessionId(sessionIds[i])
                             .orElseThrow(() -> new RuntimeException("Session Not Found!"))
                             .getEmail()).toString(),
@@ -158,7 +86,7 @@ public class waitingMeetingEventListener {
 
     @Async
     @EventListener
-    public void onBothAccepted(ProposalBothAcceptedEvent event) {
+    public void onProposalBothAccepted(ProposalBothAcceptedEvent event) {
         String[] sessionIds = event.getSessionIds();
         String[] openviduTokens = event.getOpenviduTokens();
 
@@ -167,10 +95,10 @@ public class waitingMeetingEventListener {
                 , openviduTokens);
 
         StompUser[] stompUsers = new StompUser[]{
-                waitingMeetingService
+                appStompService
                         .getStompUserBySessionId(sessionIds[0])
                         .orElseThrow(() -> new RuntimeException("Session Not Found!")),
-                waitingMeetingService
+                appStompService
                         .getStompUserBySessionId(sessionIds[1])
                         .orElseThrow(() -> new RuntimeException("Session Not Found!"))};
 
@@ -183,16 +111,14 @@ public class waitingMeetingEventListener {
                 memberService.getUserByEmail("wp29dud@naver.com"),
                 memberService.getUserByEmail("rlwls1101@hanmail.net")};
 
-        IntStream.range(0, 2).forEach(i -> {
-            simpMessagingTemplate.convertAndSend(
-                    IndividualDestination.of(stompUsers[i].getEmail()).toString(),
-                    BaseMessageBody.builder()
-                            .command("accept")
-                            .data(MeetingRoom.builder()
-                                    .openviduToken(openviduTokens[i])
-                                    .opponent(MemberResponse.of(opponents[i]))
-                                    .build())
-                            .build());
-        });
+        IntStream.range(0, 2).forEach(i -> simpMessagingTemplate.convertAndSend(
+                IndividualDestination.of(stompUsers[i].getEmail()).toString(),
+                BaseMessageBody.builder()
+                        .command("accept")
+                        .data(MeetingRoom.builder()
+                                .openviduToken(openviduTokens[i])
+                                .opponent(MemberResponse.of(opponents[i]))
+                                .build())
+                        .build()));
     }
 }
