@@ -17,7 +17,7 @@ public class Analysis extends BaseEntity {
     String fromMbti;
     String toMbti;
     Boolean proposalResult;
-    Boolean voiceResult;
+    String voiceResult;
     Boolean friendResult;
     Period voiceTime;
     Period videoTime;
@@ -27,7 +27,7 @@ public class Analysis extends BaseEntity {
                 .fromMbti(analysisRegisterRequest.getFromMbti())
                 .toMbti(analysisRegisterRequest.getToMbti())
                 .proposalResult(analysisRegisterRequest.getProposalResult())
-                .voiceResult(analysisRegisterRequest.getVoiceResult())
+                .voiceResult(analysisRegisterRequest.getVoiceResult().toString())
                 .friendResult(analysisRegisterRequest.getFriendResult())
                 .build();
     }

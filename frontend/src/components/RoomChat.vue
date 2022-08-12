@@ -4,10 +4,15 @@
     style="display: flex; flex-direction: column-reverse; overflow-y: auto"
   >
     <!-- chat-bar -->
-    <div ref="content" style="background-color: white">
+    <div ref="content" style="background-color: white; margin-bottom: 20px">
       <!-- 채팅 내용 -->
       <ul id="chat-bar" style="list-style-type: none; overflow-y: auto">
-        <li class="" v-for="(chat, idx) in state.chats" :key="idx">
+        <li
+          class=""
+          v-for="(chat, idx) in state.chats"
+          :key="idx"
+          style="border-radius: 1px"
+        >
           <!-- 내가 보낸 채팅인 경우 -->
           <div v-if="chat.isMyMessage" class="">
             <div>
@@ -34,15 +39,10 @@
       <el-input
         v-model="state.message"
         @keydown.enter="sendMessage"
-        style="width: 240px; margin-right: 3px"
+        style="width: 230px; margin-right: 3px"
       >
       </el-input>
-      <el-button
-        type="warning"
-        plain
-        :icon="Promotion"
-        @click="sendMessage()"
-      />
+      <el-button type="danger" plain :icon="Promotion" @click="sendMessage()" />
     </div>
   </div>
 </template>
@@ -50,19 +50,22 @@
 <script>
 import { reactive } from "vue";
 import { Promotion } from "@element-plus/icons-vue";
+import { useStore } from "vuex";
 export default {
   props: {
     subscribers: Object,
   },
 
   setup(props, { emit }) {
+    const store = useStore();
     const state = reactive({
       // right: true,
       isSidebarOpen: true,
       selectedUser: "all",
       message: "",
       subscribers: props.subscribers,
-      chats: [],
+      chats: store.getters["meetings/getChats"],
+      chat: [],
     });
 
     const sendMessage = () => {
@@ -98,12 +101,15 @@ export default {
         chatBar.scrollHeight - chatBar.scrollTop <= chatBar.clientHeight + 2;
 
       // await 키워드 => 새로운 채팅 메시지 추가 완료 후 스크롤바가 아래로 이동되도록 함.
-      await state.chats.push({
+      await state.chat.push({
         userId: message.sender,
         content: message.content,
         isMyMessage: isMyMessage,
       });
-
+      state.chats = state.chat;
+      store.commit("meetings/SAVE_CHAT", {
+        chats: state.chats,
+      });
       // 채팅 스크롤이 끝까지 내려가 있는 경우 => 스크롤바 맨 아래로 이동시키기
       if (isScrollBottom) {
         chatBar.scrollTo({ top: chatBar.scrollHeight, behavior: "smooth" });

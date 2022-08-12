@@ -27,8 +27,14 @@ public class AppMemberInitData {
     private final InterestMemberRepository interestMemberRepository;
     private final OpenviduService openviduService;
     public void create() {
-        String token = openviduService.getToken("qweqw");
-        System.out.println("token = " + token);
+
+//        String token = openviduService.getToken("qweqw");
+//        System.out.println("token = " + token);
+//        String token1 = openviduService.getToken("qweqw");
+//        System.out.println("token1 = " + token1);
+//        openviduService.removeUser("qweqw",token);
+//        openviduService.removeUser("qweqw",token1);
+
         List<Member> devs = new ArrayList<>();
         Member d1 = Member.builder()
                 .nickname("이기진")

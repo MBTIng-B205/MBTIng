@@ -42,7 +42,7 @@
       </div>
 
       <div
-        v-if="state.flag === true"
+        v-show="state.flag === true"
         class="chatdiv"
         style="position: absolute; right: 0; border-radius: 5px"
       >
@@ -56,9 +56,30 @@
     </div>
 
     <div class="bar-wrapper" style="display: flex">
-      <bottom-bar @chatOnOff="chatOnOff"></bottom-bar>
+      <bottom-bar
+        @chatOnOff="chatOnOff"
+        @reportOnOff="reportOnOff"
+      ></bottom-bar>
     </div>
+    <hr />
   </el-container>
+
+  <!-- report dialog -->
+  <el-dialog v-model="sirenDialog" @close="sirenClose">
+    <div style="font-weight: bold; float: left; margin: 10px">
+      신고대상자 : {{ state.partner.nickname }}
+    </div>
+    <el-input
+      v-model="sirenMsg"
+      type="textarea"
+      placeholder="신고사유를 입력해주세요"
+      rows="5"
+    ></el-input>
+    <div style="margin-top: 20px">
+      <el-button type="danger" @click="clickSiren">신고하기</el-button>
+      <el-button @click="sirenClose">취소</el-button>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -75,8 +96,11 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/UserVideo.vue";
 import RoomChat from "@/components/RoomChat.vue";
 import BottomBar from "@/components/bottom-bar.vue";
+
+import { reactive, ref, onMounted, computed } from "vue";
+
 import VideoController from "@/components/video-controller.vue";
-import { reactive, ref, onMounted } from "vue";
+
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -100,11 +124,12 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      partner: computed(() => store.getters["meetings/getPartner"]),
+      token: computed(() => store.getters["meetings/getToken"]),
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
       flag: false,
     });
-
     onMounted(() => {
       joinSession();
     });
@@ -140,34 +165,31 @@ export default {
           false
         );
       });
-
-      getToken(state.mySessionId).then((token) => {
-        state.session
-          .connect(token, { clientData: state.myUserName })
-          .then(() => {
-            let publisher = state.OV.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: "300x200", // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-              mirror: true, // Whether to mirror your local video or not
-            });
-            state.mainStreamManager = publisher;
-            state.publisher = publisher;
-
-            state.session.publish(state.publisher);
-          })
-          .catch((error) => {
-            console.log(
-              "There was an error connecting to the session:",
-              error.code,
-              error.message
-            );
+      state.session
+        .connect(state.token, { clientData: state.myUserName })
+        .then(() => {
+          let publisher = state.OV.initPublisher(undefined, {
+            audioSource: undefined, // The source of audio. If undefined default microphone
+            videoSource: undefined, // The source of video. If undefined default webcam
+            publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+            publishVideo: true, // Whether you want to start publishing with your video enabled or not
+            resolution: "320x240", // The resolution of your video
+            frameRate: 30, // The frame rate of your video
+            insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+            mirror: true, // Whether to mirror your local video or not
           });
-      });
+          state.mainStreamManager = publisher;
+          state.publisher = publisher;
+
+          state.session.publish(state.publisher);
+        })
+        .catch((error) => {
+          console.log(
+            "There was an error connecting to the session:",
+            error.code,
+            error.message
+          );
+        });
       window.addEventListener("beforeunload", leaveSession);
     };
 
@@ -176,6 +198,10 @@ export default {
       state.publisher.publishVideo(video);
     };
 
+    //button video -> v-if ->
+    //화상
+    //greenlight 2개 video cam on
+    //send
     const audioOnOff = ({ audio }) => {
       console.log("audio");
       state.publisher.publishAudio(audio);
@@ -183,6 +209,10 @@ export default {
 
     const chatOnOff = ({ flag }) => {
       state.flag = flag;
+    };
+
+    const reportOnOff = ({ flag }) => {
+      sirenDialog.value = flag;
     };
 
     const leaveSession = () => {
@@ -329,6 +359,7 @@ export default {
       chat,
       joinSession,
       leaveSession,
+      reportOnOff,
       videoOnOff,
       audioOnOff,
       chatOnOff,
@@ -385,6 +416,7 @@ export default {
 }
 .chatdiv {
   background-color: white;
+  border-radius: 1px;
   z-index: 1;
 }
 ::v-deep .uservideo-you video {

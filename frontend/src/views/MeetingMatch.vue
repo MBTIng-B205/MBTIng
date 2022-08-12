@@ -2,7 +2,11 @@
   <el-container style="background-color: #fadce1">
     <el-header>
       <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
-      <el-button style="float: right; margin-top: 25px" type="danger" round
+      <el-button
+        style="float: right; margin-top: 25px"
+        type="danger"
+        @click="goHome"
+        round
         >소개팅종료</el-button
       >
     </el-header>
@@ -18,11 +22,15 @@
         <img class="small" src="@/assets/smallpink.png" />
         <div class="infoBox">
           <div style="margin-top: 20px">
-            <img class="gender" v-if="user.gender" src="@/assets/male.png" />
+            <img
+              class="gender"
+              v-if="state.proposal.gender == `MALE`"
+              src="@/assets/male.png"
+            />
             <img class="gender" v-else src="@/assets/female.png" />
             <div>
               <span style="font-size: 100px; font-weight: bold">{{
-                user.mbti
+                state.proposal.mbti
               }}</span>
               <img style="width: 70px; height: 70px" src="@/assets/ask.png" />
             </div>
@@ -31,8 +39,12 @@
         <img class="small" src="@/assets/smallgreen.png" />
       </div>
       <el-row style="flex-direction: row; justify-content: space-evenly">
-        <el-button type="success" size="large">수락</el-button>
-        <el-button type="danger" size="large">거절</el-button>
+        <el-button type="success" size="large" @click="proposalAccept"
+          >수락</el-button
+        >
+        <el-button type="danger" size="large" @click="proposalRefuse"
+          >거절</el-button
+        >
       </el-row>
     </el-card>
   </el-container>
@@ -40,17 +52,45 @@
 
 <script>
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { reactive, computed } from "vue";
 export default {
   setup() {
+    const store = useStore();
     const router = useRouter();
-    const user = {
-      gender: true,
-      mbti: "ENFP",
+    const state = reactive({
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+      proposal: computed(() => store.getters["meetings/getProposal"]),
+      mtsocket: computed(() => store.getters["meetings/getSocket"]),
+    });
+    const proposalAccept = function () {
+      console.log("proposalAccept 실행");
+      const msg = {
+        command: "proposalResult",
+        data: true,
+      };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+    };
+
+    const proposalRefuse = function () {
+      console.log("proposalRefuse 실행");
+      const msg = {
+        command: "proposalResult",
+        data: false,
+      };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+      state.mtsocket.disconnect();
+      store.commit("meetings/SET_SOCKET", null);
+      router.push({ name: "MeetingWait" });
     };
     const goHome = function () {
       router.push({ name: "HomeView" });
+      state.mtsocket.disconnect();
+      store.commit("meetings/SET_SOCKET", null);
     };
-    return { user, goHome };
+    return { state, proposalAccept, proposalRefuse, goHome };
   },
 };
 </script>

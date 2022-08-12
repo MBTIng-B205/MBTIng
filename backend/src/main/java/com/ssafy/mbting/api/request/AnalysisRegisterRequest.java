@@ -10,10 +10,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnalysisRegisterRequest {
+
+    public enum VoiceResult {
+        GREEN, RED, TIMEOUT
+    }
+
     String fromMbti;
     String toMbti;
     Boolean proposalResult;
-    Boolean voiceResult;
+    VoiceResult voiceResult;
     Boolean friendResult;
     LocalDateTime startTime;
     LocalDateTime middleTime;
