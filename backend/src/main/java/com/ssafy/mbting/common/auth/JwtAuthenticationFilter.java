@@ -19,9 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * 요청 헤더에 jwt 토큰이 있는 경우, 토큰 검증 및 인증 처리 로직 정의.
- */
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 	private MemberService memberService;
 	
@@ -63,6 +60,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             // parse the token and validate it (decode)
             JWTVerifier verifier = JwtTokenUtil.getVerifier();
             JwtTokenUtil.handleError(token);
+            logger.info(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
             DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
             String userId = decodedJWT.getSubject();
             

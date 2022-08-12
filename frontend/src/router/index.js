@@ -1,15 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
-import MBTITest from "@/views/MBTITest";
+import MyMBTITest from "@/views/MyMBTITest";
+import MyMBTIResult from "@/views/MyMBTIResult";
+import YourMBTITest from "@/views/YourMBTITest";
+import YourMBTIResult from "@/views/YourMBTIResult";
+import MBTIWorldCup from "@/views/MBTIWorldCup";
+import MBTIWorldCupResult from "@/views/MBTIWorldCupResult";
+import MBTIChart from "@/views/MBTIChart";
 import MBTISetting from "@/views/MBTISetting";
 import ProfileSetting from "@/views/ProfileSetting";
 import HomeView from "@/views/HomeView";
 import LoginView from "@/views/LoginView";
 import People from "@/views/PeoplePage";
-import MBTIResult from "@/views/MBTIResult";
 import MeetingWait from "@/views/MeetingWait";
 import MeetingMatch from "@/views/MeetingMatch";
-import MyPage from "@/views/MyPage";
 import LogoutView from "@/views/LogoutView";
+import MeetingRoom from "@/views/MeetingRoom";
 
 const routes = [
   {
@@ -28,25 +33,44 @@ const routes = [
     component: LogoutView,
   },
   {
-    path: "/mypage",
-    name: "MyPage",
-    component: MyPage,
-  },
-
-  {
     path: "/mbtisetting",
     name: "MBTISetting",
     component: MBTISetting,
   },
   {
-    path: "/mbtitest",
-    name: "MBTITest",
-    component: MBTITest,
+    path: "/mymbtitest",
+    name: "MyMBTITest",
+    component: MyMBTITest,
   },
   {
-    path: "/mbtiresult",
-    name: "MBTIResult",
-    component: MBTIResult,
+    path: "/mymbtiresult",
+    name: "MyMBTIResult",
+    component: MyMBTIResult,
+  },
+  {
+    path: "/yourmbtitest",
+    name: "YourMBTITest",
+    component: YourMBTITest,
+  },
+  {
+    path: "/yourmbtiresult",
+    name: "YourMBTIResult",
+    component: YourMBTIResult,
+  },
+  {
+    path: "/mbtiworldcup",
+    name: "MBTIWorldCup",
+    component: MBTIWorldCup,
+  },
+  {
+    path: "/mbtiworldcupresult",
+    name: "MBTIWorldCupResult",
+    component: MBTIWorldCupResult,
+  },
+  {
+    path: "/mbtichart",
+    name: "MBTIChart",
+    component: MBTIChart,
   },
   {
     path: "/profilesetting",
@@ -84,6 +108,11 @@ const routes = [
     path: "/meetingmatch",
     name: "/MeetingMatch",
     component: MeetingMatch,
+  },
+  {
+    path: "/room",
+    name: "room",
+    component: MeetingRoom,
   },
 ];
 

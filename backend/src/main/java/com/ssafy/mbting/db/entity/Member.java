@@ -1,12 +1,11 @@
 package com.ssafy.mbting.db.entity;
 
 import com.ssafy.mbting.api.request.MemberRegisterRequest;
+import com.ssafy.mbting.db.enums.Gender;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,32 +21,42 @@ import java.util.List;
 @Builder
 @ToString
 public class Member extends BaseEntity{
+
     @Column(unique = true)
     private String email;
     @Column(unique = true)
     private String nickname;
-    private boolean gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
     private String sido;
     private String mbti;
     private String profileUrl;
+    @Builder.Default
+    private Boolean deleted = false;
 
     @Builder.Default
-    @OneToMany(mappedBy = "member")
-    private List<Interest> interests = new ArrayList<>();
+    @OneToMany(
+            mappedBy = "member"
+    )
+    private List<InterestMember> interestMember = new ArrayList<>();
     @Builder.Default
-    @OneToMany(mappedBy = "toId")
+    @OneToMany(
+            mappedBy = "toId"
+    )
     private List<Message> messages = new ArrayList<>();
     @Builder.Default
-    @OneToMany(mappedBy = "toId")
+    @OneToMany(
+            mappedBy = "toId"
+    )
     private List<Friend> friends = new ArrayList<>();
 
     public static Member of(MemberRegisterRequest memberRegisterRequest) {
         return Member.builder()
                 .email(memberRegisterRequest.getEmail())
                 .nickname(memberRegisterRequest.getNickname())
-                .gender(memberRegisterRequest.isGender())
+                .gender(memberRegisterRequest.getGender())
                 .birth(memberRegisterRequest.getBirth())
                 .sido(memberRegisterRequest.getSido())
                 .mbti(memberRegisterRequest.getMbti())

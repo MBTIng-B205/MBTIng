@@ -12,10 +12,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Friend extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     @JoinColumn(name="from_id")
     private Member fromId;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
     @JoinColumn(name="to_id")
     private Member toId;
 

@@ -51,11 +51,6 @@ export default {
 
 <style scoped>
 /* 공통으로 적용되어야할 css */
-html,
-body {
-  height: 100vh;
-}
-
 .el-container {
   margin: 0;
   height: 100vh;

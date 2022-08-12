@@ -1,7 +1,7 @@
 <template>
-  <el-container style="background-color: #fff4b8">
+  <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" />
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card style="text-align: center">
       <el-header style="font-size: xx-large"
@@ -74,7 +74,7 @@
         </el-button-group>
       </el-form>
       <div>자신의 MBTI를 모르시나요?</div>
-      <router-link to="/MBTITest">간단검사 하러가기</router-link>
+      <router-link to="/mymbtitest">간단검사 하러가기</router-link>
       <el-footer>
         <el-button
           type="warning"
@@ -113,8 +113,8 @@ export default {
         form.mbti[3] != null
       ) {
         const str = form.mbti[0] + form.mbti[1] + form.mbti[2] + form.mbti[3];
-        console.log("선택 완료", str);
-        console.log("form", form.memberinfo);
+        // console.log("선택 완료", str);
+        // console.log("form", form.memberinfo);
         form.memberinfo.mbti = str;
         store.commit("accounts/SET_MEMBER_INFO", form.memberinfo);
         router.push({ name: "ProfileSetting" });
@@ -128,14 +128,16 @@ export default {
       const i = Math.abs(sel - 1);
       const inactive = "" + idx + i;
       const active = "" + idx + sel;
-      console.log(active);
-      console.log(inactive);
+      // console.log(active);
+      // console.log(inactive);
       document.getElementById(active).style.color = "white";
       document.getElementById(inactive).style.color = "black";
-      console.log(form.mbti[idx]);
+      // console.log(form.mbti[idx]);
     };
-
-    return { form, image, clickSetting, clickValue };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+    };
+    return { form, image, clickSetting, clickValue, goHome };
   },
 };
 </script>

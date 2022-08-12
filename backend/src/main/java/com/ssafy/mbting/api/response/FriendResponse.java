@@ -1,8 +1,8 @@
 package com.ssafy.mbting.api.response;
 
-import com.ssafy.mbting.db.entity.Member;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -11,12 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FriendResponse {
-    private List<MemberResponse> friends;
+
+    @Builder.Default
+    private List<MemberResponse> friends = new ArrayList<>();
 
     public static FriendResponse of(List<MemberResponse> friends) {
         return FriendResponse.builder()
                 .friends(friends)
                 .build();
-
     }
 }

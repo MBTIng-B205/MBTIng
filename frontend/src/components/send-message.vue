@@ -4,8 +4,8 @@
       <el-row class="row">
         <el-col :span="6"
           ><el-select v-model="key" placeholder="검색키">
-            <el-option value="receiveFriend" label="받은사람" />
-            <el-option value="message" label="내용" /> </el-select
+            <el-option value="nickname" label="받은사람" />
+            <el-option value="content" label="내용" /> </el-select
         ></el-col>
         <el-col :span="12">
           <el-input v-model="search" />
@@ -23,7 +23,14 @@
         ></el-col
       >
     </el-row>
-    <table class="table">
+    <table class="table" v-if="state.messageList.length != 0">
+      <colgroup>
+        <col width="10%" />
+        <col width="25%" />
+        <col width="40%" />
+        <col width="25%" />
+      </colgroup>
+
       <thead>
         <tr>
           <th>
@@ -37,32 +44,56 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="cell" v-for="i in tableData" :key="i" @click="onMsg(i)">
+        <tr
+          class="cell"
+          v-for="message in state.messageList"
+          :key="message"
+          @click="onMsg(message)"
+        >
           <td>
             <label class="form-checkbox">
               <input
                 type="checkbox"
-                :value="i.id"
-                v-model="selected"
+                :value="message.id"
+                v-model="state.selected"
                 @click.stop
               />
-              <i class="form-icon"></i>
+              <message class="form-icon"></message>
             </label>
           </td>
-          <td class="tableName">{{ i.nickname }}</td>
-          <td class="tableMsg">{{ i.msg }}</td>
-          <td>{{ i.date }}</td>
+          <td class="tableName">{{ message.receiver.nickname }}</td>
+          <td class="tableMsg">{{ message.content }}</td>
+          <td>
+            {{
+              message.sendTime.substring(0, 10) +
+              " " +
+              message.sendTime.substring(11, 19)
+            }}
+          </td>
         </tr>
       </tbody>
     </table>
-    <el-dialog v-model="dialogVisible" @close="handleClose">
+    <el-row v-else-if="state.searchFlag">검색한 쪽지가 없습니다!</el-row>
+    <el-row v-else>친구에게 쪽지를 보내보세요!</el-row>
+    <el-dialog v-model="state.messageDialog" @close="handleClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
-        <span class="to"> TO. </span>
-        <span class="toFriend"> {{ toFriend }}</span>
+        <span class="to"> To. </span>
+        <span class="toFriend"> {{ state.message.receiver.nickname }}</span>
         <img class="friendIcon" src="@/assets/friends.png" />
-        <span class="toDate"> {{ toDate }} </span>
+        <span class="toDate">
+          {{
+            state.message.sendTime.substring(0, 10) +
+            " " +
+            state.message.sendTime.substring(11, 19)
+          }}
+        </span>
       </el-header>
-      <el-input v-model="message" type="textarea" rows="10" readonly />
+      <el-input
+        v-model="state.message.content"
+        type="textarea"
+        rows="10"
+        readonly
+      />
       <div style="margin-top: 20px">
         <el-button @click="handleClose">닫기</el-button>
       </div>
@@ -72,85 +103,56 @@
         background
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
-        :page-size="10"
-        :total="msgcnt"
+        :current-page="state.currentPage"
+        :page-size="8"
+        :total="state.msgcnt"
       />
     </div>
   </el-container>
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { useStore } from "vuex";
+import { ref, reactive, computed, onMounted } from "vue";
 
 export default {
   setup() {
     const key = ref("");
     const search = ref("");
-    const msgcnt = ref(50);
-    const selected = ref([]);
+    const store = useStore();
     const selectAll = computed(
-      () => selected.value.length === tableData.length
+      () => state.selected.length === state.messageList.length
     );
-    const toFriend = ref("");
-    const toDate = ref("");
-    const message = ref("");
-    const dialogVisible = ref(false);
-    const tableData = [
-      {
-        id: 1,
-        nickname: "aqqqq",
-        msg: "111ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        date: "2022-07-31",
-      },
-      {
-        id: 2,
-        nickname: "b",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 3,
-        nickname: "c",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 4,
-        nickname: "d",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 5,
-        nickname: "e",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 6,
-        nickname: "f",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 7,
-        nickname: "g",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 8,
-        nickname: "h",
-        msg: "111",
-        date: "2022-07-31",
-      },
-      {
-        id: 9,
-        nickname: "i",
-        msg: "111",
-        date: "2022-07-31",
-      },
-    ];
+    const state = reactive({
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+      searchFlag: false,
+      messageList: [],
+      msgcnt: 0,
+      message: {},
+      friendFlag: true,
+      currentPage: 1,
+      messageId: "",
+      messageDialog: false,
+      selected: [],
+    });
+
+    onMounted(() => {
+      store
+        .dispatch("messages/getSendList", {
+          email: state.memberinfo.email,
+          page: 0,
+          key: "",
+          word: "",
+          size: 8,
+        })
+        .then(function (result) {
+          console.log("result", result);
+          state.messageList = result.data.body.messages;
+          state.msgcnt = result.data.body.pagingResponse.totalcount;
+          console.log("messageList", state.messageList + " " + state.msgcnt);
+        });
+    });
+
     const onSearch = function () {
       if (key.value == "") {
         alert("검색키를 선택하세요");
@@ -158,56 +160,130 @@ export default {
         alert("검색어를 입력하세요");
       } else {
         console.log("search", key.value + " " + search.value);
+        state.searchFlag = true;
+        store
+          .dispatch("messages/getSendList", {
+            email: state.memberinfo.email,
+            page: 0,
+            key: key.value,
+            word: search.value,
+            size: 8,
+          })
+          .then(function (result) {
+            console.log("search-result", result);
+            state.messageList = result.data.body.messages;
+            state.msgcnt = result.data.body.pagingResponse.totalcount;
+            console.log("search-messageList", state.messageList);
+          });
       }
     };
 
     const onSelect = function () {
       console.log(selectAll.value);
       if (!selectAll.value) {
-        selected.value = [];
-        for (let index in tableData) {
-          selected.value.push(tableData[index].id);
+        state.selected = [];
+        for (let index in state.messageList) {
+          state.selected.push(state.messageList[index].id);
         }
       } else {
-        selected.value = [];
+        state.selected = [];
       }
     };
 
     const onDelete = function () {
-      console.log(selected.value);
+      console.log("delete", state.selected);
+      store
+        .dispatch("messages/deleteSendList", {
+          list: state.selected,
+        })
+        .then(function (result) {
+          console.log("result", result);
+
+          store
+            .dispatch("messages/getSendList", {
+              email: state.memberinfo.email,
+              page: 0,
+              key: key.value,
+              word: search.value,
+              size: 8,
+            })
+            .then(function (result) {
+              console.log("result", result);
+              state.messageList = result.data.body.messages;
+              state.msgcnt = result.data.body.pagingResponse.totalcount;
+              state.currentPage = 1;
+              console.log(
+                "delete-messageList",
+                state.messageList + " " + state.msgcnt
+              );
+            });
+        })
+        .catch(function (error) {
+          alert(error);
+        });
     };
 
-    const onMsg = function (i) {
+    const onMsg = async function (i) {
       console.log(i);
-      toFriend.value = i.nickname;
-      toDate.value = i.date;
-      message.value = i.msg;
-      dialogVisible.value = true;
+      state.messageId = i.id;
+      await store
+        .dispatch("messages/getMessage", { id: i.id, type: "from" })
+        .then(function (result) {
+          console.log("result", result);
+          state.message = result.data.body;
+          store
+            .dispatch("messages/getSendList", {
+              email: state.memberinfo.email,
+              page: state.currentPage - 1,
+              key: key.value,
+              word: search.value,
+              size: 8,
+            })
+            .then(function (result) {
+              console.log("search-result", result);
+              state.messageList = result.data.body.messages;
+              state.msgcnt = result.data.body.pagingResponse.totalcount;
+              state.friendFlag = state.message.fromfriendflag;
+              console.log("search-messageList", state.messageList);
+            });
+        });
+      state.messageDialog = true;
     };
 
     const handleClose = function () {
-      dialogVisible.value = false;
-      message.value = "";
-      toFriend.value = "";
-      toDate.value = "";
+      state.messageDialog = false;
+    };
+
+    const handleCurrentChange = function (val) {
+      console.log("page", val);
+      state.currentPage = val;
+      store
+        .dispatch("messages/getSendList", {
+          email: state.memberinfo.email,
+          page: val - 1,
+          key: key.value,
+          word: search.value,
+          size: 8,
+        })
+        .then(function (result) {
+          console.log("result", result);
+          state.messageList = result.data.body.messages;
+          state.msgcnt = result.data.body.pagingResponse.totalcount;
+          console.log("messageList", state.messageList + " " + state.msgcnt);
+        });
     };
 
     return {
       key,
-      selected,
-      selectAll,
       search,
-      msgcnt,
-      dialogVisible,
-      toFriend,
-      toDate,
-      message,
-      tableData,
+      selectAll,
+      state,
       onSearch,
       onSelect,
       onDelete,
       onMsg,
       handleClose,
+      handleCurrentChange,
     };
   },
 };
@@ -215,7 +291,7 @@ export default {
 
 <style>
 .el-header {
-  background-color: #9dd098;
+  background-color: rgb(255, 189, 207);
 }
 .row {
   flex-direction: row;
@@ -257,7 +333,6 @@ td {
   font-size: 30px;
   color: #cc3366;
   font-weight: bolder;
-  text-shadow: 2px 4px 2px gray;
 }
 .toFriend {
   font-size: 20px;
@@ -267,6 +342,8 @@ td {
   width: 25px;
   height: 25px;
   margin-left: 15px;
+  vertical-align: middle;
+  margin-bottom: 10px;
 }
 .toDate {
   float: right;

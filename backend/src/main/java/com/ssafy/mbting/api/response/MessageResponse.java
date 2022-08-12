@@ -12,17 +12,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class MessageResponse {
+    Long id;
     String content;
-    //member 리스폰즈를 건드림
     MemberResponse receiver;
     MemberResponse sender;
-    boolean read;
-    boolean deletedByReceiver;
-    boolean deletedBySender;
+    Boolean read;
+    Boolean deletedByReceiver;
+    Boolean deletedBySender;
+    Boolean tofriendflag;
+    Boolean fromfriendflag;
     LocalDateTime sendTime;
 
     public static MessageResponse of(Message message, Member receiver, Member sender) {
         return MessageResponse.builder()
+                .id(message.getId())
                 .content(message.getContent())
                 .receiver(MemberResponse.of(receiver))
                 .sender(MemberResponse.of(sender))
@@ -30,6 +33,8 @@ public class MessageResponse {
                 .deletedByReceiver(message.getDeletedByTo())
                 .deletedBySender(message.getDeletedByFrom())
                 .sendTime(message.getSendTime())
+                .tofriendflag(message.getTofriendflag())
+                .fromfriendflag(message.getFromfriendflag())
                 .build();
     }
 }

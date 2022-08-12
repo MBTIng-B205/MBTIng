@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import javax.transaction.Transactional;
 
@@ -61,8 +59,8 @@ public class MessageTest {
 
         MessageSendRequest msgreq = new MessageSendRequest();
         msgreq.setContent("보내기 서비스 테스트");
-        msgreq.setSenderId(id1);
-        msgreq.setReceiverId(id2);
+        msgreq.setSenderId(null);
+        msgreq.setReceiverId(null);
 
         msgs.sendMessage(msgreq);
     }

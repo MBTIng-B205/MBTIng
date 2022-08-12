@@ -1,6 +1,7 @@
 package com.ssafy.mbting;
 
 import com.ssafy.mbting.db.entity.Member;
+import com.ssafy.mbting.db.enums.Gender;
 import com.ssafy.mbting.db.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -22,10 +23,10 @@ public class MemberTest {
     void memberTest() {
         Member m1 = new Member();
         m1.setNickname("공효진");
-        m1.setGender(true);
+        m1.setGender(Gender.FEMALE);
         Member m2 = new Member();
         m2.setNickname("강하늘");
-        m2.setGender(false);
+        m2.setGender(Gender.MALE);
 
         m1.setEmail("공효진@hamail.net");
         m2.setEmail("강하늘@gmail.com");

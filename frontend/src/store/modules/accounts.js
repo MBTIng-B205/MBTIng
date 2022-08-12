@@ -1,6 +1,6 @@
 import axios from "axios";
 const base = {
-  baseUrl: "http://localhost:8080/api",
+  baseUrl: process.env.VUE_APP_API_SERVER_BASE_URL,
   headers: {
     "Content-type": "application/json",
   },
@@ -18,15 +18,11 @@ export const accounts = {
       state.token = token;
     },
     SET_MEMBER_INFO: (state, memberInfo) => {
-      console.log(memberInfo);
       state.member = memberInfo;
-      console.log(state.member);
     },
   },
   getters: {
     getMember(state) {
-      console.log("getters ------------------");
-      console.log(state);
       return state.member;
     },
   },
@@ -38,10 +34,6 @@ export const accounts = {
       return axios.get(`${base.baseUrl}/login?code=${code}`);
     },
 
-    // saveToken({ commit }, token) {
-    //   commit("SET_TOKEN", token);
-    //   SessionStorage.setItem("token", token);
-    // },
     signup({ state }) {
       const params = {
         email: state.member.email,
@@ -51,22 +43,64 @@ export const accounts = {
         sido: state.member.sido,
         mbti: state.member.mbti,
         profileUrl: state.member.profileUrl,
+        interests: state.member.interests,
       };
-
+      console.log(params, "이것이다.");
       let jwt = sessionStorage.getItem("access-token");
       console.log(jwt);
       console.log(params);
-      return axios.post(`${base.baseUrl}/v1/users`, params, {
+      return axios.post(`${base.baseUrl}/users`, params, {
         headers: {
           "Content-Type": "application/json",
         },
       });
     },
+    profileUpload({ state }, upfile) {
+      console.log("ProfileUpload 확인", upfile);
+      let formData = new FormData();
+      formData.append("upfile", upfile);
+      return axios.post(
+        `${base.baseUrl}/users/userprofile/${state.member.email}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    },
     getMemberinfo() {
       let jwt = sessionStorage.getItem("access-token");
       console.log("jwt", jwt);
       axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
-      return axios.get(`${base.baseUrl}/v1/users/me`);
+      return axios.get(`${base.baseUrl}/users/me`);
+    },
+    updateMemberinfo({ state }) {
+      const params = {
+        email: state.member.email,
+        interests: state.member.interests,
+        mbti: state.member.mbti,
+        nickname: state.member.nickname,
+        profileUrl: state.member.profileUrl,
+        sido: state.member.sido,
+      };
+      let jwt = sessionStorage.getItem("access-token");
+      console.log(jwt);
+      console.log("updateparams", params);
+      return axios.put(`${base.baseUrl}/users`, params);
+    },
+    deleteMemberinfo({ state }) {
+      console.log(state.member.email);
+      return axios.delete(`${base.baseUrl}/users/?email=${state.member.email}`);
+    },
+    getUserName({ state }, { nickname }) {
+      console.log("state", state);
+      console.log("nick", nickname);
+      return axios.get(`${base.baseUrl}/users/`, {
+        params: {
+          nickname: nickname,
+        },
+      });
     },
   },
 };

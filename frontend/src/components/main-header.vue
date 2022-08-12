@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
-    <div class="logo">
-      <img @click="goHome" src="@/assets/logo.png" alt="logo" />
+    <div>
+      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </div>
 
     <el-dropdown v-if="state.memberinfo">
@@ -30,11 +30,50 @@
     />
   </div>
 
-  <el-dialog v-model="state.mypageDialog" @close="handleClose">
+  <el-dialog v-model="state.mypageDialog" @close="mypageClose">
     <div style="text-align: center">
-      <el-row>
+      <img class="profile" :src="state.memberinfo.profileUrl" />
+      <table>
+        <tbody>
+          <tr>
+            <td class="label">MBTI</td>
+            <td>{{ state.memberinfo.mbti }}</td>
+          </tr>
+          <tr>
+            <td class="label">닉네임</td>
+            <td>{{ state.memberinfo.nickname }}</td>
+          </tr>
+          <tr>
+            <td class="label">성별</td>
+            <td v-if="state.memberinfo.gender == 'MALE'">남자</td>
+            <td v-else>여자</td>
+          </tr>
+          <tr>
+            <td class="label">생년월일</td>
+            <td>{{ state.memberinfo.birth }}</td>
+          </tr>
+          <tr>
+            <td class="label">사는지역</td>
+            <td>{{ state.memberinfo.sido }}</td>
+          </tr>
+          <tr>
+            <td class="label">관심사</td>
+            <td>{{ state.interests }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <el-button style="margin-top: 20px" @click="mypageUpdateOpen"
+        >정보 수정</el-button
+      >
+    </div>
+  </el-dialog>
+
+  <el-dialog v-model="state.mypageUpdateDialog" @close="mypageUpdateClose">
+    <div style="text-align: center">
+      <el-row class="filebox">
         <img class="profile" :src="state.memberinfo.profileUrl" />
-        <el-button style="margin-top: 10px" size="large">프로필 변경</el-button>
+        <label for="file">프로필 사진 변경</label>
+        <input type="file" id="file" @change="onFileSelected" />
       </el-row>
       <el-row>
         <el-form
@@ -44,30 +83,76 @@
           style="margin-top: 30px; margin-bottom: 30px; align-items: center"
         >
           <el-form-item label="MBTI">
-            <el-input style="width: 200px" v-model="state.memberinfo.mbti" />
+            <el-select v-model="state.memberinfo.mbti">
+              <el-option
+                v-for="item in option2"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </el-form-item>
-          <el-form-item label="Nickname">
+          <el-form-item label="닉네임">
             <el-input
               style="width: 200px"
               v-model="state.memberinfo.nickname"
+              @change="checkButtonActive"
             />
-            <el-button>중복확인</el-button>
+            <button
+              @click.prevent="nameCheck"
+              style="margin-left: 10px"
+              disabled="true"
+              id="checkButton"
+            >
+              중복확인
+            </button>
           </el-form-item>
-          <el-form-item label="Gender">
-            <el-radio-group v-model="state.memberinfo.gender">
-              <el-radio :label="true">Male</el-radio>
-              <el-radio :label="false">Female</el-radio>
+          <el-form-item label="성별">
+            <el-radio-group v-model="state.memberinfo.gender" disabled>
+              <el-radio label="MALE">남자</el-radio>
+              <el-radio label="FEMALE">여자</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="Birthday">
-            <el-date-picker v-model="state.memberinfo.birth" type="date" />
+          <el-form-item label="생년월일">
+            <el-date-picker
+              v-model="state.memberinfo.birth"
+              type="date"
+              disabled
+            />
           </el-form-item>
-          <el-form-item label="Place">
+          <el-form-item label="지역">
             <el-select v-model="state.memberinfo.sido">
-              <el-option label="서울" value="서울" />
-              <el-option label="대전" value="대전" />
+              <el-option
+                v-for="item in option1"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
+          <el-col style="flex-direction: column">
+            <el-form-item label="관심사">
+              <el-checkbox-group
+                v-model="state.memberinfo.interests"
+                style="width: 380px; align-items: center"
+              >
+                <el-checkbox label="캠핑" name="캠핑" />
+                <el-checkbox label="맛집탐방" name="맛집탐방" />
+                <el-checkbox label="코딩" name="코딩" />
+                <el-checkbox label="TV/영화" name="TV/영화" />
+                <el-checkbox label="스포츠" name="스포츠" />
+                <el-checkbox label="술" name="술" />
+                <el-checkbox label="음악" name="음악" />
+                <el-checkbox label="쇼핑" name="쇼핑" />
+                <el-checkbox label="자동차" name="자동차" />
+                <el-checkbox label="게임" name="게임" />
+                <el-checkbox label="동물" name="동물" />
+                <el-checkbox label="패션" name="패션" />
+                <el-checkbox label="뷰티" name="뷰티" />
+                <el-checkbox label="디자인" name="디자인" />
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
         </el-form>
       </el-row>
       <el-footer>
@@ -82,58 +167,295 @@
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { Avatar, Comment, Right } from "@element-plus/icons-vue";
-import { computed, reactive } from "@vue/runtime-core";
+import { computed, onMounted, reactive } from "@vue/runtime-core";
 
 export default {
   setup() {
     const router = useRouter();
     const store = useStore();
+    onMounted(() => {
+      store.dispatch("accounts/getMemberinfo").then(function (res) {
+        store.commit("accounts/SET_MEMBER_INFO", res.data.body);
+        state.memberinfo = computed(() => store.getters["accounts/getMember"]);
+      });
+    });
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
+      mypageUpdateDialog: false,
       mypageDialog: false,
+      interests: "",
+      image: "",
     });
+    const option1 = [
+      {
+        value: "서울",
+        label: "서울",
+      },
+      {
+        value: "인천",
+        label: "인천",
+      },
+      {
+        value: "경기",
+        label: "경기",
+      },
+      {
+        value: "강원",
+        label: "강원",
+      },
+      {
+        value: "부산",
+        label: "부산",
+      },
+      {
+        value: "대전",
+        label: "대전",
+      },
+      {
+        value: "울산",
+        label: "울산",
+      },
+      {
+        value: "충북",
+        label: "충북",
+      },
+      {
+        value: "충남",
+        label: "충남",
+      },
+      {
+        value: "세종",
+        label: "세종",
+      },
+      {
+        value: "대구",
+        label: "대구",
+      },
+      {
+        value: "경북",
+        label: "경북",
+      },
+      {
+        value: "경남",
+        label: "경남",
+      },
+      {
+        value: "광주",
+        label: "광주",
+      },
+      {
+        value: "전북",
+        label: "전북",
+      },
+      {
+        value: "전남",
+        label: "전남",
+      },
+      {
+        value: "제주",
+        label: "제주",
+      },
+    ];
+    const option2 = [
+      {
+        value: "INFJ",
+        label: "INFJ",
+      },
+      {
+        value: "INFP",
+        label: "INFP",
+      },
+      {
+        value: "INTJ",
+        label: "INTJ",
+      },
+      {
+        value: "INTP",
+        label: "INTP",
+      },
+      {
+        value: "ISFJ",
+        label: "ISFJ",
+      },
+      {
+        value: "ISFP",
+        label: "ISFP",
+      },
+      {
+        value: "ISTJ",
+        label: "ISTJ",
+      },
+      {
+        value: "ISTP",
+        label: "ISTP",
+      },
+      {
+        value: "ENFJ",
+        label: "ENFJ",
+      },
+      {
+        value: "ENFP",
+        label: "ENFP",
+      },
+      {
+        value: "ENTJ",
+        label: "ENTJ",
+      },
+      {
+        value: "ENTP",
+        label: "ENTP",
+      },
+      {
+        value: "ESFJ",
+        label: "ESFJ",
+      },
+      {
+        value: "ESFP",
+        label: "ESFP",
+      },
+      {
+        value: "ESTJ",
+        label: "ESTJ",
+      },
+      {
+        value: "ESTP",
+        label: "ESTP",
+      },
+    ];
+
+    const onFileSelected = function (event) {
+      event.preventDefault();
+      console.log(event.target.files);
+      //console.log(uploadimage.value);
+      state.image = event.target.files[0];
+      store
+        .dispatch("accounts/profileUpload", state.image)
+        .then(function (res) {
+          store.commit("accounts/SET_MEMBER_INFO", res.data.body.member);
+        });
+    };
+
+    const checkButtonActive = function () {
+      const button = document.querySelector("#checkButton");
+      console.log(state);
+      button.disabled = false;
+      console.log(button.disabled);
+    };
+
+    // let flag = false;
+    const nameCheck = function () {
+      const nickname = state.memberinfo.nickname;
+      console.log("이거는프로필 닉네임", nickname);
+      store.dispatch("accounts/getUserName", { nickname }).then(function (res) {
+        console.log("res", res);
+        if (res.data.body === true) {
+          alert("사용가능한 닉네임 입니다.");
+          // flag = true;
+        } else {
+          alert("중복 된 닉네임입니다.");
+          // flag = false;
+        }
+      });
+    };
     const goHome = function () {
       router.push({ name: "HomeView" });
     };
-
-    //console.log(state.memberinfo);
+    console.log(state.memberinfo);
     const goPeople = function () {
       router.push({ name: "friend" });
     };
     const goMyPage = function () {
+      mypageOpen();
+      console.log("mypage", state.memberinfo);
+    };
+
+    const mypageOpen = function () {
+      if (state.memberinfo.interests.length != 0) {
+        state.interests = "";
+        for (
+          let index = 0;
+          index < state.memberinfo.interests.length;
+          index++
+        ) {
+          state.interests += state.memberinfo.interests[index];
+          if (index < state.memberinfo.interests.length - 1) {
+            state.interests += ", ";
+          }
+        }
+      } else {
+        state.interests = "선택한 관심사가 없습니다.";
+      }
       state.mypageDialog = true;
     };
 
-    const handleClose = function () {
+    const mypageClose = function () {
       state.mypageDialog = false;
     };
+
+    const mypageUpdateOpen = function () {
+      state.mypageDialog = false;
+      state.mypageUpdateDialog = true;
+    };
+
+    const mypageUpdateClose = function () {
+      state.mypageUpdateDialog = false;
+    };
     const updateInfo = function () {
-      // 회원정보 수정
+      store
+        .dispatch("accounts/updateMemberinfo")
+        .then(function (result) {
+          console.log(result);
+          store.commit("accounts/SET_MEMBER_INFO", result.data.body.member);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     };
 
     const deleteMember = function () {
       // 회원 탈퇴
+      store
+        .dispatch("accounts/deleteMemberinfo")
+        .then(function (result) {
+          console.log(result);
+          sessionStorage.removeItem("access-token");
+          store.commit("accounts/SET_MEMBER_INFO", null);
+          console.log(store.state.member);
+          state.mypageUpdateDialog = false;
+          router.push({ name: "HomeView" });
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     };
 
     const login = () => {
       // 카카오톡 로그인 화면 전환
       window.location.replace(
-        "https://kauth.kakao.com/oauth/authorize?client_id=ebb8bb50d4cb227cf989335c827681e5&redirect_uri=http://localhost:80/loginview&response_type=code"
+        `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code`
       );
     };
 
     const logout = () => {
       window.location.replace(
-        "https://kauth.kakao.com/oauth/logout?client_id=ebb8bb50d4cb227cf989335c827681e5&logout_redirect_uri=http://localhost:80/logoutview"
+        `https://kauth.kakao.com/oauth/logout?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&logout_redirect_uri=${process.env.VUE_APP_KAKAO_LOGOUT_REDIRECT_URI}`
       );
     };
 
     return {
       state,
+      option1,
+      option2,
+      onFileSelected,
+      checkButtonActive,
+      nameCheck,
       goHome,
       goPeople,
       goMyPage,
-      handleClose,
+      mypageOpen,
+      mypageClose,
+      mypageUpdateOpen,
+      mypageUpdateClose,
       updateInfo,
       deleteMember,
       login,
@@ -146,16 +468,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .loginbtn {
+  margin: 20px;
   height: 40px;
   width: 100px;
   cursor: pointer;
-}
-.logo {
-  display: flex;
-  height: 80px;
-  width: 80px;
 }
 
 .el-dropdown {
@@ -173,7 +491,7 @@ export default {
 }
 
 .navbar {
-  background-color: #fff4b8;
+  background-color: #fadce1;
   display: flex;
   justify-content: space-between;
 }
@@ -181,5 +499,54 @@ export default {
   border-radius: 50%;
   width: 200px;
   height: 200px;
+}
+.filebox label {
+  display: inline-block;
+  padding: 10px 20px;
+  color: black;
+  background-color: #fafafa;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.filebox label:hover {
+  background-color: #ecf5ff;
+  color: #409eff;
+  border-color: #409eff;
+}
+#checkButton {
+  display: inline-block;
+  padding: 5px 10px;
+  color: black;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 5px;
+  outline: 0;
+  border: 0;
+}
+/* #checkButton:hover {
+  background-color: #ecf5ff;
+  color: #409eff;
+  border-color: #409eff;
+} */
+.filebox input[type="file"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
+  font-size: 20px;
+  border-spacing: 0 20px;
+  border: 10px solid #fadce1;
+}
+.label {
+  width: 130px;
+  color: rgb(255, 91, 136);
 }
 </style>

@@ -3,19 +3,23 @@ package com.ssafy.mbting.api.service;
 import com.ssafy.mbting.api.request.MemberRegisterRequest;
 import com.ssafy.mbting.api.request.MemberUpdateRequest;
 import com.ssafy.mbting.db.entity.Member;
+import com.ssafy.mbting.db.repository.InterestMemberRepository;
 import com.ssafy.mbting.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
- */
+
 @Service("userService")
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final MemberRepository memberRepository;
+	private final InterestService interestService;
+	private final InterestMemberService interestMemberService;
 
 	@Override
 	public Member createMember(MemberRegisterRequest userRegisterInfo) {
@@ -35,7 +39,15 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member updateMember(MemberUpdateRequest userRegisterInfo ) {
 		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
-		updatemember.setInterests(userRegisterInfo.getInterests());
+
+
+		interestMemberService.deleteAllByMember(updatemember);
+		interestService.insertInterest(userRegisterInfo.getInterests(), updatemember);
+
+
+		updatemember.setNickname(userRegisterInfo.getNickname());
+		updatemember.setMbti(userRegisterInfo.getMbti());
+
 		updatemember.setSido(userRegisterInfo.getSido());
 		updatemember.setProfileUrl(userRegisterInfo.getProfileUrl());
 		return updatemember;
@@ -45,21 +57,16 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional
 	public boolean deleteMember(String email) {
 		Member member = memberRepository.findByEmail(email);
-		try{
-			memberRepository.delete(member);
-		} catch (Exception e) {
-			return false;
-		}
+		member.setDeleted(true);
 		return true;
 	}
 
 	@Override
 	public boolean nicknameValid(String nickname) {
-		if(memberRepository.countAllByNickname(nickname) != 0){
+		if(memberRepository.countAllByNicknameAndDeleted(nickname, false) != 0){
 			return false;
 		}
 		return true;
 	}
-
 
 }

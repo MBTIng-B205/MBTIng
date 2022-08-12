@@ -1,6 +1,5 @@
 package com.ssafy.mbting.db.entity;
 
-import com.ssafy.mbting.api.response.MessageResponse;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -11,19 +10,37 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Message extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="from_id")
-    private Member fromId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="to_id")
-    private Member toId;
+
     private String content;
-    LocalDateTime sendTime;
+    @CreationTimestamp
+    private LocalDateTime sendTime;
+    @Builder.Default
+    @NotNull
+    private Boolean tofriendflag = false;
+    @Builder.Default
+    @NotNull
+    private Boolean fromfriendflag = false;
+    @Builder.Default
     @NotNull
     private Boolean readByTo = false;
+    @Builder.Default
     @NotNull
     private Boolean deletedByTo = false;
+    @Builder.Default
     @NotNull
     private Boolean deletedByFrom = false;
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name="from_id")
+    private Member fromId;
+    @ManyToOne(
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name="to_id")
+    private Member toId;
 }
