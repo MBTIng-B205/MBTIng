@@ -10,6 +10,7 @@
       >
         <user-video
           class="userVideo-me"
+          style="border-radius: 1rem"
           :stream-manager="state.publisher"
           @click="updateMainVideoStreamManager(state.publisher)"
         />
@@ -411,6 +412,6 @@ export default {
   margin-top: auto;
   margin-right: auto;
   align-self: flex-start;
-  border-radius: 100px;
+  border-radius: 20px;
 }
 </style>
