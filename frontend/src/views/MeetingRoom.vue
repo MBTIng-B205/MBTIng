@@ -67,7 +67,7 @@
   <!-- report dialog -->
   <el-dialog v-model="sirenDialog" @close="sirenClose">
     <div style="font-weight: bold; float: left; margin: 10px">
-      신고대상자 : {{}}
+      신고대상자 : {{ state.partner.nickname }}
     </div>
     <el-input
       v-model="sirenMsg"
@@ -124,6 +124,7 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      partner: computed(() => store.getters["meetings/getPartner"]),
       token: computed(() => store.getters["meetings/getToken"]),
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),

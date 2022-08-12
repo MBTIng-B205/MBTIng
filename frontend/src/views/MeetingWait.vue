@@ -161,8 +161,10 @@ export default {
                 router.push({ path: "/meetingmatch" });
               }
               if (obj.command == "accept") {
-                store.commit("meetings/SET_TOKEN", obj.data.token);
-                console.log(obj.token);
+                store.commit("meetings/SET_TOKEN", obj.data.openviduToken);
+                store.commit("meetings/SET_PARTNER", obj.data.opponent);
+                console.log(obj.data.openviduToken);
+                console.log(obj.data.opponent);
                 meetingAudioStarted();
                 router.push({ path: "/room" });
               }

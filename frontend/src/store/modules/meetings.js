@@ -7,6 +7,7 @@ export const meetings = {
     proposal: null,
     token: null,
     chats: [],
+    partner: null,
   },
   mutations: {
     SET_SOCKET: (state, mtsocket) => {
@@ -18,6 +19,9 @@ export const meetings = {
     SET_TOKEN: (state, token) => {
       state.token = token;
     },
+    SET_PARTNER: (state, partner) => {
+      state.partner = partner;
+    },
     SAVE_CHAT: (state, chats) => {
       console.log(state);
       console.log(chats.chats);
@@ -26,6 +30,9 @@ export const meetings = {
     },
   },
   getters: {
+    getPartner(state) {
+      return state.partner;
+    },
     getProposal(state) {
       return state.proposal;
     },
