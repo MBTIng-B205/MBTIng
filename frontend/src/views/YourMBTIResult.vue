@@ -27,7 +27,7 @@
         <img class="small" src="@/assets/smallblue.png" />
       </div>
       <el-footer style="margin-top: 50px">
-        <el-button type="warning" plain size="large" @click="goHome"
+        <el-button type="danger" round plain size="large" @click="goHome"
           >홈으로</el-button
         >
       </el-footer>
@@ -67,6 +67,5 @@ export default {
   border-radius: 1rem;
   background-color: white;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
-  font-family: "Dalseo";
 }
 </style>

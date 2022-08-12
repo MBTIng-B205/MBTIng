@@ -88,7 +88,7 @@
             </el-col>
             <el-form-item>
               <el-button
-                type="warning"
+                type="danger"
                 plain
                 size="large"
                 @click="signup"
