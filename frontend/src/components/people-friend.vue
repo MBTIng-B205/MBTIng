@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="height: 620px">
     <el-header>
       <el-row style="flex-direction: row; margin-top: 15px">
         <el-col :span="6"
