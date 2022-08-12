@@ -23,11 +23,6 @@
         <span style="font-size: 3rem">{{ state.timer.minutes }}</span>
         :<span style="font-size: 3rem">{{ state.timer.seconds }}</span>
       </div>
-      <!--
-        <button @click="data.timer.start()">Start</button>
-        <button @click="data.timer.pause()">Pause</button>
-        <button @click="data.timer.resume()">Resume</button>
-        -->
     </div>
     <div class="rightside" style="margin-right: 2rem">
       <button @click="addFriend">친구추가</button>

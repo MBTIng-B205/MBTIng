@@ -26,8 +26,7 @@
     "vue-timer-hook": "^1.0.0",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.1.0",
-    "webstomp-client": "^1.2.6",
-    "sweetalert2": "^11.4.0"
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
