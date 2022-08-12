@@ -20,8 +20,8 @@
 
     <div>
       <div style="margin-left: 97px">
-        <span>{{ state.timer.minutes }}</span>
-        :<span>{{ state.timer.seconds }}</span>
+        <span style="font-size: 3rem">{{ state.timer.minutes }}</span>
+        :<span style="font-size: 3rem">{{ state.timer.seconds }}</span>
       </div>
       <!--
         <button @click="data.timer.start()">Start</button>
