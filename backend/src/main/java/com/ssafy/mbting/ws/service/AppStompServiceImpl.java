@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
+
 @Service
 @RequiredArgsConstructor
 public class AppStompServiceImpl implements AppStompService {
@@ -27,6 +29,7 @@ public class AppStompServiceImpl implements AppStompService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
     private final AppRepository appRepository;
+    private final MeetingRoomService meetingRoomService;
 
     @Override
     public void connect(String sessionId, ConnectHeader connectHeader) {
@@ -66,7 +69,7 @@ public class AppStompServiceImpl implements AppStompService {
                 logger.debug("아무것도 안 합니다.");
                 break;
             case INPROGRESS:
-                logger.debug("매치된 유저가 있는지 확인합니다.");
+                logger.debug("매칭된 유저에게 먼저 알립니다.");
                 handleOrphanUserIfPresent(stompUser);
                 break;
             case INQUEUE:
@@ -74,12 +77,16 @@ public class AppStompServiceImpl implements AppStompService {
                 appRepository.leaveFromQueue(sessionId);
                 break;
             case INROOM:
-                // Todo: 룸에서 빼는 거 구현해야 함
-                logger.debug("미팅룸을 파합니다.");
+                logger.debug("미팅 종료 시각 세팅");
+                ofNullable(stompUser.getMeetingRoomId())
+                        .ifPresent(meetingRoomService::setEndTimeIfAbsent);
+                logger.debug("매칭된 유저에게 먼저 알립니다.");
                 handleOrphanUserIfPresent(stompUser);
+                logger.debug("미팅룸 비우기를 시도합니다.");
+                meetingRoomService.leaveFromMeetingRoomAndRemoveIfEmpty(sessionId);
                 break;
             default:
-                logger.debug("알 수 없는 상태입니다. 매치된 유저가 있는지 확인합니다.");
+                logger.debug("알 수 없는 상태입니다. 매칭된 유저가 있는지 확인합니다.");
                 handleOrphanUserIfPresent(stompUser);
                 break;
         }

@@ -18,7 +18,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -51,10 +50,12 @@ public class MeetingRoomAudioStageEventListener {
     @Async
     @EventListener
     public void onMeetingRoomAudioStageResultsMade(MeetingRoomAudioStageResultsMadeEvent event) {
+        String meetingRoomId = event.getMeetingRoomId();
         String[] sessionIds = event.getSessionIds();
         AudioStageResult[] voiceResults = event.getVoiceResults();
 
-        logger.debug("\n\n음성 스테이지 결과 모두 도착 이벤트 발생함\n1: ({}, {})\n2: ({}, {})\n"
+        logger.debug("\n\n음성 스테이지 결과 모두 도착 이벤트 발생함\n미팅룸 ID: {}\n1: ({}, {})\n2: ({}, {})\n"
+                , meetingRoomId
                 , sessionIds[0]
                 , voiceResults[0]
                 , sessionIds[1]
@@ -64,6 +65,7 @@ public class MeetingRoomAudioStageEventListener {
             applicationEventPublisher.publishEvent(new MeetingRoomAudioStageBothGreenEvent(
                     this,
                     Clock.systemDefaultZone(),
+                    meetingRoomId,
                     sessionIds));
             return;
         }
@@ -83,12 +85,14 @@ public class MeetingRoomAudioStageEventListener {
     @Async
     @EventListener
     public void onMeetingRoomAudioStageBothGreen(MeetingRoomAudioStageBothGreenEvent event) {
+        String meetingRoomId = event.getMeetingRoomId();
         String[] sessionIds = event.getSessionIds();
 
-        // Todo: 화상 시작 시각 세팅
+        logger.debug("\n\n음성 스테이지 결과 모두 그린라이트 이벤트 발생함\n미팅룸 ID: {}\nSession IDs: {}\n"
+                , meetingRoomId
+                , sessionIds);
 
-        logger.debug("\n\n음성 스테이지 결과 모두 그린라이트 이벤트 발생함\nSession IDs: {}\n"
-                , Arrays.toString(sessionIds));
+        meetingRoomService.setVideoStageStartTime(meetingRoomId);
 
         List<StompUser> stompUsers = IntStream.range(0, 2)
                 .mapToObj(i -> appStompService

@@ -12,12 +12,14 @@ import java.time.LocalDateTime;
 public class MeetingRoom {
 
     private String openviduSessionName;
+    private String[] openviduTokens;
     private String[] sessionIds;
     private Boolean[] meetingRoomStatus;
-    private AnalysisRegisterRequest[] meetingRoomResult;
+    private AnalysisRegisterRequest[] meetingRoomResults;
 
     public static MeetingRoom newMeetingRoom(
             String openviduSessionName,
+            String[] openviduTokens,
             String sessionId1,
             String sessionId2,
             String mbti1,
@@ -25,9 +27,10 @@ public class MeetingRoom {
         LocalDateTime now = LocalDateTime.now();
         return MeetingRoom.builder()
                 .openviduSessionName(openviduSessionName)
+                .openviduTokens(openviduTokens)
                 .sessionIds(new String[]{sessionId1, sessionId2})
                 .meetingRoomStatus(new Boolean[]{true, true})
-                .meetingRoomResult(new AnalysisRegisterRequest[]{
+                .meetingRoomResults(new AnalysisRegisterRequest[]{
                         AnalysisRegisterRequest.builder()
                                 .fromMbti(mbti1).toMbti(mbti2)
                                 .startTime(now).build(),
