@@ -42,7 +42,11 @@
       </div>
       <div v-else class="mbtiinfo">
         <!-- <div class="mbtiinfo"></div> -->
-        <img src="@/assets/meetingimg.png" alt="" />
+        <img
+          src="@/assets/meetingimg.png"
+          alt=""
+          style="width: 500px; height: 500px"
+        />
       </div>
 
       <div
