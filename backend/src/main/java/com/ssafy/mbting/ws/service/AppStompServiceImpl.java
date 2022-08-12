@@ -91,7 +91,7 @@ public class AppStompServiceImpl implements AppStompService {
 
     @Override
     public Optional<StompUser> getStompUserBySessionId(String sessionId) {
-        return stompRepository.findStompUserBySessionId(sessionId);
+        return appRepository.findStompUserBySessionId(sessionId);
     }
 
     private boolean identicalTokenAndEmail(String accessToken, String email) {
