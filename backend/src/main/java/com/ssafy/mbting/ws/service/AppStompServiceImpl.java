@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.ssafy.mbting.common.util.JwtTokenUtil;
+import com.ssafy.mbting.ws.model.event.OrphanOccurEvent;
 import com.ssafy.mbting.ws.model.event.WaitingMeetingUserQueuedEvent;
 import com.ssafy.mbting.ws.model.stompMessageHeader.ConnectHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
@@ -52,28 +53,34 @@ public class AppStompServiceImpl implements AppStompService {
 
     @Override
     public void disconnect(String sessionId) {
-        Optional<StompUser> stompUser = appRepository.findStompUserBySessionId(sessionId);
-        if (!stompUser.isPresent()) {
+        Optional<StompUser> nullableStompUser = appRepository.findStompUserBySessionId(sessionId);
+        if (!nullableStompUser.isPresent()) {
             logger.debug("\n\n세션이 이미 없어졌습니다. 아무 일도 하지 않습니다.\n");
             return;
         }
-        StompUserStatus status = stompUser.get().getStompUserStatus();
+        StompUser stompUser = nullableStompUser.get();
+        StompUserStatus status = stompUser.getStompUserStatus();
         logger.debug("\n\ndisconnect 시도...\n현재 상태: {}", status);
         switch (status) {
             case UNSUBSCRIBED:
-                // 여기서는 할 게 없음
+                logger.debug("아무것도 안 합니다.");
                 break;
             case INPROGRESS:
-                // 여기서도 할 게 없음
+                logger.debug("매치된 유저가 있는지 확인합니다.");
+                handleOrphanUserIfPresent(stompUser);
                 break;
             case INQUEUE:
+                logger.debug("큐에서 빼줍니다.");
                 appRepository.leaveFromQueue(sessionId);
                 break;
             case INROOM:
                 // Todo: 룸에서 빼는 거 구현해야 함
+                logger.debug("미팅룸을 파합니다.");
+                handleOrphanUserIfPresent(stompUser);
                 break;
             default:
-                // 미지의 세계, 해결할 수 없는 상태
+                logger.debug("알 수 없는 상태입니다. 매치된 유저가 있는지 확인합니다.");
+                handleOrphanUserIfPresent(stompUser);
                 break;
         }
         appRepository.removeSession(sessionId);
@@ -92,6 +99,17 @@ public class AppStompServiceImpl implements AppStompService {
     @Override
     public Optional<StompUser> getStompUserBySessionId(String sessionId) {
         return appRepository.findStompUserBySessionId(sessionId);
+    }
+
+    private void handleOrphanUserIfPresent(StompUser stompUser) {
+        String sessionId = stompUser.getMatchedMeetingUserSessionId();
+        appRepository.findStompUserBySessionId(sessionId).ifPresent(user -> {
+            logger.debug("\n\n고아가 있습니다.\n");
+            applicationEventPublisher.publishEvent(new OrphanOccurEvent(
+                    this,
+                    Clock.systemDefaultZone(),
+                    sessionId));
+        });
     }
 
     private boolean identicalTokenAndEmail(String accessToken, String email) {
