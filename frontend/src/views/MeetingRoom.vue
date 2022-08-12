@@ -1,4 +1,7 @@
 <template>
+  <div style="position: absolute; margin-left: 20px">
+    <img src="@/assets/logo.png" alt="" style="width: 200px; height: 94px" />
+  </div>
   <el-container
     style="display: flex; flex-direction: column; background-color: #fadce1"
   >

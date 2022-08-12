@@ -15,12 +15,6 @@
         @click="redlight"
         circle
       />
-      <el-button
-        type="Water"
-        style="margin-right: 7px"
-        @click="timeout"
-        circle
-      />
       <el-button type="info" :icon="QuestionFilled" circle />
     </div>
 
@@ -28,6 +22,8 @@
       <div style="margin-left: 97px">
         <span>{{ state.timer.minutes }}</span>
         :<span>{{ state.timer.seconds }}</span>
+        <span style="font-size: 3rem">{{ data.timer.minutes }}</span>
+        :<span style="font-size: 3rem">{{ data.timer.seconds }}</span>
       </div>
       <!--
         <button @click="data.timer.start()">Start</button>
@@ -67,7 +63,7 @@ export default {
   setup(props, { emit }) {
     const store = useStore();
     const state = reactive({
-      flag: false,
+      chatflag: false,
       reportflag: false,
       time: null,
       timer: null,
@@ -76,7 +72,6 @@ export default {
     });
 
     state.time = new Date();
-
     state.time.setSeconds(state.time.getSeconds() + 10); // 10 minutes timer
     state.timer = useTimer(state.time);
     state.timer.start();
@@ -88,17 +83,19 @@ export default {
     };
 
     const chatOnOff = () => {
-      state.flag = !state.flag;
-      console.log(state.flag);
+      state.chatflag = !state.chatflag;
+      console.log(state.chatflag);
 
       emit("chatOnOff", {
-        flag: state.flag,
+        chatflag: state.chatflag,
       });
     };
     const stopWatchEffect = watchEffect(() => {
       if (state.timer.isRunning == false)
         console.log("타이머 다됨 !!!!!!!!!!!!!!!!!!!!!!!!");
+      // TODO: router push
     });
+
     const reportOnOff = () => {
       state.reportflag = !state.reportflag;
       console.log(state.reportflag);

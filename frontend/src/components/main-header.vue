@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <div>
+    <div style="display: absolute">
       <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </div>
 
