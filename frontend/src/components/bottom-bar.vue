@@ -70,7 +70,7 @@ export default {
     });
 
     state.time = new Date();
-    state.time.setSeconds(state.time.getSeconds() + 10); // 10 minutes timer
+    state.time.setSeconds(state.time.getSeconds() + 600); // 10 minutes timer
     state.timer = useTimer(state.time);
     state.timer.start();
     const restartFive = () => {
