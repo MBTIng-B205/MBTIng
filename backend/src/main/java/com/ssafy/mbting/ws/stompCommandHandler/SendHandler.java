@@ -21,6 +21,14 @@ public class SendHandler implements StompCommandHandler {
         // 메시지 처리 : 사용자 구독 확인
         logger.info("\n\n* {} *\n", stompCommand);
 
+        String destination = stompHeaderAccessor.getDestination();
+
+        if (destination == null || !destination.startsWith("/ws/msg/indi/")) {
+            logger.info("\n\n클라이언트가 \"/ws/msg/indi/*\" 가 아닌 곳으로 메시지를 보내려 합니다.\n시도한 Destination: {}\n"
+                    , destination);
+            throw new RuntimeException("Not Allowed!");
+        }
+
         if (waitingMeetingService
                 .getStompUserBySessionId(stompHeaderAccessor
                         .getSessionId())
