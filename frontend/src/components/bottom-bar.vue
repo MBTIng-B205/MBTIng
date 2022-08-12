@@ -19,12 +19,8 @@
       <el-button type="info" :icon="QuestionFilled" circle />
     </div>
     <div class="rightside" style="margin-right: 2rem">
-      <el-button type="danger" :icon="WarningFilled" round @click="reportOnOff"
-        >신고하기</el-button
-      >
       <button @click="addFriend">친구추가</button>
       <el-button
-        class="custom-icon"
         type="danger"
         :icon="WarningFilled"
         round
