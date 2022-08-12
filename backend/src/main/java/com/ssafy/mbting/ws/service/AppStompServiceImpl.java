@@ -9,7 +9,7 @@ import com.ssafy.mbting.ws.model.stompMessageHeader.ConnectHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import com.ssafy.mbting.ws.model.vo.StompUser;
 import com.ssafy.mbting.ws.model.vo.StompUserStatus;
-import com.ssafy.mbting.ws.repository.StompRepository;
+import com.ssafy.mbting.ws.repository.AppRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class AppStompServiceImpl implements AppStompService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final StompRepository stompRepository;
+    private final AppRepository appRepository;
 
     @Override
     public void connect(String sessionId, ConnectHeader connectHeader) {
@@ -42,7 +42,7 @@ public class AppStompServiceImpl implements AppStompService {
 //            throw new RuntimeException("No Member!");
 //        }
 
-        if (stompRepository.createSession(
+        if (appRepository.createSession(
                 sessionId,
                 StompUser.ofBeforeSubscribe(email)) != null) {
             logger.info("\n\nsessionId 가 이미 존재함\n");
@@ -52,7 +52,7 @@ public class AppStompServiceImpl implements AppStompService {
 
     @Override
     public void disconnect(String sessionId) {
-        Optional<StompUser> stompUser = stompRepository.findStompUserBySessionId(sessionId);
+        Optional<StompUser> stompUser = appRepository.findStompUserBySessionId(sessionId);
         if (!stompUser.isPresent()) {
             logger.debug("\n\n세션이 이미 없어졌습니다. 아무 일도 하지 않습니다.\n");
             return;
@@ -67,7 +67,7 @@ public class AppStompServiceImpl implements AppStompService {
                 // 여기서도 할 게 없음
                 break;
             case INQUEUE:
-                stompRepository.leaveFromQueue(sessionId);
+                appRepository.leaveFromQueue(sessionId);
                 break;
             case INROOM:
                 // Todo: 룸에서 빼는 거 구현해야 함
@@ -76,13 +76,13 @@ public class AppStompServiceImpl implements AppStompService {
                 // 미지의 세계, 해결할 수 없는 상태
                 break;
         }
-        stompRepository.removeSession(sessionId);
+        appRepository.removeSession(sessionId);
     }
 
     @Override
     public void subscribe(String sessionId, MeetingUser meetingUser) {
-        stompRepository.saveMeetingUser(sessionId, meetingUser);
-        stompRepository.joinToQueue(sessionId);
+        appRepository.saveMeetingUser(sessionId, meetingUser);
+        appRepository.joinToQueue(sessionId);
         applicationEventPublisher.publishEvent(new WaitingMeetingUserQueuedEvent(
                 this,
                 Clock.systemDefaultZone()

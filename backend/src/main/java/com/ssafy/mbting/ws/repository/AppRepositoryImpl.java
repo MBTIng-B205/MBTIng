@@ -21,7 +21,7 @@ import java.util.Set;
 import static java.util.Optional.*;
 
 @Repository
-public class StompRepositoryImpl implements StompRepository {
+public class AppRepositoryImpl implements AppRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Map<String, StompUser> sessionIdStompUserMap = Maps.newConcurrentMap();

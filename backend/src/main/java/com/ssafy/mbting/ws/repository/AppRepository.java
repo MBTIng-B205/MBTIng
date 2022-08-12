@@ -7,7 +7,7 @@ import com.ssafy.mbting.ws.model.vo.StompUser;
 
 import java.util.Optional;
 
-public interface StompRepository {
+public interface AppRepository {
 
     StompUser createSession(String sessionId, StompUser stompUser);
     void removeSession(String sessionId);
