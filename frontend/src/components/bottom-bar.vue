@@ -3,19 +3,25 @@
     <div class="leftside" style="margin-left: 2rem">
       <el-button
         type="success"
-        style="margin-right: 7px"
         :icon="BellFilled"
+        style="margin-right: 7px"
+        @click="greenlight"
         circle
       />
       <el-button
         type="danger"
-        style="margin-right: 7px"
         :icon="BellFilled"
+        style="margin-right: 7px"
+        @click="redlight"
         circle
       />
+
       <el-button type="info" :icon="QuestionFilled" circle />
     </div>
     <div class="rightside" style="margin-right: 2rem">
+      <el-button type="danger" :icon="WarningFilled" round @click="reportOnOff"
+        >신고하기</el-button
+      >
       <button @click="addFriend">친구추가</button>
       <el-button
         class="custom-icon"
@@ -30,22 +36,6 @@
       >
       <el-button @click="chatOnOff" type="info" :icon="ChatDotSquare" round />
     </div>
-    <!-- report dialog -->
-    <el-dialog v-model="sirenDialog" @close="sirenClose">
-      <div style="font-weight: bold; float: left; margin: 10px">
-        신고대상자 : {{}}
-      </div>
-      <el-input
-        v-model="sirenMsg"
-        type="textarea"
-        placeholder="신고사유를 입력해주세요"
-        rows="5"
-      ></el-input>
-      <div style="margin-top: 20px">
-        <el-button type="danger" @click="clickSiren">신고하기</el-button>
-        <el-button @click="sirenClose">취소</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -58,13 +48,14 @@ import {
   ChatDotSquare,
 } from "@element-plus/icons-vue";
 import { reactive } from "vue";
-
+import { useStore } from "vuex";
 export default {
   setup(props, { emit }) {
     const data = reactive({
       flag: false,
+      reportflag: false,
     });
-
+    const store = useStore();
     const chatOnOff = () => {
       data.flag = !data.flag;
       console.log(data.flag);
@@ -74,10 +65,38 @@ export default {
       });
     };
 
-    const addFriend = () => {};
+    const reportOnOff = () => {
+      data.reportflag = !data.reportflag;
+      console.log(data.reportflag);
 
+      emit("reportOnOff", {
+        flag: data.reportflag,
+      });
+    };
+    const greenlight = function () {
+      console.log("greenlight 실행");
+      const msg = {
+        command: "meetingAudioStageResult",
+        data: true,
+      };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+    };
+    const redlight = function () {
+      console.log("redlight 실행");
+      const msg = {
+        command: "meetingAudioStageResult",
+        data: true,
+      };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+    };
+    const addFriend = () => {};
     return {
       data,
+      greenlight,
+      redlight,
+      reportOnOff,
       chatOnOff,
       addFriend,
       BellFilled,
@@ -94,7 +113,6 @@ export default {
 .controller {
   width: 100%;
   height: 50px;
-  background-color: #fadce1;
 }
 .custom-icon {
   font-size: 1.5rem;

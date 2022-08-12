@@ -6,6 +6,7 @@ import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.api.service.ReportService;
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.db.entity.ReportType;
+import com.ssafy.mbting.db.enums.Gender;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,10 +27,10 @@ public class ReportTest {
 
         MemberRegisterRequest mb1 = new MemberRegisterRequest();
         mb1.setNickname("홍길동123");
-        mb1.setGender(true);
+        mb1.setGender(Gender.MALE);
         MemberRegisterRequest mb2 = new MemberRegisterRequest();
         mb2.setNickname("유관순123");
-        mb2.setGender(false);
+        mb2.setGender(Gender.FEMALE);
 
 
         mb1.setEmail("rlwls11011@hamail.net");
