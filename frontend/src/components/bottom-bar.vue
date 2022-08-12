@@ -15,19 +15,13 @@
         @click="redlight"
         circle
       />
-      <el-button
-        type="Water"
-        style="margin-right: 7px"
-        @click="timeout"
-        circle
-      />
       <el-button type="info" :icon="QuestionFilled" circle />
     </div>
 
     <div>
       <div style="margin-left: 97px">
-        <span>{{ data.timer.minutes }}</span>
-        :<span>{{ data.timer.seconds }}</span>
+        <span style="font-size: 3rem">{{ data.timer.minutes }}</span>
+        :<span style="font-size: 3rem">{{ data.timer.seconds }}</span>
       </div>
       <!--
         <button @click="data.timer.start()">Start</button>
@@ -66,14 +60,14 @@ import { useTimer } from "vue-timer-hook";
 export default {
   setup(props, { emit }) {
     const data = reactive({
-      flag: false,
+      chatflag: false,
       reportflag: false,
       time: null,
       timer: null,
     });
     data.time = new Date();
 
-    data.time.setSeconds(data.time.getSeconds() + 10); // 10 minutes timer
+    data.time.setSeconds(data.time.getSeconds() + 600); // 10 minutes timer
     data.timer = useTimer(data.time);
     data.timer.start();
     const restartFive = () => {
@@ -84,17 +78,19 @@ export default {
     };
     const store = useStore();
     const chatOnOff = () => {
-      data.flag = !data.flag;
-      console.log(data.flag);
+      data.chatflag = !data.chatflag;
+      console.log(data.chatflag);
 
       emit("chatOnOff", {
-        flag: data.flag,
+        chatflag: data.chatflag,
       });
     };
     const stopWatchEffect = watchEffect(() => {
       if (data.timer.isRunning == false)
         console.log("타이머 다됨 !!!!!!!!!!!!!!!!!!!!!!!!");
+      // TODO: router push
     });
+
     const reportOnOff = () => {
       data.reportflag = !data.reportflag;
       console.log(data.reportflag);
