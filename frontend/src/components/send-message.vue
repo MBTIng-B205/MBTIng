@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="height: 620px">
     <el-header>
       <el-row class="row">
         <el-col :span="6"

@@ -16,6 +16,7 @@
       alt=""
     />
     <img class="mainimg" src="@/assets/main.png" alt="" />
+
     <div class="bg1"></div>
     <div class="bg2"></div>
   </div>
@@ -38,11 +39,9 @@
       >
         <img :src="contents1[index].thumb" class="image" />
         <div>
-          <div class="bottom">
-            <el-link :href="contents1[index].site"
-              ><button class="testbutton" style="background: #e37a80">
-                테스트시작
-              </button></el-link
+          <div>
+            <el-link :href="contents1[index].site" :underline="false">
+              <el-button type="danger" round>테스트시작</el-button></el-link
             >
           </div>
         </div>
@@ -118,7 +117,6 @@ export default {
   width: 100px;
   cursor: pointer;
 }
-
 .startbtn {
   height: 100px;
   width: 100px;

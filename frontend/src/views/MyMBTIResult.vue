@@ -27,7 +27,7 @@
         <img class="small" src="@/assets/smallgreen.png" />
       </div>
       <el-footer style="margin-top: 50px">
-        <el-button type="warning" plain size="large" @click="goHome"
+        <el-button type="danger" round plain size="large" @click="goHome"
           >홈으로</el-button
         >
       </el-footer>

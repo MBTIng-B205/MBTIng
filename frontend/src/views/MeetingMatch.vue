@@ -13,13 +13,17 @@
     <el-card
       style="
         text-align: center;
-        background-color: #fff4b8;
+        background-color: #fadce1;
         box-shadow: none;
         border: none;
       "
     >
       <div style="margin-bottom: 50px">
-        <img class="small" src="@/assets/smallpink.png" />
+        <img
+          class="small"
+          src="@/assets/smallpink.png"
+          style="width: 250px; height: 250px"
+        />
         <div class="infoBox">
           <div style="margin-top: 20px">
             <img
@@ -38,11 +42,11 @@
         </div>
         <img class="small" src="@/assets/smallgreen.png" />
       </div>
-      <el-row style="flex-direction: row; justify-content: space-evenly">
-        <el-button type="success" size="large" @click="proposalAccept"
+      <el-row style="flex-direction: row; justify-content: center">
+        <el-button type="success" size="large" @click="proposalAccept" round
           >수락</el-button
         >
-        <el-button type="danger" size="large" @click="proposalRefuse"
+        <el-button type="danger" size="large" @click="proposalRefuse" round
           >거절</el-button
         >
       </el-row>

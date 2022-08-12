@@ -1,7 +1,7 @@
 <template>
   <main-header />
 
-  <el-container>
+  <el-container style="height: 620px">
     <el-aside width="240px" height="100%"
       ><el-menu>
         <el-menu-item>
@@ -26,7 +26,7 @@
         ></el-menu
       ></el-aside
     >
-    <el-main style="padding: 0"><router-view /></el-main>
+    <el-main style="padding: 0; height: 620px"><router-view /></el-main>
   </el-container>
 </template>
 

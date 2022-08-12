@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="height: 620px">
     <el-header>
       <el-row class="row">
         <el-col :span="6"
@@ -413,8 +413,7 @@ export default {
       }
     };
 
-    const addFriend = function (i) {
-      console.log("친구추가", i);
+    const addFriend = function () {
       if (confirm("친구추가 하시겠습니까?")) {
         store
           .dispatch("friends/addFriend", {

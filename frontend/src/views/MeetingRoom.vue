@@ -1,17 +1,24 @@
 <template>
+  <div style="position: absolute; margin-left: 20px">
+    <img src="@/assets/logo.png" alt="" style="width: 200px; height: 94px" />
+  </div>
   <el-container
     style="display: flex; flex-direction: column; background-color: #fadce1"
   >
     <!-- cam -->
     <div class="cam" style="display: flex; flex-direction: row">
-      <div class="video2-wrapper" style="margin: auto auto 0 0; z-index: 2">
+      <div
+        class="video2-wrapper"
+        style="margin: auto auto 0 0; margin-left: 30px; z-index: 2"
+      >
         <user-video
           class="userVideo-me"
+          style="border-radius: 1rem"
           :stream-manager="state.publisher"
           @click="updateMainVideoStreamManager(state.publisher)"
         />
       </div>
-      <div v-if="state.subscribers.length">
+      <div v-if="state.videoflag">
         <div
           class="video1-wrapper"
           style="
@@ -19,8 +26,8 @@
             left: 24%;
             margin-top: 0;
             margin-bottom: 0;
-            width: 940px;
-            height: 600px;
+            width: 840px;
+            height: 550px;
           "
         >
           <user-video
@@ -37,14 +44,24 @@
           ></video-controller>
         </div>
       </div>
-      <div v-else>
-        <div class="mbtiinfo"></div>
+      <div v-else class="mbtiinfo">
+        <!-- <div class="mbtiinfo"></div> -->
+        <img
+          src="@/assets/meetingimg.png"
+          alt=""
+          style="width: 500px; height: 500px"
+        />
       </div>
 
       <div
-        v-show="state.flag === true"
+        v-show="state.chatflag === true"
         class="chatdiv"
-        style="position: absolute; right: 0; border-radius: 5px"
+        style="
+          position: absolute;
+          right: 0;
+          border-radius: 5px;
+          margin-right: 30px;
+        "
       >
         <room-chat
           ref="chat"
@@ -54,7 +71,9 @@
         ></room-chat>
       </div>
     </div>
-
+    <div style="">
+      <hr style="width: 96%" />
+    </div>
     <div class="bar-wrapper" style="display: flex">
       <bottom-bar
         @chatOnOff="chatOnOff"
@@ -128,7 +147,8 @@ export default {
       token: computed(() => store.getters["meetings/getToken"]),
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
-      flag: false,
+      chatflag: false,
+      videoflag: false,
     });
     onMounted(() => {
       joinSession();
@@ -207,12 +227,12 @@ export default {
       state.publisher.publishAudio(audio);
     };
 
-    const chatOnOff = ({ flag }) => {
-      state.flag = flag;
+    const chatOnOff = ({ chatflag }) => {
+      state.chatflag = chatflag;
     };
 
-    const reportOnOff = ({ flag }) => {
-      sirenDialog.value = flag;
+    const reportOnOff = ({ reportflag }) => {
+      sirenDialog.value = reportflag;
     };
 
     const leaveSession = () => {
@@ -398,10 +418,6 @@ export default {
   align-items: auto;
 }
 .mbtiinfo {
-  background-color: rgb(255, 189, 207);
-  border-radius: 50%;
-  width: 500px;
-  height: 500px;
   position: absolute;
   left: 35%;
   top: 15%;
@@ -431,6 +447,6 @@ export default {
   margin-top: auto;
   margin-right: auto;
   align-self: flex-start;
-  border-radius: 100px;
+  border-radius: 20px;
 }
 </style>

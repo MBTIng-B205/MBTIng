@@ -1,8 +1,8 @@
 package com.ssafy.mbting.ws.stompCommandHandler;
 
 import com.ssafy.mbting.ws.model.stompMessageHeader.ConnectHeader;
-import com.ssafy.mbting.ws.service.WaitingMeetingService;
-import lombok.RequiredArgsConstructor;
+import com.ssafy.mbting.ws.service.AppStompService;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.MessageChannel;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class ConnectHandler implements StompCommandHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final WaitingMeetingService waitingMeetingService;
+    private final AppStompService appStompService;
 
     @Override
     public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor, MessageChannel messageChannel) {
@@ -31,6 +31,6 @@ public class ConnectHandler implements StompCommandHandler {
 //            throw new RuntimeException("No Authorization!");
 //        }
 
-        waitingMeetingService.connect(stompHeaderAccessor.getSessionId(), connectHeader);
+        appStompService.connect(stompHeaderAccessor.getSessionId(), connectHeader);
     }
 }
