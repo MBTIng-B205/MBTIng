@@ -20,27 +20,39 @@
       style="flex-direction: row; justify-content: flex-start"
     >
       <el-col :span="8" v-for="friend in state.friends" :key="friend">
-        <el-card @click="onFriendProfile(friend)">
-          <el-popconfirm
-            confirm-button-text="삭제"
-            cancel-button-text="취소"
-            title="친구를 삭제하시겠습니까?"
-            @confirm="deleteFriend(friend)"
-          >
-            <template #reference>
-              <el-button
-                @click.stop
-                class="delete"
-                :icon="CircleCloseFilled"
-              ></el-button>
-            </template>
-          </el-popconfirm>
+        <el-card
+          style="
+            cursor: pointer;
+            padding: 20px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
+          "
+          @click="onFriendProfile(friend)"
+        >
+          <div>
+            <el-popconfirm
+              confirm-button-text="삭제"
+              cancel-button-text="취소"
+              title="친구를 삭제하시겠습니까?"
+              @confirm="deleteFriend(friend)"
+            >
+              <template #reference>
+                <el-button @click.stop class="delete"
+                  ><img src="@/assets/x.png"
+                /></el-button>
+              </template>
+            </el-popconfirm>
+          </div>
+
           <img class="friendProfile" :src="friend.profileUrl" />
           <div style="font-weight: bold">
             <p>{{ friend.nickname }}</p>
             <p>{{ friend.mbti }}</p>
           </div>
-          <el-button @click.stop="messageOpen(friend)">쪽지 보내기</el-button>
+          <button class="buttonStyle" @click.stop="messageOpen(friend)">
+            쪽지 보내기
+          </button>
         </el-card>
       </el-col>
     </el-row>
@@ -50,7 +62,7 @@
 
     <el-dialog v-model="messageDialog" @close="messageClose">
       <el-header style="text-align: left; padding-top: 10px">
-        <span class="to"> TO. </span>
+        <span class="to"> To. </span>
         <span class="toFriend"> {{ state.toFriend.nickname }}</span>
         <img class="friendIcon" src="@/assets/friends.png" />
       </el-header>
@@ -69,75 +81,37 @@
     </el-dialog>
 
     <el-dialog v-model="state.friendProfileDialog" @close="friendProfileClose">
-      <div style="text-align: center">
-        <el-row>
-          <img class="profile" :src="state.friend.profileUrl" />
-        </el-row>
-        <el-row>
-          <el-form
-            :model="state.friend"
-            :label-position="right"
-            label-width="100px"
-            style="margin-top: 30px; margin-bottom: 30px; align-items: center"
-          >
-            <el-form-item label="MBTI">
-              <el-input
-                style="width: 200px"
-                v-model="state.friend.mbti"
-                readonly
-              />
-            </el-form-item>
-            <el-form-item label="닉네임">
-              <el-input
-                style="width: 200px"
-                v-model="state.friend.nickname"
-                readonly
-              />
-            </el-form-item>
-            <el-form-item label="성별">
-              <el-radio-group v-model="state.friend.gender">
-                <el-radio :label="'MALE'" disabled>남자</el-radio>
-                <el-radio :label="'FEMALE'" disabled>여자</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="생년월일">
-              <el-input
-                style="width: 200px"
-                v-model="state.friend.birth"
-                readonly
-              />
-            </el-form-item>
-            <el-form-item label="사는지역">
-              <el-input
-                style="width: 200px"
-                v-model="state.friend.sido"
-                readonly
-              />
-            </el-form-item>
-            <el-form-item label="관심사">
-              <el-checkbox-group
-                v-model="state.friend.interests"
-                style="width: 380px; align-items: center"
-                disabled
-              >
-                <el-checkbox label="캠핑" name="캠핑" />
-                <el-checkbox label="맛집탐방" name="맛집탐방" />
-                <el-checkbox label="코딩" name="코딩" />
-                <el-checkbox label="TV/영화" name="TV/영화" />
-                <el-checkbox label="스포츠" name="스포츠" />
-                <el-checkbox label="술" name="술" />
-                <el-checkbox label="음악" name="음악" />
-                <el-checkbox label="쇼핑" name="쇼핑" />
-                <el-checkbox label="자동차" name="자동차" />
-                <el-checkbox label="게임" name="게임" />
-                <el-checkbox label="동물" name="동물" />
-                <el-checkbox label="패션" name="패션" />
-                <el-checkbox label="뷰티" name="뷰티" />
-                <el-checkbox label="디자인" name="디자인" />
-              </el-checkbox-group>
-            </el-form-item>
-          </el-form>
-        </el-row>
+      <div>
+        <img class="profile" :src="state.friend.profileUrl" />
+        <table>
+          <tbody>
+            <tr>
+              <td class="label">MBTI</td>
+              <td>{{ state.friend.mbti }}</td>
+            </tr>
+            <tr>
+              <td class="label">닉네임</td>
+              <td>{{ state.friend.nickname }}</td>
+            </tr>
+            <tr>
+              <td class="label">성별</td>
+              <td v-if="state.friend.gender == 'MALE'">남자</td>
+              <td v-else>여자</td>
+            </tr>
+            <tr>
+              <td class="label">생년월일</td>
+              <td>{{ state.friend.birth }}</td>
+            </tr>
+            <tr>
+              <td class="label">사는지역</td>
+              <td>{{ state.friend.sido }}</td>
+            </tr>
+            <tr>
+              <td class="label">관심사</td>
+              <td>{{ interests }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </el-dialog>
   </el-container>
@@ -146,12 +120,12 @@
 <script>
 import { useStore } from "vuex";
 import { ref, reactive, onMounted, computed } from "vue";
-import { CircleCloseFilled, UserFilled } from "@element-plus/icons-vue";
 export default {
   setup() {
     const key = ref("");
     const search = ref("");
     const store = useStore();
+    const interests = ref("선택한 관심사가 없습니다.");
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       searchFlag: false,
@@ -177,6 +151,20 @@ export default {
     const onFriendProfile = function (friend) {
       console.log(friend);
       state.friend = friend;
+
+      if (friend.interests.length != 0) {
+        interests.value = "";
+        for (let index = 0; index < friend.interests.length; index++) {
+          interests.value += friend.interests[index];
+          if (index < friend.interests.length - 1) {
+            interests.value += ", ";
+          }
+        }
+      } else {
+        interests.value = "선택한 관심사가 없습니다.";
+      }
+
+      console.log(interests.value);
       state.friendProfileDialog = true;
     };
 
@@ -281,10 +269,9 @@ export default {
       state,
       search,
       key,
+      interests,
       messageDialog,
       message,
-      CircleCloseFilled,
-      UserFilled,
       onFriendProfile,
       friendProfileClose,
       onSearch,
@@ -297,7 +284,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-header {
   background-color: rgb(255, 189, 207);
 }
@@ -307,7 +294,24 @@ export default {
   margin-left: 40px;
   border-radius: 100%;
   background-color: white;
-  font-family: "Dalseo";
+}
+.friendInfo {
+  font-size: large;
+  border: 10px solid rgb(255, 189, 207);
+  margin-left: 60px;
+  margin-right: 60px;
+}
+table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
+  font-size: 20px;
+  border-spacing: 0 20px;
+  border: 10px solid #fadce1;
+}
+.label {
+  width: 130px;
+  color: rgb(255, 91, 136);
 }
 .delete {
   float: right;
@@ -316,6 +320,13 @@ export default {
 .el-card {
   width: 250px;
   margin: 20px;
+  font-size: 20px;
+}
+.el-dialog {
+  padding: 0;
+}
+.el-form-item {
+  font-size: large;
 }
 .to {
   font-size: 30px;
@@ -330,10 +341,33 @@ export default {
   width: 25px;
   height: 25px;
   margin-left: 15px;
+  vertical-align: middle;
+  margin-bottom: 10px;
 }
 .profile {
   border-radius: 50%;
   width: 200px;
   height: 200px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.buttonStyle {
+  cursor: pointer;
+  width: 200px;
+  background-color: rgb(255, 189, 207);
+  padding: 10px;
+  border-radius: 10px;
+  border: solid rgb(255, 189, 207);
+}
+.buttonStyle:active {
+  background-color: rgb(255, 91, 136);
+  color: white;
+}
+.buttonStyle:hover {
+  background-color: rgb(255, 91, 136);
+  color: white;
+}
+.activeCard .el-card__body {
+  background-color: rgb(255, 91, 136);
 }
 </style>

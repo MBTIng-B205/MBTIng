@@ -150,22 +150,4 @@ export default {
   font-size: xx-large;
   color: rgb(255, 91, 136);
 }
-.answerBtn {
-  width: 700px;
-  font-size: 20px;
-  background-color: white;
-  color: rgb(255, 91, 136);
-  padding: 5px;
-  border: 1px solid rgb(255, 91, 136);
-}
-
-.answerBtn:active {
-  background-color: rgb(255, 91, 136);
-  color: white;
-}
-
-.answerBtn:hover {
-  background-color: rgb(255, 91, 136);
-  color: white;
-}
 </style>

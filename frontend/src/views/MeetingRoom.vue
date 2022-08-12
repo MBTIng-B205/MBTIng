@@ -40,8 +40,13 @@
           ></video-controller>
         </div>
       </div>
-      <div v-else>
-        <div class="mbtiinfo"></div>
+      <div v-else class="mbtiinfo">
+        <!-- <div class="mbtiinfo"></div> -->
+        <img
+          src="@/assets/meetingimg.png"
+          alt=""
+          style="width: 500px; height: 500px"
+        />
       </div>
 
       <div
@@ -377,10 +382,6 @@ export default {
   align-items: auto;
 }
 .mbtiinfo {
-  background-color: rgb(255, 189, 207);
-  border-radius: 50%;
-  width: 500px;
-  height: 500px;
   position: absolute;
   left: 35%;
   top: 15%;

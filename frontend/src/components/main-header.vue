@@ -30,7 +30,45 @@
     />
   </div>
 
-  <el-dialog v-model="state.mypageDialog" @close="handleClose">
+  <el-dialog v-model="state.mypageDialog" @close="mypageClose">
+    <div style="text-align: center">
+      <img class="profile" :src="state.memberinfo.profileUrl" />
+      <table>
+        <tbody>
+          <tr>
+            <td class="label">MBTI</td>
+            <td>{{ state.memberinfo.mbti }}</td>
+          </tr>
+          <tr>
+            <td class="label">닉네임</td>
+            <td>{{ state.memberinfo.nickname }}</td>
+          </tr>
+          <tr>
+            <td class="label">성별</td>
+            <td v-if="state.memberinfo.gender == 'MALE'">남자</td>
+            <td v-else>여자</td>
+          </tr>
+          <tr>
+            <td class="label">생년월일</td>
+            <td>{{ state.memberinfo.birth }}</td>
+          </tr>
+          <tr>
+            <td class="label">사는지역</td>
+            <td>{{ state.memberinfo.sido }}</td>
+          </tr>
+          <tr>
+            <td class="label">관심사</td>
+            <td>{{ state.interests }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <el-button style="margin-top: 20px" @click="mypageUpdateOpen"
+        >정보 수정</el-button
+      >
+    </div>
+  </el-dialog>
+
+  <el-dialog v-model="state.mypageUpdateDialog" @close="mypageUpdateClose">
     <div style="text-align: center">
       <el-row class="filebox">
         <img class="profile" :src="state.memberinfo.profileUrl" />
@@ -143,7 +181,9 @@ export default {
     });
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
+      mypageUpdateDialog: false,
       mypageDialog: false,
+      interests: "",
       image: "",
     });
     const option1 = [
@@ -325,12 +365,40 @@ export default {
       router.push({ name: "friend" });
     };
     const goMyPage = function () {
-      state.mypageDialog = true;
+      mypageOpen();
       console.log("mypage", state.memberinfo);
     };
 
-    const handleClose = function () {
+    const mypageOpen = function () {
+      if (state.memberinfo.interests.length != 0) {
+        state.interests = "";
+        for (
+          let index = 0;
+          index < state.memberinfo.interests.length;
+          index++
+        ) {
+          state.interests += state.memberinfo.interests[index];
+          if (index < state.memberinfo.interests.length - 1) {
+            state.interests += ", ";
+          }
+        }
+      } else {
+        state.interests = "선택한 관심사가 없습니다.";
+      }
+      state.mypageDialog = true;
+    };
+
+    const mypageClose = function () {
       state.mypageDialog = false;
+    };
+
+    const mypageUpdateOpen = function () {
+      state.mypageDialog = false;
+      state.mypageUpdateDialog = true;
+    };
+
+    const mypageUpdateClose = function () {
+      state.mypageUpdateDialog = false;
     };
     const updateInfo = function () {
       store
@@ -353,7 +421,7 @@ export default {
           sessionStorage.removeItem("access-token");
           store.commit("accounts/SET_MEMBER_INFO", null);
           console.log(store.state.member);
-          state.mypageDialog = false;
+          state.mypageUpdateDialog = false;
           router.push({ name: "HomeView" });
         })
         .catch(function (err) {
@@ -384,7 +452,10 @@ export default {
       goHome,
       goPeople,
       goMyPage,
-      handleClose,
+      mypageOpen,
+      mypageClose,
+      mypageUpdateOpen,
+      mypageUpdateClose,
       updateInfo,
       deleteMember,
       login,
@@ -465,5 +536,17 @@ export default {
   width: 0;
   height: 0;
   overflow: hidden;
+}
+table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
+  font-size: 20px;
+  border-spacing: 0 20px;
+  border: 10px solid #fadce1;
+}
+.label {
+  width: 130px;
+  color: rgb(255, 91, 136);
 }
 </style>
