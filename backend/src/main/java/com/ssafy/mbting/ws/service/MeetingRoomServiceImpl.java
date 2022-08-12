@@ -7,7 +7,7 @@ import com.ssafy.mbting.ws.model.event.MeetingRoomAudioStageResultsMadeEvent;
 import com.ssafy.mbting.ws.model.event.ProposalResultsMadeEvent;
 import com.ssafy.mbting.ws.model.vo.MeetingRoom;
 import com.ssafy.mbting.ws.model.vo.StompUser;
-import com.ssafy.mbting.ws.repository.StompRepository;
+import com.ssafy.mbting.ws.repository.AppRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,21 +24,21 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final StompRepository stompRepository;
+    private final AppRepository appRepository;
     private final MemberService memberService;
     private final OpenviduService openviduService;
 
     @Override
     public void setProposalAcceptedAndHandleIt(String sessionId, Boolean accepted) {
-        stompRepository.setProposalAccepted(sessionId, accepted);
+        appRepository.setProposalAccepted(sessionId, accepted);
 
-        String matchedSessionId = stompRepository.findStompUserBySessionId(sessionId)
+        String matchedSessionId = appRepository.findStompUserBySessionId(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session Not Found!"))
                 .getMatchedMeetingUserSessionId();
 
         logger.debug("\n\nsubject: {}\nmatched: {}\n", sessionId, matchedSessionId);
 
-        Boolean opponentAccepted = stompRepository.findStompUserBySessionId(matchedSessionId)
+        Boolean opponentAccepted = appRepository.findStompUserBySessionId(matchedSessionId)
                 .orElseThrow(() -> {
                     logger.debug("\n\n이미 상대가 떠났습니다.\n");
                     applicationEventPublisher.publishEvent(new ProposalResultsMadeEvent(
@@ -65,16 +65,16 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
 
     @Override
     public void setVoiceResultAndHandleIt(String sessionId, AudioStageResult subjectVoiceResult) {
-        stompRepository.setVoiceResult(sessionId, subjectVoiceResult);
+        appRepository.setVoiceResult(sessionId, subjectVoiceResult);
 
-        StompUser stompUser = stompRepository.findStompUserBySessionId(sessionId)
+        StompUser stompUser = appRepository.findStompUserBySessionId(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session Not Found!"));
         String meetingRoomId = ofNullable(stompUser.getMeetingRoomId())
                 .orElseThrow(() -> new RuntimeException("Not In Room!"));
         int indexOnRoom = ofNullable(stompUser.getIndexOnRoom())
                 .orElseThrow(() -> new RuntimeException("Not In Room!"));
         int opponentIndexOnRoom = indexOnRoom == 0 ? 1 : 0;
-        MeetingRoom meetingRoom = stompRepository.findMeetingRoomByMeetingRoomId(meetingRoomId)
+        MeetingRoom meetingRoom = appRepository.findMeetingRoomByMeetingRoomId(meetingRoomId)
                 .orElseThrow(() -> new RuntimeException("Meeting Room Not Found!"));
         AudioStageResult opponentVoiceResult = meetingRoom.getMeetingRoomResult()[opponentIndexOnRoom].getVoiceResult();
 
