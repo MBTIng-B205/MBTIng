@@ -30,6 +30,7 @@
         </button></el-col
       >
     </el-row>
+
     <table class="table" v-if="state.messageList.length != 0">
       <colgroup>
         <col width="10%" />
@@ -84,6 +85,7 @@
       >검색한 쪽지가 없습니다!</el-row
     >
     <el-row class="exceptionMsg" v-else>친구에게 쪽지를 보내보세요!</el-row>
+
     <el-dialog v-model="state.messageDialog" @close="handleClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
         <span class="to"> To. </span>
@@ -115,7 +117,7 @@
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
         :current-page="state.currentPage"
-        :page-size="8"
+        :page-size="7"
         :total="state.msgcnt"
       />
     </div>
@@ -154,7 +156,7 @@ export default {
           page: 0,
           key: "",
           word: "",
-          size: 8,
+          size: 7,
         })
         .then(function (result) {
           console.log("result", result);
@@ -178,7 +180,7 @@ export default {
             page: 0,
             key: key.value,
             word: search.value,
-            size: 8,
+            size: 7,
           })
           .then(function (result) {
             console.log("search-result", result);
@@ -216,7 +218,7 @@ export default {
               page: 0,
               key: key.value,
               word: search.value,
-              size: 8,
+              size: 7,
             })
             .then(function (result) {
               console.log("result", result);
@@ -248,7 +250,7 @@ export default {
               page: state.currentPage - 1,
               key: key.value,
               word: search.value,
-              size: 8,
+              size: 7,
             })
             .then(function (result) {
               console.log("search-result", result);
@@ -274,7 +276,7 @@ export default {
           page: val - 1,
           key: key.value,
           word: search.value,
-          size: 8,
+          size: 7,
         })
         .then(function (result) {
           console.log("result", result);

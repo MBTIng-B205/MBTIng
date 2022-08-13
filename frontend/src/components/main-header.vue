@@ -577,25 +577,6 @@ export default {
   color: palevioletred;
   background-color: #fbeff1;
   border-color: #fbeff1;
-
-  /* background-color: #fde2e2;
-  color: #f56c6c;
-  border-color: #f56c6c; */
-}
-#checkButton {
-  display: inline-block;
-  padding: 5px 10px;
-  color: black;
-  vertical-align: middle;
-  cursor: pointer;
-  border-radius: 5px;
-  outline: 0;
-  border: 0;
-}
-#checkButton:hover {
-  background-color: #fde2e2;
-  color: #f56c6c;
-  border-color: #f56c6c;
 }
 
 .filebox input[type="file"] {
