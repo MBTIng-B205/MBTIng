@@ -6,6 +6,7 @@
         style="float: right; margin-top: 25px"
         type="danger"
         @click="goHome"
+        size="large"
         round
         >소개팅종료</el-button
       >

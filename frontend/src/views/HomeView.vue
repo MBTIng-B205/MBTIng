@@ -41,7 +41,9 @@
         <div>
           <div>
             <el-link :href="contents1[index].site" :underline="false">
-              <el-button type="danger" round>테스트시작</el-button></el-link
+              <el-button type="danger" size="large" round
+                >테스트시작</el-button
+              ></el-link
             >
           </div>
         </div>

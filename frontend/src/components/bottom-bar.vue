@@ -1,11 +1,19 @@
 <template>
-  <div class="controller" style="display: flex; justify-content: space-between">
+  <div
+    class="controller"
+    style="
+      display: flex;
+      justify-content: space-between;
+      background-color: rgb(255, 189, 207);
+    "
+  >
     <div class="leftside" style="margin-left: 2rem">
       <el-button
         type="success"
         :icon="BellFilled"
         style="margin-right: 7px"
         @click="greenlight"
+        size="large"
         circle
       />
       <el-button
@@ -13,9 +21,10 @@
         :icon="BellFilled"
         style="margin-right: 7px"
         @click="redlight"
+        size="large"
         circle
       />
-      <el-button type="info" :icon="QuestionFilled" circle />
+      <el-button type="info" :icon="QuestionFilled" size="large" circle />
     </div>
 
     <div>
@@ -25,10 +34,18 @@
       </div>
     </div>
     <div class="rightside" style="margin-right: 2rem">
-      <button @click="addFriend">친구추가</button>
+      <el-button
+        type="primary"
+        :icon="WarningFilled"
+        size="large"
+        round
+        @click="addFriend"
+        >친구추가</el-button
+      >
       <el-button
         type="danger"
         :icon="WarningFilled"
+        size="large"
         round
         @click="
           receiveClose();
@@ -36,7 +53,13 @@
         "
         >신고하기</el-button
       >
-      <el-button @click="chatOnOff" type="info" :icon="ChatDotSquare" round />
+      <el-button
+        @click="chatOnOff"
+        type="info"
+        :icon="ChatDotSquare"
+        size="large"
+        round
+      />
     </div>
   </div>
 </template>
@@ -165,6 +188,7 @@ export default {
 .controller {
   width: 100%;
   height: 50px;
+  align-items: center;
 }
 .custom-icon {
   font-size: 1.5rem;
