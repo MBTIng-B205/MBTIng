@@ -2,12 +2,14 @@ package com.ssafy.mbting.ws.service;
 
 import com.ssafy.mbting.db.enums.Gender;
 import com.ssafy.mbting.ws.model.algorithm.MatchingScoreBoard;
+import com.ssafy.mbting.ws.model.event.waiting.RequestToStartMatchingEvent;
 import com.ssafy.mbting.ws.model.event.waiting.WaitingMeetingUserMatchedEvent;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import com.ssafy.mbting.ws.repository.AppRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -24,25 +26,44 @@ import static java.util.Optional.ofNullable;
 @RequiredArgsConstructor
 public class MeetingMatchServiceImpl implements MeetingMatchService {
 
+    @Value("${com.mbting.match.condition.enough.size}")
+    private int enoughSizeToStartMatching;
+    @Value("${com.mbting.match.condition.score.gender}")
+    private int genderScore;
+    @Value("${com.mbting.match.condition.score.sido}")
+    private int sidoScore;
+    @Value("${com.mbting.match.condition.score.interest}")
+    private int interestScore;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
     private final AppRepository appRepository;
+    private boolean inProgress = false;
+
+    public int getEnoughSizeToStartMatching() {
+        return enoughSizeToStartMatching;
+    }
 
     public void startMatching() {
-        // Todo: 구현
+        if (inProgress) {
+            logger.debug("매칭이 진행중이기 때문에 매칭을 시작하지 않습니다.");
+            return;
+        }
+        inProgress = true;
 
         String subject, matched;
 
         subject = appRepository.getFirstSessionId().orElseThrow(() -> new RuntimeException("Queue Empty!"));
+
+        appRepository.leaveFromQueue(subject);
 
         MeetingUser subjectFeatures = ofNullable(appRepository.findStompUserBySessionId(subject)
                 .orElseThrow(() -> new RuntimeException("Session Not Found!"))
                 .getMeetingUser()).orElseThrow(() -> new RuntimeException("No Meeting User!"));
 
         MatchingScoreBoard scoreBoard = MatchingScoreBoard.builder()
-                .genderScore(100)
-                .sidoScore(10)
-                .interestScore(1)
+                .genderScore(genderScore)
+                .sidoScore(sidoScore)
+                .interestScore(interestScore)
                 .build();
 
         Gender targetGender = subjectFeatures.getGender() == MALE ? FEMALE : MALE;
@@ -68,10 +89,18 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
 
         matched = scoreBoard.getBestTarget();
 
+        appRepository.leaveFromQueue(matched);
+
         applicationEventPublisher.publishEvent(new WaitingMeetingUserMatchedEvent(
                 this,
                 Clock.systemDefaultZone(),
                 subject,
                 matched));
+
+        inProgress = false;
+
+        applicationEventPublisher.publishEvent(new RequestToStartMatchingEvent(
+                this,
+                Clock.systemDefaultZone()));
     }
 }

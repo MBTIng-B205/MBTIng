@@ -1,9 +1,9 @@
 package com.ssafy.mbting.ws.eventListener;
 
-import com.ssafy.mbting.ws.model.event.waiting.RequestToJoinQueueEvent;
+import com.ssafy.mbting.ws.model.event.waiting.RequestToJoinToQueueEvent;
 import com.ssafy.mbting.ws.model.event.waiting.WaitingMeetingUserMatchedEvent;
 import com.ssafy.mbting.ws.model.event.waiting.EnoughToStartMatchingEvent;
-import com.ssafy.mbting.ws.model.event.waiting.WaitingMeetingUserQueuedEvent;
+import com.ssafy.mbting.ws.model.event.waiting.RequestToStartMatchingEvent;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.Proposal;
 import com.ssafy.mbting.ws.model.vo.IndividualDestination;
@@ -36,7 +36,7 @@ public class MeetingMatchEventListener {
 
     @Async
     @EventListener
-    public void onRequestToJoin(RequestToJoinQueueEvent event) {
+    public void onRequestToJoinToQueue(RequestToJoinToQueueEvent event) {
         String sessionId = event.getSessionId();
         MeetingUser meetingUser = event.getMeetingUser();
 
@@ -49,12 +49,12 @@ public class MeetingMatchEventListener {
 
     @Async
     @EventListener
-    public void onQueued(WaitingMeetingUserQueuedEvent event) {
-        logger.debug("\n\nQueued 이벤트 발생함\n");
-        // Todo: 매치 시작 트리거 조건 체크...
+    public void onRequestToStartMatching(RequestToStartMatchingEvent event) {
+        logger.debug("\n\n매칭 시작 요청 이벤트 발생함\n이벤트 소스: {}\n", event.getSource());
 
-        // 임시로 세 명 오면 시작
-        if (waitingMeetingService.getQueueSize() < 3) return;
+        if (waitingMeetingService.getQueueSize() < meetingMatchService.getEnoughSizeToStartMatching())
+            return;
+
         applicationEventPublisher.publishEvent(new EnoughToStartMatchingEvent(
                 this,
                 Clock.systemDefaultZone()
@@ -63,21 +63,10 @@ public class MeetingMatchEventListener {
 
     @Async
     @EventListener
-    public void onEnough(EnoughToStartMatchingEvent event) {
-
+    public void onEnoughToStartMatching(EnoughToStartMatchingEvent event) {
         logger.debug("\n\nEnough 이벤트 발생함\n");
 
-//        meetingMatchService.startMatching();
-
-        //임시로 먼저 온 두 명을 무조건 꺼냄
-        String sessionId1 = waitingMeetingService.getFirstSessionId();
-        String sessionId2 = waitingMeetingService.getFirstSessionId();
-
-        applicationEventPublisher.publishEvent(new WaitingMeetingUserMatchedEvent(
-                this,
-                Clock.systemDefaultZone(),
-                sessionId1,
-                sessionId2));
+        meetingMatchService.startMatching();
     }
 
     @Async
