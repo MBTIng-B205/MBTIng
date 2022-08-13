@@ -44,6 +44,9 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
     }
 
     public void startMatching() {
+
+        logger.debug("\n\n\n          == ****************************** ==\n          == ******* START MATCHING ******* ==\n          == ****************************** ==\n\n");
+
         if (inProgress) {
             logger.debug("매칭이 진행중이기 때문에 매칭을 시작하지 않습니다.");
             return;

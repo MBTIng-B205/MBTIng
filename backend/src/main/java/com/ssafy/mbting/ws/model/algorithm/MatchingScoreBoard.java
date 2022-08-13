@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -46,10 +47,11 @@ public class MatchingScoreBoard {
     }
 
     private void addScore(String id, int score) {
-        int oldScore = idScoreMap.get(id);
+        logger.debug("id: {}, score: {}", id, score);
 
-        idScoreMap.computeIfPresent(id, (i, s) -> s + score);
-        idScoreMap.putIfAbsent(id, score);
+        idScoreMap.putIfAbsent(id, 0);
+        int oldScore = idScoreMap.get(id);
+        idScoreMap.put(id, oldScore + score);
 
         int newScore = idScoreMap.get(id);
 
