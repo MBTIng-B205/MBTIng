@@ -3,6 +3,7 @@
 export const meetings = {
   namespaced: true,
   state: {
+    ovsocket: null,
     mtsocket: null,
     proposal: null,
     token: null,
@@ -11,6 +12,9 @@ export const meetings = {
     videoflag: false,
   },
   mutations: {
+    SET_OVSOCKET: (state, ovsocket) => {
+      state.ovsocket = ovsocket;
+    },
     SET_SOCKET: (state, mtsocket) => {
       state.mtsocket = mtsocket;
     },
@@ -34,6 +38,9 @@ export const meetings = {
     },
   },
   getters: {
+    getOvsocket(state) {
+      return state.ovsocket;
+    },
     getPartner(state) {
       return state.partner;
     },

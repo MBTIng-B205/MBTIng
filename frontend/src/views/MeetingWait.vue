@@ -65,6 +65,7 @@ export default {
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       proposal: computed(() => store.getters["meetings/getProposal"]),
       mtsocket: computed(() => store.getters["meetings/getSocket"]),
+      ovsocket: computed(() => store.getters["meetings/getOvsocket"]),
     });
     onMounted(() => {
       connect();
@@ -181,6 +182,9 @@ export default {
                 router.push({ name: "MeetingWait" });
               }
               if (obj.command == "noVideoStage") {
+                console.log("noVideoStage");
+                state.ovsocket.disconnect();
+                store.commit("meetings/SET_OVSOCKET", null);
                 state.mtsocket.disconnect();
                 store.commit("meetings/SET_SOCKET", null);
                 router.push({ name: "HomeView" });
@@ -189,9 +193,19 @@ export default {
                 store.commit("meetings/SET_VIDEOFLAG", true);
               }
               if (obj.command == "opponentLeft") {
-                state.mtsocket.disconnect();
-                store.commit("meetings/SET_SOCKET", null);
-                router.push({ name: "MeetingWait" });
+                if (obj.data.status == "INPROGRESS") {
+                  state.mtsocket.disconnect();
+                  store.commit("meetings/SET_SOCKET", null);
+                  router.push({ name: "MeetingWait" });
+                }
+                if (obj.data.status == "INROOM") {
+                  console.log("INROOM");
+                  state.ovsocket.disconnect();
+                  store.commit("meetings/SET_OVSOCKET", null);
+                  state.mtsocket.disconnect();
+                  store.commit("meetings/SET_SOCKET", null);
+                  router.push({ name: "HomeView" });
+                }
               }
             },
             {
