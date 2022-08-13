@@ -19,6 +19,7 @@ public class OpenviduServiceImpl implements OpenviduService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final OpenVidu openVidu;
+    private final ConnectionProperties connectionProperties;
     private final Map<String, Session> mapSessions;
     private final Map<String, Set<String>> mapSessionNamesTokens;
 
@@ -26,6 +27,10 @@ public class OpenviduServiceImpl implements OpenviduService {
             @Value("${com.mbting.openvidu.server.url}") String OPENVIDU_URL,
             @Value("${com.mbting.openvidu.server.secret}") String SECRET) {
         openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
+        connectionProperties = new ConnectionProperties.Builder()
+                .type(ConnectionType.WEBRTC)
+                .role(OpenViduRole.PUBLISHER)
+                .build();
         mapSessions = newConcurrentMap();
         mapSessionNamesTokens = newConcurrentMap();
     }
@@ -36,11 +41,7 @@ public class OpenviduServiceImpl implements OpenviduService {
             Session session = ofNullable(mapSessions.get(sessionName))
                     .orElse(openVidu.createSession());
 
-            String token = session.createConnection(new ConnectionProperties.Builder()
-                            .type(ConnectionType.WEBRTC)
-                            .role(OpenViduRole.PUBLISHER)
-                            .build())
-                    .getToken();
+            String token = session.createConnection(connectionProperties).getToken();
 
             mapSessions.putIfAbsent(sessionName, session);
             Set<String> tokens = ofNullable(mapSessionNamesTokens.get(sessionName))
