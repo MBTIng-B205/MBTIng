@@ -4,10 +4,10 @@
       <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </div>
 
-    <el-dropdown v-if="state.memberinfo">
+    <el-dropdown v-if="state.memberinfo" class="dropdown-css">
       <img class="el-dropdown-link" :src="state.memberinfo.profileUrl" />
       <template #dropdown>
-        <el-dropdown-menu>
+        <el-dropdown-menu class="dropdown-css">
           <el-dropdown-item @click="goMyPage" :icon="Avatar"
             >마이페이지</el-dropdown-item
           >
@@ -62,7 +62,11 @@
           </tr>
         </tbody>
       </table>
-      <el-button style="margin-top: 20px" @click="mypageUpdateOpen" size="large"
+      <el-button
+        class="dropdown-css"
+        style="margin-top: 20px"
+        @click="mypageUpdateOpen"
+        size="large"
         >정보 수정</el-button
       >
     </div>
@@ -616,5 +620,18 @@ export default {
 }
 .data {
   width: 300px;
+}
+.mypage,
+.dropdown-css,
+.selected {
+  --el-color-primary: #f56c6c;
+  --el-color-primary-light-3: #f89898;
+  --el-color-primary-light-5: #fab6b6;
+  --el-color-primary-light-7: #fcd3d3;
+  --el-color-primary-light-8: #fde2e2;
+  --el-color-primary-light-9: #fef0f0;
+  --el-color-primary-dark-2: #c45656;
+  --el-select-input-focus-border-color: #f56c6c;
+  --el-menu-hover-text-color: #f56c6c;
 }
 </style>

@@ -39,7 +39,11 @@
               >
             </el-form-item>
             <el-form-item label="성별" style="margin-bottom: 10px">
-              <el-radio-group v-model="form.gender" style="margin-left: 30px">
+              <el-radio-group
+                v-model="form.gender"
+                style="margin-left: 30px"
+                type="danger"
+              >
                 <el-radio label="MALE">남자</el-radio>
                 <el-radio label="FEMALE">여자</el-radio>
               </el-radio-group>
@@ -89,7 +93,7 @@
                 </el-checkbox-group>
               </el-form-item>
             </el-col> </el-form
-          ><el-button type="warning" plain size="large" @click="signup"
+          ><el-button type="danger" plain size="large" @click="signup" round
             >확인</el-button
           >
         </form>
@@ -236,6 +240,10 @@ export default {
 </script>
 
 <style>
+.el-radio__input.is-checked .el-radio__inner {
+  border-color: #f56c6c;
+  background: #f56c6c;
+}
 .el-row {
   display: flex;
   flex-wrap: wrap;
@@ -247,6 +255,12 @@ export default {
   flex-direction: column;
 }
 .el-form-item {
-  margin-bottom: 10px;
+  --el-color-primary: #f56c6c;
+  --el-color-primary-light-3: #f89898;
+  --el-color-primary-light-5: #fab6b6;
+  --el-color-primary-light-7: #fcd3d3;
+  --el-color-primary-light-8: #fde2e2;
+  --el-color-primary-light-9: #fef0f0;
+  --el-color-primary-dark-2: #c45656;
 }
 </style>
