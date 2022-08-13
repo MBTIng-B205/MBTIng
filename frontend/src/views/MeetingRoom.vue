@@ -21,6 +21,10 @@
           :stream-manager="state.publisher"
           @click="updateMainVideoStreamManager(state.publisher)"
         />
+        <video-controller
+          @videoOnOff="videoOnOff"
+          @audioOnOff="audioOnOff"
+        ></video-controller>
       </div>
       <div v-if="state.videoflag">
         <div
