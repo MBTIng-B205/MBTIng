@@ -1,6 +1,6 @@
 package com.ssafy.mbting.ws.stompCommandHandler;
 
-import com.ssafy.mbting.ws.model.event.RequestToJoinQueueEvent;
+import com.ssafy.mbting.ws.model.event.waiting.RequestToJoinToQueueEvent;
 import com.ssafy.mbting.ws.model.stompMessageHeader.SubscribeHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import lombok.*;
@@ -35,7 +35,7 @@ public class SubscribeHandler implements StompCommandHandler {
             throw new RuntimeException("Bad Request!");
         }
 
-        applicationEventPublisher.publishEvent(new RequestToJoinQueueEvent(
+        applicationEventPublisher.publishEvent(new RequestToJoinToQueueEvent(
                 this,
                 Clock.systemDefaultZone(),
                 stompHeaderAccessor.getSessionId(),

@@ -32,11 +32,17 @@ public class MeetingRoom {
                 .meetingRoomStatus(new Boolean[]{true, true})
                 .meetingRoomResults(new AnalysisRegisterRequest[]{
                         AnalysisRegisterRequest.builder()
-                                .fromMbti(mbti1).toMbti(mbti2)
-                                .startTime(now).build(),
+                                .fromMbti(mbti1)
+                                .toMbti(mbti2)
+                                .startTime(now)
+                                .friendResult(false)
+                                .build(),
                         AnalysisRegisterRequest.builder()
-                                .fromMbti(mbti2).toMbti(mbti1)
-                                .startTime(now).build()})
+                                .fromMbti(mbti2)
+                                .toMbti(mbti1)
+                                .startTime(now)
+                                .friendResult(false)
+                                .build()})
                 .build();
     }
 }

@@ -1,7 +1,5 @@
 package com.ssafy.mbting.ws.repository;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.ssafy.mbting.api.request.AudioStageResult;
 import com.ssafy.mbting.db.enums.Gender;
 import com.ssafy.mbting.ws.model.vo.MeetingRoom;
@@ -13,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static com.google.common.collect.Sets.newConcurrentHashSet;
 
 import static java.util.Optional.*;
 
@@ -24,17 +22,32 @@ import static java.util.Optional.*;
 public class AppRepositoryImpl implements AppRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final Map<String, StompUser> sessionIdStompUserMap = Maps.newConcurrentMap();
+    private final Map<String, StompUser> sessionIdStompUserMap = newConcurrentMap();
     private final LinkedHashSet<String> waitingMeetingUserQueue = new LinkedHashSet<>();
-    private final Map<String, MeetingRoom> meetingRoomIdMeetingRoomMap = Maps.newConcurrentMap();
-    private final Map<Gender, Set<String>> genderSessionIdMap = Maps.newConcurrentMap();
-    private final Map<String, Set<String>> sidoSessionIdMap = Maps.newConcurrentMap();
-    private final Map<String, Set<String>> interestSessionIdMap = Maps.newConcurrentMap();
+    private final Map<String, MeetingRoom> meetingRoomIdMeetingRoomMap = newConcurrentMap();
+    private final Map<Gender, Set<String>> genderSessionIdMap = newConcurrentMap();
+    private final Map<String, Set<String>> sidoSessionIdMap = newConcurrentMap();
+    private final Map<String, Set<String>> interestSessionIdMap = newConcurrentMap();
 
     @PostConstruct
     private void init() {
-        genderSessionIdMap.put(Gender.MALE, Sets.newHashSet());
-        genderSessionIdMap.put(Gender.FEMALE, Sets.newHashSet());
+        genderSessionIdMap.put(Gender.MALE, newConcurrentHashSet());
+        genderSessionIdMap.put(Gender.FEMALE, newConcurrentHashSet());
+    }
+
+    @Override
+    public Map<Gender, Set<String>> getGenderTable() {
+        return genderSessionIdMap;
+    }
+
+    @Override
+    public Map<String, Set<String>> getSidoTable() {
+        return sidoSessionIdMap;
+    }
+
+    @Override
+    public Map<String, Set<String>> getInterestTable() {
+        return interestSessionIdMap;
     }
 
     @Override
@@ -44,6 +57,13 @@ public class AppRepositoryImpl implements AppRepository {
                 , sessionId
                 , stompUser);
         return oldValue;
+    }
+
+    @Override
+    public Optional<StompUser> findStompUserBySessionId(String sessionId) {
+        Optional<StompUser> stompUser = ofNullable(sessionIdStompUserMap.get(sessionId));
+        stompUser.ifPresent(user -> logger.debug("\n\nStompUser found\n({}, {})\n", sessionId, user));
+        return stompUser;
     }
 
     @Override
@@ -163,13 +183,6 @@ public class AppRepositoryImpl implements AppRepository {
     }
 
     @Override
-    public Optional<StompUser> findStompUserBySessionId(String sessionId) {
-        Optional<StompUser> stompUser = ofNullable(sessionIdStompUserMap.get(sessionId));
-        stompUser.ifPresent(user -> logger.debug("\n\nStompUser found\n({}, {})\n", sessionId, user));
-        return stompUser;
-    }
-
-    @Override
     public int getQueueSize() {
         int size = waitingMeetingUserQueue.size();
         logger.debug("\n\n현재 대기열 크기: {}\n", size);
@@ -189,10 +202,10 @@ public class AppRepositoryImpl implements AppRepository {
                 .getMeetingUser();
         genderSessionIdMap.get(meetingUser.getGender()).add(sessionId);
         String sido = meetingUser.getSido();
-        sidoSessionIdMap.putIfAbsent(sido, Sets.newConcurrentHashSet());
+        sidoSessionIdMap.putIfAbsent(sido, newConcurrentHashSet());
         sidoSessionIdMap.get(sido).add(sessionId);
         meetingUser.getInterests().forEach(interest -> {
-            interestSessionIdMap.putIfAbsent(interest, Sets.newConcurrentHashSet());
+            interestSessionIdMap.putIfAbsent(interest, newConcurrentHashSet());
             interestSessionIdMap.get(interest).add(sessionId);
         });
         logger.debug("\n\nFeatureUserTables 에 \"{}\" 넣음\nMeetingUser: {}\n", sessionId, meetingUser);

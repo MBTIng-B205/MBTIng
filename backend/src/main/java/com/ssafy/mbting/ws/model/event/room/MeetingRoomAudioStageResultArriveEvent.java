@@ -1,4 +1,4 @@
-package com.ssafy.mbting.ws.model.event;
+package com.ssafy.mbting.ws.model.event.room;
 
 import com.ssafy.mbting.api.request.AudioStageResult;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.ssafy.mbting.ws.model.event;
+package com.ssafy.mbting.ws.model.event.proposal;
 
 import lombok.*;
 import org.springframework.context.ApplicationEvent;

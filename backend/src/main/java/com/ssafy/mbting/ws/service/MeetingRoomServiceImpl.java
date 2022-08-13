@@ -3,7 +3,7 @@ package com.ssafy.mbting.ws.service;
 import com.ssafy.mbting.api.request.AnalysisRegisterRequest;
 import com.ssafy.mbting.api.request.AudioStageResult;
 import com.ssafy.mbting.api.service.OpenviduService;
-import com.ssafy.mbting.ws.model.event.MeetingRoomAudioStageResultsMadeEvent;
+import com.ssafy.mbting.ws.model.event.room.MeetingRoomAudioStageResultsMadeEvent;
 import com.ssafy.mbting.ws.model.vo.MeetingRoom;
 import com.ssafy.mbting.ws.model.vo.StompUser;
 import com.ssafy.mbting.ws.repository.AppRepository;
@@ -17,7 +17,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 import static java.util.Optional.ofNullable;
 
@@ -143,6 +142,21 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
             Arrays.stream(room.getMeetingRoomResults())
                     .filter(result -> !ofNullable(result.getEndTime()).isPresent())
                     .forEach(result -> result.setEndTime(now));
+        });
+    }
+
+    @Override
+    public void setFriendResultToTrue(String sessionId) {
+        appRepository.findStompUserBySessionId(sessionId).ifPresent(user -> {
+            int indexOnRoom = user.getIndexOnRoom();
+            String meetingRoomId = user.getMeetingRoomId();
+            appRepository.findMeetingRoomByMeetingRoomId(meetingRoomId).ifPresent((room -> {
+                room.getMeetingRoomResults()[indexOnRoom].setFriendResult(true);
+                logger.debug("\n\n미팅룸 {}[{}] 의 친구 추가 여부를 True 로 세팅\nMeeting Room: {}\n"
+                        , meetingRoomId
+                        , indexOnRoom
+                        , room);
+            }));
         });
     }
 }
