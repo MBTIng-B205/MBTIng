@@ -4,7 +4,7 @@
       <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </div>
 
-    <el-dropdown v-if="state.memberinfo" class="dropdown-css">
+    <el-dropdown v-if="state.memberinfo">
       <img class="el-dropdown-link" :src="state.memberinfo.profileUrl" />
       <template #dropdown>
         <el-dropdown-menu class="dropdown-css">
@@ -577,7 +577,27 @@ export default {
   color: palevioletred;
   background-color: #fbeff1;
   border-color: #fbeff1;
+
+  /* background-color: #fde2e2;
+  color: #f56c6c;
+  border-color: #f56c6c; */
 }
+#checkButton {
+  display: inline-block;
+  padding: 5px 10px;
+  color: black;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 5px;
+  outline: 0;
+  border: 0;
+}
+#checkButton:hover {
+  background-color: #fde2e2;
+  color: #f56c6c;
+  border-color: #f56c6c;
+}
+
 .filebox input[type="file"] {
   position: absolute;
   width: 0;
@@ -590,7 +610,7 @@ export default {
   width: 500px;
   font-size: 20px;
   border-spacing: 0 20px;
-  border: 10px solid #fadce1;
+  border: 10px solid #fde2e2;
 }
 .mypageLabel {
   width: 150px;
@@ -616,7 +636,8 @@ export default {
 }
 .mypage,
 .dropdown-css,
-.selected {
+.selected,
+.el-dropdown__popper {
   --el-color-primary: #f56c6c;
   --el-color-primary-light-3: #f89898;
   --el-color-primary-light-5: #fab6b6;
@@ -625,6 +646,7 @@ export default {
   --el-color-primary-light-9: #fef0f0;
   --el-color-primary-dark-2: #c45656;
   --el-select-input-focus-border-color: #f56c6c;
-  --el-menu-hover-text-color: #f56c6c;
+  --el-dropdown-menuItem-hover-color: #f56c6c;
+  --el-dropdown-menuItem-hover-fill: #fef0f0;
 }
 </style>
