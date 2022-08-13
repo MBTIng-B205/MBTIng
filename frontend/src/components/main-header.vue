@@ -4,7 +4,7 @@
       <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </div>
 
-    <el-dropdown v-if="state.memberinfo" trigger="click">
+    <el-dropdown v-if="state.memberinfo">
       <img class="el-dropdown-link" :src="state.memberinfo.profileUrl" />
       <template #dropdown>
         <el-dropdown-menu class="dropdown-css">
