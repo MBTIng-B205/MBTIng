@@ -389,7 +389,7 @@ export default {
       store.commit("meetings/SET_SOCKET", null);
       console.log(state.mtsocket);
       console.log(state.session);
-      state.ovsocket.disconnect();
+      state.session.disconnect();
       store.commit("meetings/SET_OVSOCKET", null);
     };
 

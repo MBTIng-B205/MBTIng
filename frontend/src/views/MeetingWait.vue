@@ -200,9 +200,9 @@ export default {
                 }
                 if (obj.data.status == "INROOM") {
                   store.commit("meetings/SET_VIDEOFLAG", false);
-                  store.commit("meetings/SET_OVSOCKET", null);
                   console.log("INROOM");
                   state.ovsocket.disconnect();
+                  store.commit("meetings/SET_OVSOCKET", null);
                   store.commit("meetings/SET_OVSOCKET", null);
                   state.mtsocket.disconnect();
                   store.commit("meetings/SET_SOCKET", null);
