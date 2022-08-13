@@ -1,5 +1,6 @@
 package com.ssafy.mbting.ws.model.stompMessageBody.sub;
 
+import com.ssafy.mbting.ws.model.vo.StompUserStatus;
 import lombok.*;
 
 @Data
@@ -8,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class OpponentLeft {
 
-    private String message;
+    private StompUserStatus status;
 }

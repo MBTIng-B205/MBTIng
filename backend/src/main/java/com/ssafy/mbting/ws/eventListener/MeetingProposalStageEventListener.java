@@ -3,7 +3,9 @@ package com.ssafy.mbting.ws.eventListener;
 import com.ssafy.mbting.api.response.MemberResponse;
 import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.db.entity.Member;
-import com.ssafy.mbting.ws.model.event.*;
+import com.ssafy.mbting.ws.model.event.proposal.ProposalBothAcceptedEvent;
+import com.ssafy.mbting.ws.model.event.proposal.ProposalResultArriveEvent;
+import com.ssafy.mbting.ws.model.event.proposal.ProposalResultsMadeEvent;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.MeetingRoom;
 import com.ssafy.mbting.ws.model.vo.IndividualDestination;
@@ -21,7 +23,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 @Component

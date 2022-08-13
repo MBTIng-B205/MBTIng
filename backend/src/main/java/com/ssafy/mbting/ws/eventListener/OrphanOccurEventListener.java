@@ -34,23 +34,11 @@ public class OrphanOccurEventListener {
         logger.debug("\n\n!고아 발생! 이벤트 발생\n고아 세션 ID: {}\n", orphanSessionId);
 
         appStompService.getStompUserBySessionId(orphanSessionId).ifPresent(user -> {
-            String message;
-            switch (user.getStompUserStatus()) {
-                case INPROGRESS:
-                    message = "상대방이 제안을 거절했습니다.";
-                    break;
-                case INROOM:
-                    message = "상대방이 룸에서 나갔습니다.";
-                    break;
-                default:
-                    message = "원인을 알 수 없습니다.";
-                    break;
-            }
             simpMessagingTemplate.convertAndSend(
                     IndividualDestination.of(user.getEmail()).toString(),
                     BaseMessageBody.builder()
                             .command("opponentLeft")
-                            .data(OpponentLeft.builder().message(message).build())
+                            .data(OpponentLeft.builder().status(user.getStompUserStatus()).build())
                             .build());
         });
     }

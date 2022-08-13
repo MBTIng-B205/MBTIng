@@ -1,4 +1,4 @@
-package com.ssafy.mbting.ws.model.event;
+package com.ssafy.mbting.ws.model.event.waiting;
 
 import lombok.*;
 import org.springframework.context.ApplicationEvent;

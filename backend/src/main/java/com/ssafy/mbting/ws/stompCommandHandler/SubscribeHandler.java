@@ -1,6 +1,6 @@
 package com.ssafy.mbting.ws.stompCommandHandler;
 
-import com.ssafy.mbting.ws.model.event.RequestToJoinQueueEvent;
+import com.ssafy.mbting.ws.model.event.waiting.RequestToJoinQueueEvent;
 import com.ssafy.mbting.ws.model.stompMessageHeader.SubscribeHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import lombok.*;
