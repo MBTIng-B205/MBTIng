@@ -64,7 +64,7 @@ export default {
       console.log("greenlight 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: true,
+        data: { result: "GREEN" },
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);
@@ -73,7 +73,7 @@ export default {
       console.log("redlight 실행");
       const msg = {
         command: "meetingAudioStageResult",
-        data: true,
+        data: { result: "RED" },
       };
       console.log(msg);
       store.dispatch("meetings/send", msg);

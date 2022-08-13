@@ -1,13 +1,13 @@
 package com.ssafy.mbting.ws.repository;
 
+import com.ssafy.mbting.api.request.AudioStageResult;
 import com.ssafy.mbting.ws.model.vo.MeetingRoom;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import com.ssafy.mbting.ws.model.vo.StompUser;
-import com.ssafy.mbting.ws.model.vo.StompUserStatus;
 
 import java.util.Optional;
 
-public interface WaitingMeetingUserRepository {
+public interface AppRepository {
 
     StompUser createSession(String sessionId, StompUser stompUser);
     void removeSession(String sessionId);
@@ -15,11 +15,14 @@ public interface WaitingMeetingUserRepository {
     void joinToQueue(String sessionId);
     void leaveFromQueue(String sessionId);
     void setMatchedMeetingUser(String subjectSessionId, String matchedSessionId);
-    Boolean getProposalAccepted(String sessionId);
     void setProposalAccepted(String sessionId, Boolean accepted);
+    Optional<MeetingRoom> findMeetingRoomByMeetingRoomId(String meetingRoomId);
+    void setVoiceResult(String sessionId, AudioStageResult greenLight);
     void saveMeetingRoom(String meetingRoomId, MeetingRoom meetingRoom);
     void setMeetingRoomIdAndIndex(String sessionId, String meetingRoomId, Integer indexOnRoom);
-    Optional<StompUser> findBySessionId(String sessionId);
+    void setMeetingRoomStatusToFalse(String meetingRoomId, int indexOnRoom);
+    void removeMeetingRoom(String meetingRoomId);
+    Optional<StompUser> findStompUserBySessionId(String sessionId);
     int getQueueSize();
     Optional<String> getFirstSessionId();
 }
