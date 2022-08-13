@@ -21,6 +21,10 @@
           :stream-manager="state.publisher"
           @click="updateMainVideoStreamManager(state.publisher)"
         />
+        <video-controller
+          @videoOnOff="videoOnOff"
+          @audioOnOff="audioOnOff"
+        ></video-controller>
       </div>
       <div v-if="state.videoflag">
         <div
@@ -384,12 +388,13 @@ export default {
     const goHome = function () {
       router.push({ name: "HomeView" });
       console.log(state.mtsocket);
+      store.commit("meetings/SET_VIDEOFLAG", false);
       state.mtsocket.disconnect();
+      store.commit("meetings/SET_SOCKET", null);
       console.log(state.mtsocket);
       console.log(state.session);
       state.session.disconnect();
-      console.log(state.session);
-      store.commit("meetings/SET_SOCKET", null);
+      store.commit("meetings/SET_OVSOCKET", null);
     };
 
     return {

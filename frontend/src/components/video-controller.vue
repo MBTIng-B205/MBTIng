@@ -32,14 +32,6 @@
       round
       :icon="Mute"
     />
-
-    <el-button
-      @click="leaveSession"
-      type="danger"
-      size="large"
-      :icon="CloseBold"
-      round
-    ></el-button>
   </div>
 </template>
 
