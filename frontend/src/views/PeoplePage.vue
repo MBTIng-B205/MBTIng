@@ -3,22 +3,50 @@
 
   <el-container style="height: 620px">
     <el-aside width="240px" height="100%"
-      ><el-menu>
+      ><el-menu background-color="white">
         <el-menu-item>
-          <router-link :to="{ name: 'friend' }" class="link"
+          <router-link
+            :to="{ name: 'friend' }"
+            class="link"
+            :class="{ linkActive: state.friendActive }"
+            @click="
+              state.friendActive = true;
+              state.messageActive = 0;
+            "
             >친구 리스트</router-link
           ></el-menu-item
         >
         <el-sub-menu
-          ><template #title><span class="link">쪽지 리스트</span></template>
+          ><template #title
+            ><span
+              class="link"
+              :class="{ linkActive: !state.friendActive }"
+              @click="state.friendActive = false"
+              >쪽지 리스트</span
+            ></template
+          >
           <el-menu-item-group>
             <el-menu-item>
-              <router-link :to="{ name: 'receiveMessage' }" class="link"
+              <router-link
+                :to="{ name: 'receiveMessage' }"
+                class="link"
+                :class="{ linkActive: state.messageActive == 1 }"
+                @click="
+                  state.friendActive = false;
+                  state.messageActive = 1;
+                "
                 >받은 쪽지함</router-link
               ></el-menu-item
             >
             <el-menu-item>
-              <router-link :to="{ name: 'sendMessage' }" class="link"
+              <router-link
+                :to="{ name: 'sendMessage' }"
+                class="link"
+                :class="{ linkActive: state.messageActive == 2 }"
+                @click="
+                  state.friendActive = false;
+                  state.messageActive = 2;
+                "
                 >보낸 쪽지함</router-link
               ></el-menu-item
             ></el-menu-item-group
@@ -39,6 +67,8 @@ export default {
   setup() {
     const store = useStore();
     const state = reactive({
+      friendActive: true,
+      messageActive: 0,
       memberinfo: computed(() => store.getters["accounts/getMember"]),
     });
 
@@ -74,5 +104,28 @@ export default {
 
 .link {
   text-decoration: none;
+  width: 200px;
+  color: black;
+  font-size: medium;
+  padding: 10px;
+}
+
+.link:hover {
+  color: palevioletred;
+}
+
+.link:active {
+  color: palevioletred;
+}
+
+.linkActive {
+  color: palevioletred;
+}
+
+.el-select-dropdown__item.selected {
+  color: palevioletred;
+}
+.el-menu-item:hover {
+  background-color: white;
 }
 </style>

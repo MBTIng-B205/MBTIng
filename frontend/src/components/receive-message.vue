@@ -8,20 +8,27 @@
             <el-option value="content" label="내용" /> </el-select
         ></el-col>
         <el-col :span="12">
-          <el-input v-model="search" />
+          <el-input v-model="search" placeholder="검색어를 입력하세요" />
         </el-col>
         <el-col :span="6">
-          <el-button @click="onSearch" size="large">검색</el-button>
+          <button class="mainButton" @click="onSearch" size="large">
+            검색
+          </button>
         </el-col>
       </el-row>
     </el-header>
     <el-row class="row select">
       <el-col :span="16"></el-col>
       <el-col :span="6"
-        ><el-button @click="onRead" size="large">읽음</el-button>
-        <el-button style="margin-right: 30px" @click="onDelete" size="large"
-          >삭제</el-button
-        ></el-col
+        ><button class="mainButton" @click="onRead" size="large">읽음</button>
+        <button
+          class="mainButton"
+          style="margin-right: 30px; margin-left: 12px"
+          @click="onDelete"
+          size="large"
+        >
+          삭제
+        </button></el-col
       >
     </el-row>
     <table class="table" v-if="state.messageList.length != 0">
@@ -75,8 +82,10 @@
         </tr>
       </tbody>
     </table>
-    <el-row v-else-if="state.searchFlag">검색한 쪽지가 없습니다!</el-row>
-    <el-row v-else>받은 쪽지가 없습니다!</el-row>
+    <el-row class="exceptionMsg" v-else-if="state.searchFlag"
+      >검색한 쪽지가 없습니다!</el-row
+    >
+    <el-row class="exceptionMsg" v-else>받은 쪽지가 없습니다!</el-row>
 
     <el-dialog v-model="state.receiveDialog" @close="receiveClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
@@ -116,16 +125,18 @@
         readonly
       />
       <div style="margin-top: 20px">
-        <el-button
-          type="success"
+        <button
+          class="mainButton messageSend"
           @click="
             receiveClose();
             sendOpen();
           "
-          size="large"
-          >답장</el-button
         >
-        <el-button @click="receiveClose" size="large">닫기</el-button>
+          답장
+        </button>
+        <button class="mainButton messageCancel" @click="receiveClose">
+          닫기
+        </button>
       </div>
     </el-dialog>
     <el-dialog v-model="state.sendDialog" @close="sendClose">
@@ -151,16 +162,23 @@
         rows="10"
       />
       <div style="margin-top: 20px">
-        <el-button @click="clickSend" type="success" size="large"
-          >전송</el-button
-        >
-        <el-button @click="sendClose" size="large">취소</el-button>
+        <button class="mainButton messageSend" @click="clickSend">전송</button>
+        <button class="mainButton messageCancel" @click="sendClose">
+          취소
+        </button>
       </div>
     </el-dialog>
     <el-dialog v-model="sirenDialog" @close="sirenClose">
-      <div style="font-weight: bold; float: left; margin: 10px">
+      <el-row
+        style="
+          padding: 10px;
+          flex-direction: colunm;
+          align-content: flex-start;
+          background-color: #fab6b6;
+        "
+      >
         신고대상자 : {{ state.message.sender.nickname }}
-      </div>
+      </el-row>
       <el-input
         v-model="sirenMsg"
         type="textarea"
@@ -168,10 +186,12 @@
         rows="5"
       ></el-input>
       <div style="margin-top: 20px">
-        <el-button type="danger" @click="clickSiren" size="large"
+        <el-button type="danger" @click="clickSiren" size="large" round
           >신고하기</el-button
         >
-        <el-button @click="sirenClose" size="large">취소</el-button>
+        <el-button @click="sirenClose" type="danger" size="large" round plain
+          >취소</el-button
+        >
       </div>
     </el-dialog>
     <div style="margin: 0 auto; margin-top: 20px">
@@ -515,7 +535,10 @@ td {
   text-align: left;
 }
 .cell:hover {
-  background-color: #ebeef5;
+  background-color: #faebee;
+}
+input {
+  accent-color: pink;
 }
 .to {
   font-size: 30px;
@@ -552,5 +575,26 @@ td {
 }
 .read {
   font-weight: bold;
+}
+.el-select-dropdown__item.selected {
+  color: palevioletred;
+}
+.exceptionMsg {
+  padding: 30px;
+  border-top: solid 2px rgb(255, 189, 207);
+  border-bottom: solid 2px rgb(255, 189, 207);
+  font-size: large;
+}
+.el-pagination.is-background .el-pager li:not(.is-disabled).is-active {
+  background-color: rgb(255, 189, 207);
+}
+.messageCancel {
+  margin-left: 18px;
+  border-radius: 20px;
+}
+.messageSend {
+  margin-left: 18px;
+  border-radius: 20px;
+  background-color: rgb(255, 189, 207);
 }
 </style>
