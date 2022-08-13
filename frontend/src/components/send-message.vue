@@ -8,19 +8,26 @@
             <el-option value="content" label="내용" /> </el-select
         ></el-col>
         <el-col :span="12">
-          <el-input v-model="search" />
+          <el-input v-model="search" placeholder="검색어를 입력하세요" />
         </el-col>
         <el-col :span="6">
-          <el-button @click="onSearch" size="large">검색</el-button>
+          <button class="mainButton" @click="onSearch" size="large">
+            검색
+          </button>
         </el-col>
       </el-row>
     </el-header>
     <el-row class="row select">
       <el-col :span="16"></el-col>
       <el-col :span="6"
-        ><el-button style="margin-right: 30px" @click="onDelete" size="large"
-          >삭제</el-button
-        ></el-col
+        ><button
+          class="mainButton"
+          style="margin-right: 30px"
+          @click="onDelete"
+          size="large"
+        >
+          삭제
+        </button></el-col
       >
     </el-row>
     <table class="table" v-if="state.messageList.length != 0">
@@ -73,8 +80,10 @@
         </tr>
       </tbody>
     </table>
-    <el-row v-else-if="state.searchFlag">검색한 쪽지가 없습니다!</el-row>
-    <el-row v-else>친구에게 쪽지를 보내보세요!</el-row>
+    <el-row class="exceptionMsg" v-else-if="state.searchFlag"
+      >검색한 쪽지가 없습니다!</el-row
+    >
+    <el-row class="exceptionMsg" v-else>친구에게 쪽지를 보내보세요!</el-row>
     <el-dialog v-model="state.messageDialog" @close="handleClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
         <span class="to"> To. </span>
@@ -95,7 +104,9 @@
         readonly
       />
       <div style="margin-top: 20px">
-        <el-button @click="handleClose" size="large">닫기</el-button>
+        <button class="mainButton messageCancel" @click="handleClose">
+          닫기
+        </button>
       </div>
     </el-dialog>
     <div style="margin: 0 auto; margin-top: 20px">
@@ -327,7 +338,10 @@ td {
   text-align: left;
 }
 .cell:hover {
-  background-color: #ebeef5;
+  background-color: #faebee;
+}
+input {
+  accent-color: pink;
 }
 .to {
   font-size: 30px;
@@ -352,5 +366,21 @@ td {
 }
 .form-checkbox {
   zoom: 1.5;
+}
+.el-select-dropdown__item.selected {
+  color: palevioletred;
+}
+.exceptionMsg {
+  padding: 30px;
+  border-top: solid 2px rgb(255, 189, 207);
+  border-bottom: solid 2px rgb(255, 189, 207);
+  font-size: large;
+}
+.el-pagination.is-background .el-pager li:not(.is-disabled).is-active {
+  background-color: rgb(255, 189, 207);
+}
+.messageCancel {
+  margin-left: 18px;
+  border-radius: 20px;
 }
 </style>
