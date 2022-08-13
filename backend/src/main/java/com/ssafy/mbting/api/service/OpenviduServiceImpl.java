@@ -38,8 +38,8 @@ public class OpenviduServiceImpl implements OpenviduService {
     public String getToken(String sessionName) {
         logger.info("OpenVidu 토큰 생성 요청 들어옴");
         try {
-            Session session = ofNullable(mapSessions.get(sessionName))
-                    .orElse(openVidu.createSession());
+            Session session = mapSessions.get(sessionName);
+            if (session == null) session = openVidu.createSession();
 
             String token = session.createConnection(connectionProperties).getToken();
 
