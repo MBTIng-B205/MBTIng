@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="height: 620px">
     <el-header>
       <el-row class="row">
         <el-col :span="6"
@@ -11,14 +11,14 @@
           <el-input v-model="search" />
         </el-col>
         <el-col :span="6">
-          <el-button @click="onSearch">검색</el-button>
+          <el-button @click="onSearch" size="large">검색</el-button>
         </el-col>
       </el-row>
     </el-header>
     <el-row class="row select">
       <el-col :span="16"></el-col>
       <el-col :span="6"
-        ><el-button style="margin-right: 30px" @click="onDelete"
+        ><el-button style="margin-right: 30px" @click="onDelete" size="large"
           >삭제</el-button
         ></el-col
       >
@@ -95,7 +95,7 @@
         readonly
       />
       <div style="margin-top: 20px">
-        <el-button @click="handleClose">닫기</el-button>
+        <el-button @click="handleClose" size="large">닫기</el-button>
       </div>
     </el-dialog>
     <div style="margin: 0 auto; margin-top: 20px">

@@ -3,14 +3,12 @@ package com.ssafy.mbting.api.service;
 import com.ssafy.mbting.api.request.MemberRegisterRequest;
 import com.ssafy.mbting.api.request.MemberUpdateRequest;
 import com.ssafy.mbting.db.entity.Member;
-import com.ssafy.mbting.db.repository.InterestMemberRepository;
 import com.ssafy.mbting.db.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @Service("userService")
 @RequiredArgsConstructor

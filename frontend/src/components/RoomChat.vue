@@ -42,7 +42,13 @@
         style="width: 230px; margin-right: 3px"
       >
       </el-input>
-      <el-button type="danger" plain :icon="Promotion" @click="sendMessage()" />
+      <el-button
+        type="danger"
+        plain
+        :icon="Promotion"
+        @click="sendMessage()"
+        size="large"
+      />
     </div>
   </div>
 </template>

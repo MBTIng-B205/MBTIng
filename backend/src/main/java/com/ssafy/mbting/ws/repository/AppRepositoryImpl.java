@@ -2,6 +2,7 @@ package com.ssafy.mbting.ws.repository;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.ssafy.mbting.api.request.AudioStageResult;
 import com.ssafy.mbting.db.enums.Gender;
 import com.ssafy.mbting.ws.model.vo.MeetingRoom;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
@@ -20,7 +21,7 @@ import java.util.Set;
 import static java.util.Optional.*;
 
 @Repository
-public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepository {
+public class AppRepositoryImpl implements AppRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Map<String, StompUser> sessionIdStompUserMap = Maps.newConcurrentMap();
@@ -94,20 +95,36 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     }
 
     @Override
-    public Boolean getProposalAccepted(String sessionId) {
-        Boolean proposalAccepted = ofNullable(sessionIdStompUserMap.get(sessionId))
-                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
-                .getProposalAccepted();
-        logger.debug("\n\n세션 \"{}\" 의 제안 수락 여부: {}\n", sessionId, proposalAccepted);
-        return proposalAccepted;
-    }
-
-    @Override
     public void setProposalAccepted(String sessionId, Boolean accepted) {
         ofNullable(sessionIdStompUserMap.get(sessionId))
                 .orElseThrow(() -> new RuntimeException("Session Not Found!"))
                 .setProposalAccepted(accepted);
         logger.debug("\n\n세션 \"{}\" 에 제안 수락 여부를 {} 로 세팅\n", sessionId, accepted);
+    }
+
+    @Override
+    public Optional<MeetingRoom> findMeetingRoomByMeetingRoomId(String meetingRoomId) {
+        Optional<MeetingRoom> meetingRoom = ofNullable(meetingRoomIdMeetingRoomMap.get(meetingRoomId));
+        meetingRoom.ifPresent(room -> logger.debug("\n\nMeetingRoom found\n({}, {})\n", meetingRoomId, room));
+        return meetingRoom;
+    }
+
+    @Override
+    public void setVoiceResult(String sessionId, AudioStageResult voiceResult) {
+        StompUser stompUser = ofNullable(sessionIdStompUserMap.get(sessionId))
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"));
+        String meetingRoomId = stompUser.getMeetingRoomId();
+        Integer indexOnRoom = stompUser.getIndexOnRoom();
+        ofNullable(meetingRoomIdMeetingRoomMap.get(meetingRoomId))
+                .orElseThrow(() -> new RuntimeException("Room Not Found!"))
+                .getMeetingRoomResults()[indexOnRoom]
+                .setVoiceResult(voiceResult);
+
+        logger.debug("\n\n세션 \"{}\" 의 음성 스테이지 결과를 {} 로 세팅\nMeeting Room ID: {}\nIndex On Room: {}\n"
+                , sessionId
+                , voiceResult
+                , meetingRoomId
+                , indexOnRoom);
     }
 
     @Override
@@ -130,7 +147,23 @@ public class WaitingMeetingUserRepositoryImpl implements WaitingMeetingUserRepos
     }
 
     @Override
-    public Optional<StompUser> findBySessionId(String sessionId) {
+    public void setMeetingRoomStatusToFalse(String meetingRoomId, int indexOnRoom) {
+        ofNullable(meetingRoomIdMeetingRoomMap.get(meetingRoomId)).ifPresent(room -> {
+            room.getMeetingRoomStatus()[indexOnRoom] = false;
+            logger.debug("\n\n미팅룸 {} 의 {} 자리 상태를 false로 세팅\n"
+                    , meetingRoomId
+                    , indexOnRoom);
+        });
+    }
+
+    @Override
+    public void removeMeetingRoom(String meetingRoomId) {
+        ofNullable(meetingRoomIdMeetingRoomMap.remove(meetingRoomId)).ifPresent(oldRoom ->
+                logger.debug("\n\n미팅 룸 \"{}\" 제거함\nRemoved Room: {}\n", meetingRoomId, oldRoom));
+    }
+
+    @Override
+    public Optional<StompUser> findStompUserBySessionId(String sessionId) {
         Optional<StompUser> stompUser = ofNullable(sessionIdStompUserMap.get(sessionId));
         stompUser.ifPresent(user -> logger.debug("\n\nStompUser found\n({}, {})\n", sessionId, user));
         return stompUser;

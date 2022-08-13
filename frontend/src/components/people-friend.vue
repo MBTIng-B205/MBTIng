@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="height: 620px">
     <el-header>
       <el-row style="flex-direction: row; margin-top: 15px">
         <el-col :span="6"
@@ -11,7 +11,7 @@
           <el-input v-model="search" />
         </el-col>
         <el-col :span="6">
-          <el-button @click="onSearch"> 검색 </el-button>
+          <el-button @click="onSearch" size="large"> 검색 </el-button>
         </el-col>
       </el-row>
     </el-header>
@@ -38,7 +38,7 @@
               @confirm="deleteFriend(friend)"
             >
               <template #reference>
-                <el-button @click.stop class="delete"
+                <el-button @click.stop class="delete" size="large"
                   ><img src="@/assets/x.png"
                 /></el-button>
               </template>
@@ -76,7 +76,7 @@
         <el-button style="background-color: deeppink" @click="clickSend"
           >전송</el-button
         >
-        <el-button @click="messageClose">취소</el-button>
+        <el-button @click="messageClose" size="large">취소</el-button>
       </div>
     </el-dialog>
 

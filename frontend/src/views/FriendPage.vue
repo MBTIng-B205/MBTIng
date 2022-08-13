@@ -47,8 +47,8 @@
       </el-main>
     </el-container>
     <el-container id="footerContainer">
-      <el-button>수정</el-button>
-      <el-button @click="goHome">나가기</el-button>
+      <el-button size="large">수정</el-button>
+      <el-button @click="goHome" size="large">나가기</el-button>
     </el-container>
   </div>
 </template>

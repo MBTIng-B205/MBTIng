@@ -3,8 +3,7 @@ package com.ssafy.mbting.ws.stompCommandHandler;
 import com.ssafy.mbting.ws.model.event.RequestToJoinQueueEvent;
 import com.ssafy.mbting.ws.model.stompMessageHeader.SubscribeHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
-import com.ssafy.mbting.ws.service.WaitingMeetingService;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,7 +19,6 @@ import java.time.Clock;
 public class SubscribeHandler implements StompCommandHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final WaitingMeetingService waitingMeetingService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override

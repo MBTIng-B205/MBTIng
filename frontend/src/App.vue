@@ -13,11 +13,6 @@ export default {
 </script>
 
 <style>
-/* .background {
-  height: 864px;
-  width: 100%;
-  background-image: url("@/assets/BG_Heart_Bar.gif");
-} */
 @font-face {
   font-family: "Dalseo";
   src: url("./font/DalseoHealingMedium.woff") format("woff");
