@@ -19,10 +19,12 @@ public class DisconnectHandler implements StompCommandHandler {
     @Override
     public void handle(StompCommand stompCommand, StompHeaderAccessor stompHeaderAccessor, MessageChannel messageChannel) {
         // 연결 해제 처리 : 사용자 제거
+        String sessionId = stompHeaderAccessor.getSessionId();
+
         logger.info("\n\n* {} *\nSession ID: {}\n"
                 , stompCommand
-                , stompHeaderAccessor.getSessionId());
+                , sessionId);
 
-        appStompService.disconnect(stompHeaderAccessor.getSessionId());
+        appStompService.disconnect(sessionId);
     }
 }

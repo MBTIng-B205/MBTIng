@@ -4,6 +4,9 @@ import com.ssafy.mbting.api.request.AudioStageResult;
 
 public interface MeetingRoomService {
 
-    void setProposalAcceptedAndHandleIt(String sessionId, Boolean accepted);
+    String[] setMeetingRoomAndGetTokensForTwoUsers(String sessionId1, String sessionId2);
+    void leaveFromMeetingRoomAndRemoveIfEmpty(String sessionId);
     void setVoiceResultAndHandleIt(String sessionId, AudioStageResult voiceResult);
+    void setVideoStageStartTime(String meetingRoomId);
+    void setEndTimeIfAbsent(String meetingRoomId);
 }
