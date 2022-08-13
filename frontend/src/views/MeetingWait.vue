@@ -199,6 +199,8 @@ export default {
                   router.push({ name: "MeetingWait" });
                 }
                 if (obj.data.status == "INROOM") {
+                  store.commit("meetings/SET_VIDEOFLAG", false);
+                  store.commit("meetings/SET_OVSOCKET", null);
                   console.log("INROOM");
                   state.ovsocket.disconnect();
                   store.commit("meetings/SET_OVSOCKET", null);

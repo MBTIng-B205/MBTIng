@@ -384,12 +384,13 @@ export default {
     const goHome = function () {
       router.push({ name: "HomeView" });
       console.log(state.mtsocket);
+      store.commit("meetings/SET_VIDEOFLAG", false);
       state.mtsocket.disconnect();
+      store.commit("meetings/SET_SOCKET", null);
       console.log(state.mtsocket);
       console.log(state.session);
-      state.session.disconnect();
-      console.log(state.session);
-      store.commit("meetings/SET_SOCKET", null);
+      state.ovsocket.disconnect();
+      store.commit("meetings/SET_OVSOCKET", null);
     };
 
     return {
