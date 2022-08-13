@@ -31,7 +31,10 @@
                 v-model="form.nickname"
                 style="width: 220px; margin-left: 30px"
               ></el-input>
-              <el-button @click="nameCheck" style="margin-left: 10px"
+              <el-button
+                @click="nameCheck"
+                style="margin-left: 10px"
+                size="large"
                 >중복확인</el-button
               >
             </el-form-item>

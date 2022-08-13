@@ -62,7 +62,7 @@
           </tr>
         </tbody>
       </table>
-      <el-button style="margin-top: 20px" @click="mypageUpdateOpen"
+      <el-button style="margin-top: 20px" @click="mypageUpdateOpen" size="large"
         >정보 수정</el-button
       >
     </div>
@@ -169,8 +169,10 @@
           </tbody></table
       ></el-form>
       <el-footer>
-        <el-button @click.prevent="updateInfo">수정</el-button>
-        <el-button @click="deleteMember" type="danger">탈퇴</el-button>
+        <el-button @click.prevent="updateInfo" size="large">수정</el-button>
+        <el-button @click="deleteMember" type="danger" size="large"
+          >탈퇴</el-button
+        >
       </el-footer>
     </div>
   </el-dialog>
