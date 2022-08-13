@@ -5,6 +5,7 @@
       <el-button
         style="float: right; margin-top: 25px"
         type="danger"
+        size="large"
         round
         @click="goHome"
         >소개팅종료</el-button

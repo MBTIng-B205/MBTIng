@@ -3,14 +3,14 @@
     <el-header>
       <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
-    <el-card style="text-align: center">
+    <el-card style="text-align: center; padding: 0">
       <el-row type="flex" justify="space-around">
-        <el-header style="font-size: xx-large"
+        <el-header style="font-size: x-large"
           >자신의 프로필을 작성해주세요.</el-header
         >
         <form>
           <el-col
-            style="display: flex; justify-content: center; margin-bottom: 10px"
+            style="display: flex; justify-content: center; margin-bottom: 5px"
           >
             <img
               :src="form.memberinfo.profileUrl"
@@ -19,29 +19,32 @@
             />
           </el-col>
           <el-form :model="form" label-width="120px" style="width: 500px">
-            <el-form-item label="MBTI">
+            <el-form-item style="margin-bottom: 10px" label="MBTI">
               <el-input
                 v-model="form.mbti"
                 readonly
                 style="width: 220px; margin-left: 30px"
               ></el-input>
             </el-form-item>
-            <el-form-item label="닉네임">
+            <el-form-item label="닉네임" style="margin-bottom: 10px">
               <el-input
                 v-model="form.nickname"
                 style="width: 220px; margin-left: 30px"
               ></el-input>
-              <el-button @click="nameCheck" style="margin-left: 10px"
+              <el-button
+                @click="nameCheck"
+                style="margin-left: 10px"
+                size="large"
                 >중복확인</el-button
               >
             </el-form-item>
-            <el-form-item label="성별">
+            <el-form-item label="성별" style="margin-bottom: 10px">
               <el-radio-group v-model="form.gender" style="margin-left: 30px">
                 <el-radio label="MALE">남자</el-radio>
                 <el-radio label="FEMALE">여자</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="생년월일">
+            <el-form-item label="생년월일" style="margin-bottom: 10px">
               <el-date-picker
                 type="date"
                 placeholder="생년월일"
@@ -49,7 +52,7 @@
                 style="margin-left: 30px"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item label="사는지역">
+            <el-form-item label="사는지역" style="margin-bottom: 10px">
               <el-select
                 v-model="form.sido"
                 placeholder="거주 지역을 선택하세요"
@@ -64,7 +67,7 @@
               </el-select>
             </el-form-item>
             <el-col style="flex-direction: column">
-              <el-form-item label="관심사">
+              <el-form-item label="관심사" style="margin-bottom: 10px">
                 <el-checkbox-group
                   v-model="form.interests"
                   style="width: 380px; align-items: center"
@@ -85,18 +88,10 @@
                   <el-checkbox label="디자인" name="디자인" />
                 </el-checkbox-group>
               </el-form-item>
-            </el-col>
-            <el-form-item>
-              <el-button
-                type="danger"
-                plain
-                size="large"
-                @click="signup"
-                style="margin-top: 20px; margin-left: 80px"
-                >확인</el-button
-              >
-            </el-form-item>
-          </el-form>
+            </el-col> </el-form
+          ><el-button type="warning" plain size="large" @click="signup"
+            >확인</el-button
+          >
         </form>
       </el-row>
     </el-card>
@@ -251,8 +246,7 @@ export default {
   align-content: center;
   flex-direction: column;
 }
-.el-card {
-  padding: 50px;
-  margin: 50px;
+.el-form-item {
+  margin-bottom: 10px;
 }
 </style>

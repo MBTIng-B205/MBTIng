@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="height: 620px">
     <el-header>
       <el-row class="row">
         <el-col :span="6"
@@ -11,15 +11,15 @@
           <el-input v-model="search" />
         </el-col>
         <el-col :span="6">
-          <el-button @click="onSearch">검색</el-button>
+          <el-button @click="onSearch" size="large">검색</el-button>
         </el-col>
       </el-row>
     </el-header>
     <el-row class="row select">
       <el-col :span="16"></el-col>
       <el-col :span="6"
-        ><el-button @click="onRead">읽음</el-button>
-        <el-button style="margin-right: 30px" @click="onDelete"
+        ><el-button @click="onRead" size="large">읽음</el-button>
+        <el-button style="margin-right: 30px" @click="onDelete" size="large"
           >삭제</el-button
         ></el-col
       >
@@ -122,9 +122,10 @@
             receiveClose();
             sendOpen();
           "
+          size="large"
           >답장</el-button
         >
-        <el-button @click="receiveClose">닫기</el-button>
+        <el-button @click="receiveClose" size="large">닫기</el-button>
       </div>
     </el-dialog>
     <el-dialog v-model="state.sendDialog" @close="sendClose">
@@ -150,8 +151,10 @@
         rows="10"
       />
       <div style="margin-top: 20px">
-        <el-button @click="clickSend" type="success">전송</el-button>
-        <el-button @click="sendClose">취소</el-button>
+        <el-button @click="clickSend" type="success" size="large"
+          >전송</el-button
+        >
+        <el-button @click="sendClose" size="large">취소</el-button>
       </div>
     </el-dialog>
     <el-dialog v-model="sirenDialog" @close="sirenClose">
@@ -165,8 +168,10 @@
         rows="5"
       ></el-input>
       <div style="margin-top: 20px">
-        <el-button type="danger" @click="clickSiren">신고하기</el-button>
-        <el-button @click="sirenClose">취소</el-button>
+        <el-button type="danger" @click="clickSiren" size="large"
+          >신고하기</el-button
+        >
+        <el-button @click="sirenClose" size="large">취소</el-button>
       </div>
     </el-dialog>
     <div style="margin: 0 auto; margin-top: 20px">

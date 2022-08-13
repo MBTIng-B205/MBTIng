@@ -3,7 +3,7 @@
     <el-header>
       <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </el-header>
-    <el-card style="padding: 0">
+    <el-card style="padding: 0px; margin-bottom: 0px; margin-top: 30px">
       <el-row><div class="title">MBTI 별 매칭 성공률</div></el-row>
       <div style="margin-top: 10px">
         <div style="margin-left: 200px; display: inline-block">
@@ -18,11 +18,23 @@
         </div>
         <span class="rank">
           1. <span class="rank-mbti"> {{ first }} </span> 2.
-          <span class="rank-mbti">{{ second }} </span> 3.
-          <span class="rank-mbti">{{ third }} </span>
+          <span class="rank-mbti"> {{ second }} </span> 3.
+          <span class="rank-mbti"> {{ third }} </span>
         </span>
       </div>
       <div class="chart">
+        <div
+          class="hidden-box"
+          style="
+            background-color: white;
+            z-index: 10;
+            height: 20px;
+            width: 100px;
+            position: absolute;
+            left: 47%;
+            top: 26%;
+          "
+        ></div>
         <vue3-chart-js
           ref="chartRef"
           :id="lineChart.id"
@@ -37,18 +49,32 @@
 <script>
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { reactive, ref, computed, onMounted } from "vue";
+import { useStore } from "vuex";
 export default {
   components: {
     Vue3ChartJs,
   },
   setup() {
     const router = useRouter();
-    const mbti = ref(0);
+    var mbti = ref(0);
     const first = ref("ESTP");
     const second = ref("ESFP");
     const third = ref("ISTP");
     const chartRef = ref(null);
+    const store = useStore();
+    const state = reactive({
+      userMbti: "",
+    });
+    onMounted(() => {
+      store.dispatch("accounts/getMemberinfo").then(function (res) {
+        store.commit("accounts/SET_MEMBER_INFO", res.data.body);
+        state.userMbti = computed(
+          () => store.getters["accounts/getMember"].mbti
+        );
+        if (state.userMbti != null) preSetting();
+      });
+    });
     const lineChart = {
       id: "bar",
       type: "bar",
@@ -780,7 +806,15 @@ export default {
         data: [5, 11, 12, 7, 1, 15, 13, 2, 8, 3, 14, 9, 10, 4, 6],
       },
     ];
-
+    const preSetting = function () {
+      for (var i = 0; i <= 15; i++) {
+        if (dataList[i].label === state.userMbti) {
+          mbti.value = i;
+          break;
+        }
+      }
+      changeChart();
+    };
     const changeChart = function () {
       lineChart.data.datasets[0].label = dataList[mbti.value].label;
       lineChart.data.datasets[0].backgroundColor =

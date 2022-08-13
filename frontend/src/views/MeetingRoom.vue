@@ -1,6 +1,10 @@
 <template>
   <div style="position: absolute; margin-left: 20px">
-    <img src="@/assets/logo.png" alt="" style="width: 200px; height: 94px" />
+    <img
+      src="@/assets/logo.png"
+      @click="goHome"
+      style="width: 200px; height: 94px"
+    />
   </div>
   <el-container
     style="display: flex; flex-direction: column; background-color: #fadce1"
@@ -71,9 +75,6 @@
         ></room-chat>
       </div>
     </div>
-    <div style="">
-      <hr style="width: 96%" />
-    </div>
     <div class="bar-wrapper" style="display: flex">
       <bottom-bar
         @chatOnOff="chatOnOff"
@@ -95,8 +96,10 @@
       rows="5"
     ></el-input>
     <div style="margin-top: 20px">
-      <el-button type="danger" @click="clickSiren">신고하기</el-button>
-      <el-button @click="sirenClose">취소</el-button>
+      <el-button type="danger" @click="clickSiren" size="large"
+        >신고하기</el-button
+      >
+      <el-button @click="sirenClose" size="large">취소</el-button>
     </div>
   </el-dialog>
 </template>
@@ -373,6 +376,11 @@ export default {
         sirenClose();
       }
     };
+    const goHome = function () {
+      router.push({ name: "HomeView" });
+      state.mtsocket.disconnect();
+      store.commit("meetings/SET_SOCKET", null);
+    };
 
     return {
       state,
@@ -393,6 +401,7 @@ export default {
       sirenOpen,
       sirenClose,
       clickSiren,
+      goHome,
       Check,
       QuestionFilled,
       BellFilled,
