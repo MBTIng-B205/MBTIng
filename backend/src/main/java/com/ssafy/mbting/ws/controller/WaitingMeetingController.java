@@ -21,7 +21,7 @@ public class WaitingMeetingController {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @MessageMapping("/indi/proposalResult")
-    public void receiveProposalResult(@Payload Message<Boolean> message) {
+    public void receiveProposalResult(Message<Boolean> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
         boolean accepted = message.getPayload();
 

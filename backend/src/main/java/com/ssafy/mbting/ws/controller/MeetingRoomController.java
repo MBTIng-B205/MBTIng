@@ -23,7 +23,7 @@ public class MeetingRoomController {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @MessageMapping("/indi/meetingAudioStageResult")
-    public void receiveAudioStarted(@Payload Message<AudioStageResultBody> message) {
+    public void receiveAudioStarted(Message<AudioStageResultBody> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
 
         AudioStageResult voiceResult = message.getPayload().getResult();
