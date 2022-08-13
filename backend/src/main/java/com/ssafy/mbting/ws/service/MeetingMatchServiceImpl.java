@@ -39,8 +39,8 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
     private final AppRepository appRepository;
     private boolean inProgress = false;
 
-    public int getEnoughSizeToStartMatching() {
-        return enoughSizeToStartMatching;
+    public boolean isEnoughSizeToStartMatching(int size) {
+        return size >= enoughSizeToStartMatching;
     }
 
     public void startMatching() {

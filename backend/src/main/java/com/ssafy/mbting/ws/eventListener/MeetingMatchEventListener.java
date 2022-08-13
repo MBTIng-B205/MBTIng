@@ -52,7 +52,7 @@ public class MeetingMatchEventListener {
     public void onRequestToStartMatching(RequestToStartMatchingEvent event) {
         logger.debug("\n\n매칭 시작 요청 이벤트 발생함\n이벤트 소스: {}\n", event.getSource());
 
-        if (waitingMeetingService.getQueueSize() < meetingMatchService.getEnoughSizeToStartMatching())
+        if (!meetingMatchService.isEnoughSizeToStartMatching(waitingMeetingService.getQueueSize()))
             return;
 
         applicationEventPublisher.publishEvent(new EnoughToStartMatchingEvent(
