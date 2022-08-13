@@ -117,7 +117,7 @@ public class AppRepositoryImpl implements AppRepository {
         Integer indexOnRoom = stompUser.getIndexOnRoom();
         ofNullable(meetingRoomIdMeetingRoomMap.get(meetingRoomId))
                 .orElseThrow(() -> new RuntimeException("Room Not Found!"))
-                .getMeetingRoomResult()[indexOnRoom]
+                .getMeetingRoomResults()[indexOnRoom]
                 .setVoiceResult(voiceResult);
 
         logger.debug("\n\n세션 \"{}\" 의 음성 스테이지 결과를 {} 로 세팅\nMeeting Room ID: {}\nIndex On Room: {}\n"
@@ -144,6 +144,22 @@ public class AppRepositoryImpl implements AppRepository {
                 , sessionId
                 , meetingRoomId
                 , indexOnRoom);
+    }
+
+    @Override
+    public void setMeetingRoomStatusToFalse(String meetingRoomId, int indexOnRoom) {
+        ofNullable(meetingRoomIdMeetingRoomMap.get(meetingRoomId)).ifPresent(room -> {
+            room.getMeetingRoomStatus()[indexOnRoom] = false;
+            logger.debug("\n\n미팅룸 {} 의 {} 자리 상태를 false로 세팅\n"
+                    , meetingRoomId
+                    , indexOnRoom);
+        });
+    }
+
+    @Override
+    public void removeMeetingRoom(String meetingRoomId) {
+        ofNullable(meetingRoomIdMeetingRoomMap.remove(meetingRoomId)).ifPresent(oldRoom ->
+                logger.debug("\n\n미팅 룸 \"{}\" 제거함\nRemoved Room: {}\n", meetingRoomId, oldRoom));
     }
 
     @Override

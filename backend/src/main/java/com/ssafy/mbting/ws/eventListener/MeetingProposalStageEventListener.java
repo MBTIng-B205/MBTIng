@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 @Component
@@ -45,7 +46,7 @@ public class MeetingProposalStageEventListener {
                 , sessionId
                 , accepted ? "수락" : "거절");
 
-        meetingRoomService.setProposalAcceptedAndHandleIt(
+        waitingMeetingService.setProposalAcceptedAndHandleIt(
                 sessionId,
                 accepted);
     }
@@ -67,8 +68,10 @@ public class MeetingProposalStageEventListener {
                     this,
                     Clock.systemDefaultZone(),
                     sessionIds,
-                    waitingMeetingService
-                            .setMeetingRoomAndGetTokensForTwoUsers(sessionIds[0], sessionIds[1])));
+                    meetingRoomService
+                            .setMeetingRoomAndGetTokensForTwoUsers(
+                                    sessionIds[0],
+                                    sessionIds[1])));
             return;
         }
 

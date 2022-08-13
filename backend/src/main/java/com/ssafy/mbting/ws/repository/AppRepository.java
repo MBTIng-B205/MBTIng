@@ -20,6 +20,8 @@ public interface AppRepository {
     void setVoiceResult(String sessionId, AudioStageResult greenLight);
     void saveMeetingRoom(String meetingRoomId, MeetingRoom meetingRoom);
     void setMeetingRoomIdAndIndex(String sessionId, String meetingRoomId, Integer indexOnRoom);
+    void setMeetingRoomStatusToFalse(String meetingRoomId, int indexOnRoom);
+    void removeMeetingRoom(String meetingRoomId);
     Optional<StompUser> findStompUserBySessionId(String sessionId);
     int getQueueSize();
     Optional<String> getFirstSessionId();
