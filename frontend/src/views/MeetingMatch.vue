@@ -45,7 +45,7 @@
                 />
                 <div class="Bubble bubblePosition hoverBubble">
                   <p>
-                    {{ mbtiInfo[user.mbti] }}
+                    {{ mbtiInfo[state.proposal.mbti] }}
                   </p>
                 </div>
               </a>
@@ -75,7 +75,6 @@ export default {
     const store = useStore();
     const router = useRouter();
     const state = reactive({
-      memberinfo: computed(() => store.getters["accounts/getMember"]),
       proposal: computed(() => store.getters["meetings/getProposal"]),
       mtsocket: computed(() => store.getters["meetings/getSocket"]),
     });
