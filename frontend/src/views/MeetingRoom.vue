@@ -135,9 +135,6 @@ export default {
     });
     const chat = ref(null);
     const joinSession = () => {
-      console.log("openvidu server", OPENVIDU_SERVER_URL);
-      console.log("openvidu secret", OPENVIDU_SERVER_SECRET);
-
       state.OV = new OpenVidu();
       state.session = state.OV.initSession();
 
