@@ -624,7 +624,8 @@ export default {
 .mypage,
 .dropdown-css,
 .selected,
-.el-dropdown__popper {
+.el-dropdown__popper,
+.el-dropdown-menu {
   --el-color-primary: #f56c6c;
   --el-color-primary-light-3: #f89898;
   --el-color-primary-light-5: #fab6b6;
@@ -635,5 +636,8 @@ export default {
   --el-select-input-focus-border-color: #f56c6c;
   --el-dropdown-menuItem-hover-color: #f56c6c;
   --el-dropdown-menuItem-hover-fill: #fef0f0;
+  --el-select-input-focus-border-color: #f56c6c;
+  --el-menu-hover-text-color: #f56c6c;
+  --el-dialog-padding-primary: #f56c6c;
 }
 </style>

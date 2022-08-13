@@ -129,6 +129,7 @@ export default {
 .el-menu-item:hover {
   background-color: white;
 }
+
 .el-main {
   --el-color-primary: #f56c6c;
   --el-color-primary-light-3: #f89898;
