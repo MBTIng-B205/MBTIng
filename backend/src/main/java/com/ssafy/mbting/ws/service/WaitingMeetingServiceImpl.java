@@ -1,8 +1,6 @@
 package com.ssafy.mbting.ws.service;
 
-import com.ssafy.mbting.api.service.MemberService;
-import com.ssafy.mbting.api.service.OpenviduService;
-import com.ssafy.mbting.ws.model.vo.MeetingRoom;
+import com.ssafy.mbting.ws.model.event.ProposalResultsMadeEvent;
 import com.ssafy.mbting.ws.repository.AppRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -10,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.time.Clock;
+
+import static java.util.Optional.ofNullable;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +19,6 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
     private final AppRepository appRepository;
-    private final MemberService memberService;
-    private final OpenviduService openviduService;
 
     @Override
     public int getQueueSize() {
@@ -47,30 +45,37 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     }
 
     @Override
-    public String[] setMeetingRoomAndGetTokensForTwoUsers(String sessionId1, String sessionId2) {
+    public void setProposalAcceptedAndHandleIt(String sessionId, Boolean accepted) {
+        appRepository.setProposalAccepted(sessionId, accepted);
 
-        String meetingRoomId = UUID.randomUUID().toString();
-        String openviduSessionName = UUID.randomUUID().toString();
-        String[] tokens = {
-                openviduService.getToken(openviduSessionName),
-                openviduService.getToken(openviduSessionName)};
+        String matchedSessionId = appRepository.findStompUserBySessionId(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                .getMatchedMeetingUserSessionId();
 
+        logger.debug("\n\nsubject: {}\nmatched: {}\n", sessionId, matchedSessionId);
 
-        appRepository.saveMeetingRoom(meetingRoomId,
-                MeetingRoom.newMeetingRoom(
-                        openviduSessionName,
-                        sessionId1,
-                        sessionId2,
-                        appRepository.findStompUserBySessionId(sessionId1)
-                                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
-                                .getMeetingUser().getMbti(),
-                        appRepository.findStompUserBySessionId(sessionId2)
-                                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
-                                .getMeetingUser().getMbti()
-                ));
+        Boolean opponentAccepted = appRepository.findStompUserBySessionId(matchedSessionId)
+                .orElseThrow(() -> {
+                    logger.debug("\n\n이미 상대가 떠났습니다.\n");
+                    applicationEventPublisher.publishEvent(new ProposalResultsMadeEvent(
+                            this,
+                            Clock.systemDefaultZone(),
+                            sessionId,
+                            accepted,
+                            matchedSessionId,
+                            false));
+                    return new RuntimeException("Session Not Found!");
+                }).getProposalAccepted();
 
-        appRepository.setMeetingRoomIdAndIndex(sessionId1, meetingRoomId, 0);
-        appRepository.setMeetingRoomIdAndIndex(sessionId2, meetingRoomId, 1);
-        return tokens;
+        logger.debug("\n\n상대 수락 여부: {}\n", opponentAccepted);
+
+        ofNullable(opponentAccepted).ifPresent(oppoA -> applicationEventPublisher
+                .publishEvent(new ProposalResultsMadeEvent(
+                        this,
+                        Clock.systemDefaultZone(),
+                        sessionId,
+                        accepted,
+                        matchedSessionId,
+                        oppoA)));
     }
 }

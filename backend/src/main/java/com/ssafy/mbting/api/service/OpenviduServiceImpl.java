@@ -1,65 +1,74 @@
 package com.ssafy.mbting.api.service;
 
 import io.openvidu.java.client.*;
-import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
+
+import static com.google.common.collect.Maps.newConcurrentMap;
+import static com.google.common.collect.Sets.newConcurrentHashSet;
+
+import static java.util.Optional.ofNullable;
 
 @Service
-@RequiredArgsConstructor
 public class OpenviduServiceImpl implements OpenviduService {
 
-    private OpenVidu openVidu; // openvidu 선언
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final OpenVidu openVidu;
+    private final ConnectionProperties connectionProperties;
+    private final Map<String, Session> mapSessions;
+    private final Map<String, Set<String>> mapSessionNamesTokens;
 
-    private Map<String, Session> mapSessions = new ConcurrentHashMap<>(); // mapSessions m
-    private Map<String, Set<String>> mapSessionNamesTokens = new ConcurrentHashMap<>();
-
-    private String OPENVIDU_URL = "https://i7b205.p.ssafy.io:4443/";
-    private String SECRET = "MY_SECRET";
+    public OpenviduServiceImpl(
+            @Value("${com.mbting.openvidu.server.url}") String OPENVIDU_URL,
+            @Value("${com.mbting.openvidu.server.secret}") String SECRET) {
+        openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
+        connectionProperties = new ConnectionProperties.Builder()
+                .type(ConnectionType.WEBRTC)
+                .role(OpenViduRole.PUBLISHER)
+                .build();
+        mapSessions = newConcurrentMap();
+        mapSessionNamesTokens = newConcurrentMap();
+    }
 
     public String getToken(String sessionName) {
-        openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
-        OpenViduRole role = OpenViduRole.PUBLISHER;
-        ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC).role(role).build();
-        if (this.mapSessions.get(sessionName) != null) {
-            String token = null;
-            try {
-                token = this.mapSessions.get(sessionName).createConnection(connectionProperties).getToken();
-                this.mapSessionNamesTokens.get(sessionName).add(token);
-            } catch (OpenViduJavaClientException e) {
-                e.printStackTrace();
-            } catch (OpenViduHttpException e2) {
-                e2.printStackTrace();
-                this.mapSessions.remove(sessionName);
-                this.mapSessionNamesTokens.remove(sessionName);
-            }
-            return token;
-        }
+        logger.info("OpenVidu 토큰 생성 요청 들어옴");
         try {
-            Session session = this.openVidu.createSession();
+            Session session = ofNullable(mapSessions.get(sessionName))
+                    .orElse(openVidu.createSession());
+
             String token = session.createConnection(connectionProperties).getToken();
-            this.mapSessions.put(sessionName, session);
-            this.mapSessionNamesTokens.put(sessionName, new HashSet<>());
-            this.mapSessionNamesTokens.get(sessionName).add(token);
+
+            mapSessions.putIfAbsent(sessionName, session);
+            Set<String> tokens = ofNullable(mapSessionNamesTokens.get(sessionName))
+                    .orElse(newConcurrentHashSet());
+            tokens.add(token);
+            mapSessionNamesTokens.putIfAbsent(sessionName, tokens);
+
+            logger.info("토큰을 성공적으로 발행함\nOpenVidu Token: {}", token);
+
             return token;
-        } catch (Exception e) {
-            return String.valueOf(e);
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            logger.error("토큰 생성 중 OpenVidu Error\n{}", e.getMessage());
+            e.printStackTrace();
         }
+        return null;
     }
 
     public void removeUser(String sessionName, String token) {
-        if (this.mapSessions.get(sessionName) != null && this.mapSessionNamesTokens.get(sessionName) != null) {
-            this.mapSessionNamesTokens.get(sessionName).remove(token);
-            if (this.mapSessionNamesTokens.get(sessionName).isEmpty()) {
-                this.mapSessions.remove(sessionName);
+        logger.info("OpenVidu 사용자 제거 요청 들어옴");
+        ofNullable(mapSessionNamesTokens.get(sessionName)).ifPresent(tokens -> {
+            tokens.remove(token);
+            if (tokens.isEmpty()) {
+                mapSessionNamesTokens.remove(sessionName);
+                mapSessions.remove(sessionName);
+                logger.info("세션이 비어서 없앰");
             }
-            return;
-        }
+        });
     }
 
 }

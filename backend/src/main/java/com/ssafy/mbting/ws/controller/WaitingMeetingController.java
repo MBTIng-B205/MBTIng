@@ -21,15 +21,16 @@ public class WaitingMeetingController {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @MessageMapping("/indi/proposalResult")
-    public void receiveProposalResult(@Payload Message<Boolean> message) {
+    public void receiveProposalResult(Message<Boolean> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
+        boolean accepted = message.getPayload();
 
-        logger.debug("\n\n제안 결과 메시지 도착\nMessage: {}\n", message.getPayload());
+        logger.debug("\n\n제안 결과 메시지 도착\nMessage: {}\n", accepted);
 
         applicationEventPublisher.publishEvent(new ProposalResultArriveEvent(
                 this,
                 Clock.systemDefaultZone(),
                 header.getSessionId(),
-                message.getPayload()));
+                accepted));
     }
 }
