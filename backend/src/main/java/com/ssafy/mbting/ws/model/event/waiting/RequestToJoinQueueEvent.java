@@ -1,4 +1,4 @@
-package com.ssafy.mbting.ws.model.event;
+package com.ssafy.mbting.ws.model.event.waiting;
 
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import lombok.*;

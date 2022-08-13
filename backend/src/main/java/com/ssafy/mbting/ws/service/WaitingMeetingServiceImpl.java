@@ -1,6 +1,6 @@
 package com.ssafy.mbting.ws.service;
 
-import com.ssafy.mbting.ws.model.event.ProposalResultsMadeEvent;
+import com.ssafy.mbting.ws.model.event.proposal.ProposalResultsMadeEvent;
 import com.ssafy.mbting.ws.repository.AppRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

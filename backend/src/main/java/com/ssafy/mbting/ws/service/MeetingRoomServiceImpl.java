@@ -3,7 +3,7 @@ package com.ssafy.mbting.ws.service;
 import com.ssafy.mbting.api.request.AnalysisRegisterRequest;
 import com.ssafy.mbting.api.request.AudioStageResult;
 import com.ssafy.mbting.api.service.OpenviduService;
-import com.ssafy.mbting.ws.model.event.MeetingRoomAudioStageResultsMadeEvent;
+import com.ssafy.mbting.ws.model.event.room.MeetingRoomAudioStageResultsMadeEvent;
 import com.ssafy.mbting.ws.model.vo.MeetingRoom;
 import com.ssafy.mbting.ws.model.vo.StompUser;
 import com.ssafy.mbting.ws.repository.AppRepository;
@@ -17,7 +17,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 import static java.util.Optional.ofNullable;
 
