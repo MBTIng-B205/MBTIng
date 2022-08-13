@@ -47,10 +47,7 @@
         :icon="WarningFilled"
         size="large"
         round
-        @click="
-          receiveClose();
-          sirenOpen();
-        "
+        @click="reportOnOff"
         >신고하기</el-button
       >
       <el-button
@@ -118,7 +115,7 @@ export default {
       console.log(state.reportflag);
 
       emit("reportOnOff", {
-        flag: state.reportflag,
+        reportflag: state.reportflag,
       });
     };
     const greenlight = function () {

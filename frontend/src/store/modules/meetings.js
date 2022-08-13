@@ -3,13 +3,18 @@
 export const meetings = {
   namespaced: true,
   state: {
+    ovsocket: null,
     mtsocket: null,
     proposal: null,
     token: null,
     chats: [],
     partner: null,
+    videoflag: false,
   },
   mutations: {
+    SET_OVSOCKET: (state, ovsocket) => {
+      state.ovsocket = ovsocket;
+    },
     SET_SOCKET: (state, mtsocket) => {
       state.mtsocket = mtsocket;
     },
@@ -28,8 +33,14 @@ export const meetings = {
 
       state.chats = chats.chats;
     },
+    SET_VIDEOFLAG: (state, videoflag) => {
+      state.videoflag = videoflag;
+    },
   },
   getters: {
+    getOvsocket(state) {
+      return state.ovsocket;
+    },
     getPartner(state) {
       return state.partner;
     },
@@ -44,6 +55,9 @@ export const meetings = {
     },
     getChats(state) {
       return state.chats;
+    },
+    getVideoflag(state) {
+      return state.videoflag;
     },
   },
   // 체크 필요

@@ -146,12 +146,14 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      mtsocket: computed(() => store.getters["meetings/getSocket"]),
       partner: computed(() => store.getters["meetings/getPartner"]),
       token: computed(() => store.getters["meetings/getToken"]),
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
       chatflag: false,
-      videoflag: false,
+      videoflag: computed(() => store.getters["meetings/getVideoflag"]),
     });
     onMounted(() => {
       joinSession();
@@ -160,7 +162,7 @@ export default {
     const joinSession = () => {
       state.OV = new OpenVidu();
       state.session = state.OV.initSession();
-
+      store.commit("meetings/SET_OVSOCKET", state.session);
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
         console.log(subscriber, "이거다");
@@ -235,7 +237,10 @@ export default {
     };
 
     const reportOnOff = ({ reportflag }) => {
+      console.log("여기왔니?");
+      console.log("reportflag" + reportflag);
       sirenDialog.value = reportflag;
+      console.log("sirenDialog" + sirenDialog.value);
     };
 
     const leaveSession = () => {
@@ -378,7 +383,12 @@ export default {
     };
     const goHome = function () {
       router.push({ name: "HomeView" });
+      console.log(state.mtsocket);
       state.mtsocket.disconnect();
+      console.log(state.mtsocket);
+      console.log(state.session);
+      state.session.disconnect();
+      console.log(state.session);
       store.commit("meetings/SET_SOCKET", null);
     };
 
