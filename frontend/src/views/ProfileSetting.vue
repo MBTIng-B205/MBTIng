@@ -31,10 +31,7 @@
                 v-model="form.nickname"
                 style="width: 220px; margin-left: 30px"
               ></el-input>
-              <el-button
-                @click="nameCheck"
-                style="margin-left: 10px"
-                size="large"
+              <el-button @click="nameCheck" style="margin-left: 10px"
                 >중복확인</el-button
               >
             </el-form-item>
@@ -60,7 +57,7 @@
               <el-select
                 v-model="form.sido"
                 placeholder="거주 지역을 선택하세요"
-                style="margin-left: 30px"
+                style="margin-left: 30px; width: 220px"
               >
                 <el-option
                   v-for="item in option"
@@ -74,7 +71,7 @@
               <el-form-item label="관심사" style="margin-bottom: 10px">
                 <el-checkbox-group
                   v-model="form.interests"
-                  style="width: 380px; align-items: center"
+                  style="width: 380px; padding-left: 10px; align-items: center"
                 >
                   <el-checkbox label="캠핑" name="캠핑" />
                   <el-checkbox label="맛집탐방" name="맛집탐방" />
@@ -249,6 +246,10 @@ export default {
   align-content: center;
   flex-direction: column;
 }
+.el-form-item__label {
+  color: rgb(255, 91, 136);
+}
+
 .el-form-item,
 .el-input__wrapper,
 .el-date-table,
