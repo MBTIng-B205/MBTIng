@@ -48,10 +48,12 @@ public class FriendController {
     // 친구 추가
     @PostMapping("/{fromEmail}/{toEmail}")
     public ResponseEntity<?> create(@PathVariable("fromEmail") String fromEmail, @PathVariable("toEmail") String toEmail) {
+        logger.debug("여기까지 왔니? -0");
         Member fromMember = memberService.getUserByEmail(fromEmail);
         Member toMember = memberService.getUserByEmail(toEmail);
+        logger.debug("여기까지 왔니? -1");
         friendService.createFriend(fromMember, toMember);
-
+        logger.debug("여기까지 왔니? -2");
         return baseResponseUtil.success();
     }
 

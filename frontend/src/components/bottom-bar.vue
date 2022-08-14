@@ -146,23 +146,35 @@ export default {
       store.dispatch("meetings/send", msg);
     };
 
+    const addFriendmsg = function () {
+      console.log("TIMEOUT 실행");
+      const msg = {
+        command: "addFriend",
+        data: {},
+      };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+    };
+
     const addFriend = function () {
       if (confirm("친구추가 하시겠습니까?")) {
         console.log(state.memberinfo);
         console.log(state.partner);
         store
           .dispatch("friends/addFriend", {
-            from: state.memberinfo.email,
-            to: state.partner.email,
+            from: "rlwls1101@hanmail.net",
+            to: "ejrtks261@nate.com",
           })
           .then(function (result) {
             console.log("addResult", result);
             state.friendFlag = true;
+            addFriendmsg();
           });
       }
     };
     return {
       state,
+      addFriendmsg,
       stopWatchEffect,
       timeout,
       restartFive,
