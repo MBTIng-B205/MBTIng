@@ -621,6 +621,7 @@ export default {
 .data {
   width: 300px;
 }
+
 .mypage,
 .dropdown-css,
 .selected,
@@ -639,5 +640,9 @@ export default {
   --el-select-input-focus-border-color: #f56c6c;
   --el-menu-hover-text-color: #f56c6c;
   --el-dialog-padding-primary: #f56c6c;
+  --el-menu-active-color: #f56c6c;
+  --el-menu-active-color: #f56c6c;
+  --el-menu-hover-text-color: #f56c6c;
+  --el-icon-active-color: #f56c6c;
 }
 </style>

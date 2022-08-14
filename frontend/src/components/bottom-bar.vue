@@ -29,8 +29,9 @@
 
     <div>
       <div style="margin-left: 97px">
-        <span style="font-size: 3rem">{{ state.timer.minutes }}</span>
-        :<span style="font-size: 3rem">{{ state.timer.seconds }}</span>
+        <span style="font-size: 3rem"
+          >{{ state.timer.minutes }} : {{ state.timer.seconds }}</span
+        >
       </div>
     </div>
     <div class="rightside" style="margin-right: 2rem">
