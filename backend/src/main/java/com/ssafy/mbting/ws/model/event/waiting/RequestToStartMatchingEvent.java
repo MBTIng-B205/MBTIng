@@ -6,9 +6,9 @@ import org.springframework.context.ApplicationEvent;
 import java.time.Clock;
 
 @Getter
-public class WaitingMeetingUserQueuedEvent extends ApplicationEvent {
+public class RequestToStartMatchingEvent extends ApplicationEvent {
 
-    public WaitingMeetingUserQueuedEvent(Object source, Clock clock) {
+    public RequestToStartMatchingEvent(Object source, Clock clock) {
         super(source, clock);
     }
 }

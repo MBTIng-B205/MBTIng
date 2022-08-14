@@ -7,12 +7,12 @@ import org.springframework.context.ApplicationEvent;
 import java.time.Clock;
 
 @Getter
-public class RequestToJoinQueueEvent extends ApplicationEvent {
+public class RequestToJoinToQueueEvent extends ApplicationEvent {
 
     private final String sessionId;
     private final MeetingUser meetingUser;
 
-    public RequestToJoinQueueEvent(Object source, Clock clock, String sessionId, MeetingUser meetingUser) {
+    public RequestToJoinToQueueEvent(Object source, Clock clock, String sessionId, MeetingUser meetingUser) {
         super(source, clock);
         this.sessionId = sessionId;
         this.meetingUser = meetingUser;

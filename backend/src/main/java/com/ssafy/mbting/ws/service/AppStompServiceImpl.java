@@ -5,7 +5,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.ssafy.mbting.common.util.JwtTokenUtil;
 import com.ssafy.mbting.ws.model.event.OrphanOccurEvent;
-import com.ssafy.mbting.ws.model.event.waiting.WaitingMeetingUserQueuedEvent;
+import com.ssafy.mbting.ws.model.event.waiting.RequestToStartMatchingEvent;
 import com.ssafy.mbting.ws.model.stompMessageHeader.ConnectHeader;
 import com.ssafy.mbting.ws.model.vo.MeetingUser;
 import com.ssafy.mbting.ws.model.vo.StompUser;
@@ -97,7 +97,7 @@ public class AppStompServiceImpl implements AppStompService {
     public void subscribe(String sessionId, MeetingUser meetingUser) {
         appRepository.saveMeetingUser(sessionId, meetingUser);
         appRepository.joinToQueue(sessionId);
-        applicationEventPublisher.publishEvent(new WaitingMeetingUserQueuedEvent(
+        applicationEventPublisher.publishEvent(new RequestToStartMatchingEvent(
                 this,
                 Clock.systemDefaultZone()
         ));

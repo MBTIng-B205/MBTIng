@@ -125,7 +125,20 @@ export default {
 .el-select-dropdown__item.selected {
   color: palevioletred;
 }
+
 .el-menu-item:hover {
   background-color: white;
+}
+
+.el-main {
+  --el-color-primary: #f56c6c;
+  --el-color-primary-light-3: #f89898;
+  --el-color-primary-light-5: #fab6b6;
+  --el-color-primary-light-7: #fcd3d3;
+  --el-color-primary-light-8: #fde2e2;
+  --el-color-primary-light-9: #fef0f0;
+  --el-color-primary-dark-2: #c45656;
+  --el-select-input-focus-border-color: #f56c6c;
+  --el-menu-hover-text-color: #f56c6c;
 }
 </style>

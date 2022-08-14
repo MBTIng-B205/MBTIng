@@ -4,7 +4,7 @@
       <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
     </div>
 
-    <el-dropdown v-if="state.memberinfo" class="dropdown-css">
+    <el-dropdown v-if="state.memberinfo">
       <img class="el-dropdown-link" :src="state.memberinfo.profileUrl" />
       <template #dropdown>
         <el-dropdown-menu class="dropdown-css">
@@ -66,6 +66,7 @@
         class="dropdown-css"
         style="margin-top: 20px"
         @click="mypageUpdateOpen"
+        round
         size="large"
         >정보 수정</el-button
       >
@@ -76,7 +77,7 @@
     <div class="mypage" style="text-align: center">
       <el-row class="filebox">
         <img class="profile" :src="state.member.profileUrl" />
-        <label for="file">프로필 사진 변경</label>
+        <label class="labelButton" for="file">프로필 사진 변경</label>
         <input type="file" id="file" @change="onFileSelected" />
       </el-row>
       <el-form
@@ -105,8 +106,13 @@
                 />
                 <button
                   @click.prevent="nameCheck"
-                  style="margin-left: 10px"
-                  id="checkButton"
+                  style="
+                    margin-left: 10px;
+                    height: 32px;
+                    padding: 9px;
+                    vertical-align: bottom;
+                  "
+                  class="mainButton"
                 >
                   중복확인
                 </button>
@@ -173,8 +179,10 @@
           </tbody></table
       ></el-form>
       <el-footer>
-        <el-button @click.prevent="updateInfo" size="large">수정</el-button>
-        <el-button @click="deleteMember" type="danger" size="large"
+        <el-button @click.prevent="updateInfo" size="large" round
+          >수정</el-button
+        >
+        <el-button @click="deleteMember" type="danger" size="large" round
           >탈퇴</el-button
         >
       </el-footer>
@@ -557,34 +565,20 @@ export default {
 .filebox label {
   display: inline-block;
   padding: 10px 20px;
-  color: black;
-  background-color: #fafafa;
+  background-color: #ffffff;
+  color: #606266;
   vertical-align: middle;
   cursor: pointer;
-  border-radius: 5px;
-  margin-left: 10px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
   margin-top: 10px;
 }
 .filebox label:hover {
-  background-color: #ecf5ff;
-  color: #409eff;
-  border-color: #409eff;
+  color: palevioletred;
+  background-color: #fbeff1;
+  border-color: #fbeff1;
 }
-#checkButton {
-  display: inline-block;
-  padding: 5px 10px;
-  color: black;
-  vertical-align: middle;
-  cursor: pointer;
-  border-radius: 5px;
-  outline: 0;
-  border: 0;
-}
-/* #checkButton:hover {
-  background-color: #ecf5ff;
-  color: #409eff;
-  border-color: #409eff;
-} */
+
 .filebox input[type="file"] {
   position: absolute;
   width: 0;
@@ -597,7 +591,7 @@ export default {
   width: 500px;
   font-size: 20px;
   border-spacing: 0 20px;
-  border: 10px solid #fadce1;
+  border: 10px solid #fde2e2;
 }
 .mypageLabel {
   width: 150px;
@@ -623,7 +617,9 @@ export default {
 }
 .mypage,
 .dropdown-css,
-.selected {
+.selected,
+.el-dropdown__popper,
+.el-dropdown-menu {
   --el-color-primary: #f56c6c;
   --el-color-primary-light-3: #f89898;
   --el-color-primary-light-5: #fab6b6;
@@ -632,6 +628,10 @@ export default {
   --el-color-primary-light-9: #fef0f0;
   --el-color-primary-dark-2: #c45656;
   --el-select-input-focus-border-color: #f56c6c;
+  --el-dropdown-menuItem-hover-color: #f56c6c;
+  --el-dropdown-menuItem-hover-fill: #fef0f0;
+  --el-select-input-focus-border-color: #f56c6c;
   --el-menu-hover-text-color: #f56c6c;
+  --el-dialog-padding-primary: #f56c6c;
 }
 </style>

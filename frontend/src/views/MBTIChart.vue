@@ -6,7 +6,7 @@
     <el-card style="padding: 0px; margin-bottom: 0px; margin-top: 30px">
       <el-row><div class="title">MBTI 별 매칭 성공률</div></el-row>
       <div style="margin-top: 10px">
-        <div style="margin-left: 200px; display: inline-block">
+        <div class="outline" style="margin-left: 200px; display: inline-block">
           <el-select v-model="mbti" @change="changeChart">
             <el-option
               v-for="item in options"
@@ -882,5 +882,17 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+}
+.selected,
+.outline {
+  --el-color-primary: #f56c6c;
+  --el-color-primary-light-3: #f89898;
+  --el-color-primary-light-5: #fab6b6;
+  --el-color-primary-light-7: #fcd3d3;
+  --el-color-primary-light-8: #fde2e2;
+  --el-color-primary-light-9: #fef0f0;
+  --el-color-primary-dark-2: #c45656;
+  --el-select-input-focus-border-color: #f56c6c;
+  box-shadow: #f56c6c;
 }
 </style>

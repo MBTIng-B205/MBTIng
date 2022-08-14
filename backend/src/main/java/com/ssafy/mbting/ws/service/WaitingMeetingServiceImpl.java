@@ -19,10 +19,16 @@ public class WaitingMeetingServiceImpl implements WaitingMeetingService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
     private final AppRepository appRepository;
+    private final MeetingMatchService meetingMatchService;
 
     @Override
     public int getQueueSize() {
         return appRepository.getQueueSize();
+    }
+
+    @Override
+    public boolean isEnoughSizeToStartMatching() {
+        return getQueueSize() >= meetingMatchService.getEnoughSizeToStartMatching();
     }
 
     @Override
