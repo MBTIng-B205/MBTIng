@@ -73,7 +73,8 @@ public class AuthController {
                         .build());
             }
         } else {
-            return baseResponseUtil.fail("no email");
+            kakaoApi.getEmail();
+            return baseResponseUtil.success("no email");
         }
         return baseResponseUtil.success(MemberLoginResponse.builder()
                 .visited(true)

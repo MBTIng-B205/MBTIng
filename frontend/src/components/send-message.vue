@@ -31,60 +31,73 @@
       >
     </el-row>
 
-    <table class="table" v-if="state.messageList.length != 0">
-      <colgroup>
-        <col width="10%" />
-        <col width="25%" />
-        <col width="40%" />
-        <col width="25%" />
-      </colgroup>
+    <div style="width: 100%; height: 500px">
+      <table class="table" v-if="state.messageList.length != 0">
+        <colgroup>
+          <col width="10%" />
+          <col width="25%" />
+          <col width="40%" />
+          <col width="25%" />
+        </colgroup>
 
-      <thead>
-        <tr>
-          <th>
-            <label class="form-checkbox"
-              ><input type="checkbox" v-model="selectAll" @click="onSelect"
-            /></label>
-          </th>
-          <th>받은사람</th>
-          <th>내용</th>
-          <th>날짜</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class="cell"
-          v-for="message in state.messageList"
-          :key="message"
-          @click="onMsg(message)"
-        >
-          <td>
-            <label class="form-checkbox">
-              <input
-                type="checkbox"
-                :value="message.id"
-                v-model="state.selected"
-                @click.stop
-              />
-              <message class="form-icon"></message>
-            </label>
-          </td>
-          <td class="tableName">{{ message.receiver.nickname }}</td>
-          <td class="tableMsg">{{ message.content }}</td>
-          <td>
-            {{
-              message.sendTime.substring(0, 10) +
-              " " +
-              message.sendTime.substring(11, 19)
-            }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <el-row class="exceptionMsg" v-else-if="state.searchFlag"
-      >검색한 쪽지가 없습니다!</el-row
-    >
-    <el-row class="exceptionMsg" v-else>친구에게 쪽지를 보내보세요!</el-row>
+        <thead>
+          <tr>
+            <th>
+              <label class="form-checkbox"
+                ><input type="checkbox" v-model="selectAll" @click="onSelect"
+              /></label>
+            </th>
+            <th>받은사람</th>
+            <th>내용</th>
+            <th>날짜</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="cell"
+            v-for="message in state.messageList"
+            :key="message"
+            @click="onMsg(message)"
+          >
+            <td>
+              <label class="form-checkbox">
+                <input
+                  type="checkbox"
+                  :value="message.id"
+                  v-model="state.selected"
+                  @click.stop
+                />
+                <message class="form-icon"></message>
+              </label>
+            </td>
+            <td class="tableName">{{ message.receiver.nickname }}</td>
+            <td class="tableMsg">{{ message.content }}</td>
+            <td>
+              {{
+                message.sendTime.substring(0, 10) +
+                " " +
+                message.sendTime.substring(11, 19)
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <el-row class="exceptionMsg" v-else-if="state.searchFlag"
+        >검색한 쪽지가 없습니다!</el-row
+      >
+      <el-row class="exceptionMsg" v-else>친구에게 쪽지를 보내보세요!</el-row>
+    </div>
+
+    <div style="margin: 0 auto; margin-top: 20px">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        @current-change="handleCurrentChange"
+        :current-page="state.currentPage"
+        :page-size="7"
+        :total="state.msgcnt"
+      />
+    </div>
 
     <el-dialog v-model="state.messageDialog" @close="handleClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
@@ -111,16 +124,6 @@
         </button>
       </div>
     </el-dialog>
-    <div style="margin: 0 auto; margin-top: 20px">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        @current-change="handleCurrentChange"
-        :current-page="state.currentPage"
-        :page-size="7"
-        :total="state.msgcnt"
-      />
-    </div>
   </el-container>
 </template>
 
@@ -374,7 +377,6 @@ input {
 }
 .exceptionMsg {
   padding: 30px;
-  border-top: solid 2px rgb(255, 189, 207);
   border-bottom: solid 2px rgb(255, 189, 207);
   font-size: large;
 }

@@ -7,7 +7,7 @@
       background-color: rgb(255, 189, 207);
     "
   >
-    <div class="leftside" style="margin-left: 2rem">
+    <div class="leftside" style="margin-left: 2rem; display: flex">
       <el-button
         type="success"
         :icon="BellFilled"
@@ -19,28 +19,62 @@
       <el-button
         type="danger"
         :icon="BellFilled"
-        style="margin-right: 7px"
+        style="margin-right: 15px"
         @click="redlight"
         size="large"
         circle
       />
-      <el-button type="info" :icon="QuestionFilled" size="large" circle />
+      <a href="#" class="info">
+        <img
+          style="width: 40px; height: 40px"
+          src="@/assets/ask.png"
+          class="question"
+        />
+        <div
+          class="Bubble bubblePosition hoverBubble"
+          style="
+            border-radius: 1rem;
+            width: 350px;
+            height: 50px;
+            position: absolute;
+            top: 1px;
+          "
+        >
+          <div style="margin-top: 0.5rem; margin-left: 0.25rem">
+            모두 그린라이트를 누르면 화상모드로 전환됩니다!
+          </div>
+          <div style="margin-left: 0.25rem">
+            상대방이 맘에 들지 않으면 레드라이트를 누르세요!
+          </div>
+        </div>
+      </a>
     </div>
 
     <div>
-      <div style="margin-left: 97px">
-        <span style="font-size: 3rem">{{ state.timer.minutes }}</span>
-        :<span style="font-size: 3rem">{{ state.timer.seconds }}</span>
+      <div style="margin-left: 180px">
+        <span style="font-size: 3rem"
+          >{{ state.timer.minutes }} : {{ state.timer.seconds }}</span
+        >
       </div>
     </div>
     <div class="rightside" style="margin-right: 2rem">
       <el-button
+        v-if="!state.friendflag"
         type="primary"
         :icon="WarningFilled"
         size="large"
         round
         @click="addFriend"
         >친구추가</el-button
+      >
+      <el-button
+        v-else
+        type="info"
+        :icon="WarningFilled"
+        size="large"
+        round
+        @click="addFriend"
+        >친구취소</el-button
       >
       <el-button
         type="danger"
@@ -78,6 +112,7 @@ export default {
     const state = reactive({
       chatflag: false,
       reportflag: false,
+      friendflag: false,
       time: null,
       timer: null,
       partner: computed(() => store.getters["meetings/getPartner"]),
@@ -147,20 +182,20 @@ export default {
     };
 
     const addFriend = function () {
-      if (confirm("친구추가 하시겠습니까?")) {
-        console.log(state.memberinfo);
-        console.log(state.partner);
-        store
-          .dispatch("friends/addFriend", {
-            from: state.memberinfo.email,
-            to: state.partner.email,
-          })
-          .then(function (result) {
-            console.log("addResult", result);
-            state.friendFlag = true;
-          });
-      }
+      console.log("Friend 실행");
+      const msg = {
+        command: "addFriend",
+        data: {
+          fromEmail: "rlwls1101@hanmail.net",
+          toEmail: "wp29dud@naver.com",
+          addOrRemove: !state.friendflag,
+        },
+      };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+      state.friendflag = !state.friendflag;
     };
+
     return {
       state,
       stopWatchEffect,
@@ -189,5 +224,28 @@ export default {
 }
 .custom-icon {
   font-size: 1.5rem;
+}
+.hoverbox {
+  background: #f0f8ff;
+  visibility: hidden;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-transition: all 0.25s;
+  -moz-transition: all 0.25s;
+  -ms-transition: all 0.25s;
+  -o-transition: all 0.25s;
+  transition: all 0.25s;
+}
+.infobutton:hover .hoverbox {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: all 0.25s;
+  -moz-transition: all 0.25s;
+  -ms-transition: all 0.25s;
+  -o-transition: all 0.25s;
+  transition: all 0.25s;
 }
 </style>

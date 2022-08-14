@@ -51,7 +51,6 @@ public class FriendController {
         Member fromMember = memberService.getUserByEmail(fromEmail);
         Member toMember = memberService.getUserByEmail(toEmail);
         friendService.createFriend(fromMember, toMember);
-
         return baseResponseUtil.success();
     }
 

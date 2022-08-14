@@ -21,6 +21,11 @@ export default {
         .then(function (result) {
           //store.commit("SET_MEMBER_INFO", result.data.member);
           console.log("member data check", result.data.body);
+          if (result.data.body == "no email") {
+            alert("email 동의를 해주셔야합니다.");
+            location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code&scope=account_email`;
+            return;
+          }
           sessionStorage.setItem("access-token", result.data.body.jwt);
           console.log(result.data.body.member);
           store.commit("accounts/SET_MEMBER_INFO", result.data.body.member);

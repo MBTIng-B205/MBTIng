@@ -46,10 +46,6 @@
             @click="updateMainVideoStreamManager(sub)"
             style="width: 100%; height: 100%; margin-top: 0; margin-bottom: 0"
           />
-          <video-controller
-            @videoOnOff="videoOnOff"
-            @audioOnOff="audioOnOff"
-          ></video-controller>
         </div>
       </div>
       <div v-else class="mbtiinfo">
@@ -155,7 +151,6 @@ export default {
       token: computed(() => store.getters["meetings/getToken"]),
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       mySessionId: "SessionA",
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
       chatflag: false,
       videoflag: computed(() => store.getters["meetings/getVideoflag"]),
     });
@@ -190,12 +185,12 @@ export default {
       state.session.on("signal:public-chat", (event) => {
         chat.value.addMessage(
           event.data,
-          JSON.parse(event.data).sender === state.myUserName,
+          JSON.parse(event.data).sender === state.partner.nickname,
           false
         );
       });
       state.session
-        .connect(state.token, { clientData: state.myUserName })
+        .connect(state.token, { clientData: state.partner.nickname })
         .then(() => {
           let publisher = state.OV.initPublisher(undefined, {
             audioSource: undefined, // The source of audio. If undefined default microphone
@@ -337,7 +332,7 @@ export default {
 
       let messageData = {
         content: content,
-        sender: state.myUserName,
+        sender: state.partner.nickname,
         // time: current,
       };
 
@@ -372,16 +367,28 @@ export default {
       if (sirenMsg.value == "") {
         alert("신고 사유를 입력하세요!");
       } else {
+        console.log("addFriend 실행");
+        const msg = {
+          command: "createReport",
+          data: {
+            from_id: "rlwls1101@hanmail.net",
+            to_id: state.partner.email,
+            content: sirenMsg.value,
+          },
+        };
+        console.log(msg);
+        store.dispatch("meetings/send", msg);
+        /*
         store
           .dispatch("reports/registerReport", {
-            from: state.memberinfo.email,
-            to: state.message.sender.email,
+            from: "rlwls1101@hanmail.net",
+            to: state.partner.email,
             content: sirenMsg.value,
           })
           .then(function (result) {
             console.log("result-report", result);
             alert("신고가 접수되었습니다.");
-          });
+          });*/
         sirenClose();
       }
     };

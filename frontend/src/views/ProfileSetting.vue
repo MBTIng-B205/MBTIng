@@ -1,7 +1,7 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
+      <img class="logo" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card style="text-align: center; padding: 0">
       <el-row type="flex" justify="space-around">
@@ -104,9 +104,7 @@
 
 <script>
 import { computed, reactive } from "vue";
-// import axios from "axios";
 import { useStore } from "vuex";
-// import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
@@ -231,10 +229,7 @@ export default {
       }
     };
 
-    const goHome = function () {
-      router.push({ name: "HomeView" });
-    };
-    return { signup, nameCheck, goHome, option, form };
+    return { signup, nameCheck, option, form };
   },
 };
 </script>
@@ -254,7 +249,13 @@ export default {
   align-content: center;
   flex-direction: column;
 }
-.el-form-item {
+.el-form-item,
+.el-input__wrapper,
+.el-date-table,
+td.current:not(.disabled),
+.el-date-table-cell__text,
+#el-popper-container-8708,
+.el-select-dropdown__item:hover {
   --el-color-primary: #f56c6c;
   --el-color-primary-light-3: #f89898;
   --el-color-primary-light-5: #fab6b6;
@@ -262,5 +263,6 @@ export default {
   --el-color-primary-light-8: #fde2e2;
   --el-color-primary-light-9: #fef0f0;
   --el-color-primary-dark-2: #c45656;
+  --el-datepicker-active-color: #f56c6c;
 }
 </style>
