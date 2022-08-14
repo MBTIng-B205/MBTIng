@@ -152,9 +152,10 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
             String meetingRoomId = user.getMeetingRoomId();
             appRepository.findMeetingRoomByMeetingRoomId(meetingRoomId).ifPresent((room -> {
                 room.getMeetingRoomResults()[indexOnRoom].setFriendResult(addOrRemove);
-                logger.debug("\n\n미팅룸 {}[{}] 의 친구 추가 여부를 True 로 세팅\nMeeting Room: {}\n"
+                logger.debug("\n\n미팅룸 {}[{}] 의 친구 추가 여부를 {} 로 세팅\nMeeting Room: {}\n"
                         , meetingRoomId
                         , indexOnRoom
+                        , addOrRemove
                         , room);
             }));
         });
