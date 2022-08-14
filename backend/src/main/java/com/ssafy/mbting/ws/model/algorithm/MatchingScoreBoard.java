@@ -38,11 +38,16 @@ public class MatchingScoreBoard {
         Map.Entry<Integer, Set<String>> entry = scoreIdSetMap.entrySet().stream()
                 .max(Comparator.comparingInt(Map.Entry::getKey))
                 .orElseThrow(() -> new RuntimeException("Internal Server Error!"));
+
         logger.debug("매칭 알고리즘 결과:\n최고점: {}\n상대 후보 Session IDs: {}\n한 명이 아니라면 이 중 아무나 나갑니다."
                 , entry.getKey()
                 , entry.getValue());
+
         return entry.getValue().stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("Internal Server Error!"));
+
+        // Todo: 여기임
+//        Set<String> set = entry.getValue();
     }
 
     private void addScore(String id, int score) {
