@@ -40,10 +40,10 @@ public class FriendTest {
         }
         for (int i = 0; i < 10; i++){
             String email = "test" + i + "@test.com";
-            Member m1 = memberRepository.findByEmail(email);
+            Member m1 = memberRepository.findByEmailAndDeleted(email,false);
             for (int j = i + 1; j < 10; j++){
                 String email2 = "hun" + j + "test.com";
-                Member m2 = memberRepository.findByEmail(email2);
+                Member m2 = memberRepository.findByEmailAndDeleted(email2,false);
                 Friend friend = new Friend(m1, m2);
                 friendRepository.save(friend);
             }

@@ -33,6 +33,6 @@ public class MemberTest {
         logger.info("\n\n공효진 : {}\n", memberRepository.save(m1).getId());
         logger.info("\n\n강하늘 : {}\n", memberRepository.save(m2).getId());
 
-        logger.info("\n\n{}\n", memberRepository.findByEmail("공효진@hamail.net"));
+        logger.info("\n\n{}\n", memberRepository.findByEmailAndDeleted("공효진@hamail.net",false));
     }
 }
