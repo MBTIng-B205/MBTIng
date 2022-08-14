@@ -9,5 +9,5 @@ public interface MeetingRoomService {
     void setVoiceResultAndHandleIt(String sessionId, AudioStageResult voiceResult);
     void setVideoStageStartTime(String meetingRoomId);
     void setEndTimeIfAbsent(String meetingRoomId);
-    void setFriendResultToTrue(String sessionId);
+    void setFriendResult(String sessionId, Boolean AddOrRemove);
 }

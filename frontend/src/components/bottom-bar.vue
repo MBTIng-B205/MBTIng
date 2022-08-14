@@ -59,12 +59,22 @@
     </div>
     <div class="rightside" style="margin-right: 2rem">
       <el-button
+        v-if="!state.friendflag"
         type="primary"
         :icon="WarningFilled"
         size="large"
         round
         @click="addFriend"
         >친구추가</el-button
+      >
+      <el-button
+        v-else
+        type="info"
+        :icon="WarningFilled"
+        size="large"
+        round
+        @click="addFriend"
+        >친구취소</el-button
       >
       <el-button
         type="danger"
@@ -102,6 +112,7 @@ export default {
     const state = reactive({
       chatflag: false,
       reportflag: false,
+      friendflag: false,
       time: null,
       timer: null,
       partner: computed(() => store.getters["meetings/getPartner"]),
@@ -171,20 +182,20 @@ export default {
     };
 
     const addFriend = function () {
-      if (confirm("친구추가 하시겠습니까?")) {
-        console.log(state.memberinfo);
-        console.log(state.partner);
-        store
-          .dispatch("friends/addFriend", {
-            from: state.memberinfo.email,
-            to: state.partner.email,
-          })
-          .then(function (result) {
-            console.log("addResult", result);
-            state.friendFlag = true;
-          });
-      }
+      console.log("Friend 실행");
+      const msg = {
+        command: "addFriend",
+        data: {
+          fromEmail: "rlwls1101@hanmail.net",
+          toEmail: "wp29dud@naver.com",
+          addOrRemove: !state.friendflag,
+        },
+      };
+      console.log(msg);
+      store.dispatch("meetings/send", msg);
+      state.friendflag = !state.friendflag;
     };
+
     return {
       state,
       stopWatchEffect,
