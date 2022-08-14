@@ -32,7 +32,13 @@
         />
         <div
           class="Bubble bubblePosition hoverBubble"
-          style="border-radius: 1rem; width: 350px; height: 50px"
+          style="
+            border-radius: 1rem;
+            width: 350px;
+            height: 50px;
+            position: absolute;
+            top: 1px;
+          "
         >
           <div style="margin-top: 0.5rem; margin-left: 0.25rem">
             모두 그린라이트를 누르면 화상모드로 전환됩니다!

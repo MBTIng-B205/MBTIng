@@ -46,10 +46,6 @@
             @click="updateMainVideoStreamManager(sub)"
             style="width: 100%; height: 100%; margin-top: 0; margin-bottom: 0"
           />
-          <video-controller
-            @videoOnOff="videoOnOff"
-            @audioOnOff="audioOnOff"
-          ></video-controller>
         </div>
       </div>
       <div v-else class="mbtiinfo">
