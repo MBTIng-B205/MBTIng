@@ -8,6 +8,10 @@
     "
   >
     <div class="leftside" style="margin-left: 2rem">
+      <div style="background-color: ">
+        <div>나와 상대방이 모두 그린라이트를 누르면 화상모드로 전환됩니다!</div>
+        <div>상대방이 맘에 들지 않으면 레드라이트를 누르세요!</div>
+      </div>
       <el-button
         type="success"
         :icon="BellFilled"
@@ -29,8 +33,9 @@
 
     <div>
       <div style="margin-left: 97px">
-        <span style="font-size: 3rem">{{ state.timer.minutes }}</span>
-        :<span style="font-size: 3rem">{{ state.timer.seconds }}</span>
+        <span style="font-size: 3rem"
+          >{{ state.timer.minutes }} : {{ state.timer.seconds }}</span
+        >
       </div>
     </div>
     <div class="rightside" style="margin-right: 2rem">
