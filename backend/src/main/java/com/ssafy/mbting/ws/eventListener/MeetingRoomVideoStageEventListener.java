@@ -20,9 +20,12 @@ public class MeetingRoomVideoStageEventListener {
     @EventListener
     public void onAddFriend(AddFriendEvent event) {
         String sessionId = event.getSessionId();
+        Boolean addOrRemove = event.getAddOrRemove();
 
-        logger.debug("\n\n친구 추가 이벤트 발생\nSession ID: {}\n", sessionId);
+        logger.debug("\n\n친구 추가 이벤트 발생\nSession ID: {}\nAdd Or Remove: {}\n"
+                , sessionId
+                , addOrRemove ? "add" : "remove");
 
-        meetingRoomService.setFriendResultToTrue(sessionId);
+        meetingRoomService.setFriendResult(sessionId, addOrRemove);
     }
 }
