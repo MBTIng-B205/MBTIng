@@ -120,10 +120,6 @@ public class KakaoAPI {
 		return userInfo;
 	}
 
-	public void getEmail(){
-		//String reqURL="https://kauth.kakao.com/oauth/authorize?client_id=ebb8bb50d4cb227cf989335c827681e5&redirect_uri=http://localhost:80/loginview&response_type=code&scope=account_email";
-	}
-
 	public void kakaoLogout(String accessToken) {
 		String reqURL="http://kapi.kakao.com/v1/user/logout";
 		try {
