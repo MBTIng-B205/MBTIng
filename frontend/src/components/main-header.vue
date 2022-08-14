@@ -620,7 +620,28 @@ export default {
 .dropdown-css,
 .selected,
 .el-dropdown__popper,
-.el-dropdown-menu {
+.el-dropdown-menu,
+#el-id-3047-150 {
+  --el-color-primary: #f56c6c;
+  --el-color-primary-light-3: #f89898;
+  --el-color-primary-light-5: #fab6b6;
+  --el-color-primary-light-7: #fcd3d3;
+  --el-color-primary-light-8: #fde2e2;
+  --el-color-primary-light-9: #fef0f0;
+  --el-color-primary-dark-2: #c45656;
+  --el-select-input-focus-border-color: #f56c6c;
+  --el-dropdown-menuItem-hover-color: #f56c6c;
+  --el-dropdown-menuItem-hover-fill: #fef0f0;
+  --el-select-input-focus-border-color: #f56c6c;
+  --el-menu-hover-text-color: #f56c6c;
+  --el-dialog-padding-primary: #f56c6c;
+  --el-menu-active-color: #f56c6c;
+  --el-menu-active-color: #f56c6c;
+  --el-menu-hover-text-color: #f56c6c;
+  --el-icon-active-color: #f56c6c;
+}
+
+::v-deep svg {
   --el-color-primary: #f56c6c;
   --el-color-primary-light-3: #f89898;
   --el-color-primary-light-5: #fab6b6;
