@@ -45,7 +45,7 @@
       >
       <el-button
         v-else
-        type="primary"
+        type="info"
         :icon="WarningFilled"
         size="large"
         round
