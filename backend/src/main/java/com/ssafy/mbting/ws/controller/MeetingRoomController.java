@@ -51,13 +51,16 @@ public class MeetingRoomController {
 
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
 
+        Boolean addOrRemove = message.getPayload().getAddOrRemove();
+
         logger.debug("\n\n친구 추가 클릭 도착\nMessage: {}\n", message);
 
         // Todo: 이벤트 발행
         applicationEventPublisher.publishEvent(new AddFriendEvent(
                 this,
                 Clock.systemDefaultZone(),
-                header.getSessionId()));
+                header.getSessionId(),
+                addOrRemove));
 
         AddFriendBody addFriendBody = message.getPayload();
 
