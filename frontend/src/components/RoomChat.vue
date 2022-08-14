@@ -14,7 +14,7 @@
           style="border-radius: 1px"
         >
           <!-- 내가 보낸 채팅인 경우 -->
-          <div v-if="chat.isMyMessage" class="">
+          <div v-if="chat.isMyMessage" class="" style="">
             <div>
               <p>
                 나 :
