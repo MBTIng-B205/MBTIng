@@ -7,11 +7,7 @@
       background-color: rgb(255, 189, 207);
     "
   >
-    <div class="leftside" style="margin-left: 2rem">
-      <div style="background-color: ">
-        <div>나와 상대방이 모두 그린라이트를 누르면 화상모드로 전환됩니다!</div>
-        <div>상대방이 맘에 들지 않으면 레드라이트를 누르세요!</div>
-      </div>
+    <div class="leftside" style="margin-left: 2rem; display: flex">
       <el-button
         type="success"
         :icon="BellFilled"
@@ -23,16 +19,33 @@
       <el-button
         type="danger"
         :icon="BellFilled"
-        style="margin-right: 7px"
+        style="margin-right: 15px"
         @click="redlight"
         size="large"
         circle
       />
-      <el-button type="info" :icon="QuestionFilled" size="large" circle />
+      <a href="#" class="info">
+        <img
+          style="width: 40px; height: 40px"
+          src="@/assets/ask.png"
+          class="question"
+        />
+        <div
+          class="Bubble bubblePosition hoverBubble"
+          style="border-radius: 1rem; width: 350px; height: 50px"
+        >
+          <div style="margin-top: 0.5rem; margin-left: 0.25rem">
+            모두 그린라이트를 누르면 화상모드로 전환됩니다!
+          </div>
+          <div style="margin-left: 0.25rem">
+            상대방이 맘에 들지 않으면 레드라이트를 누르세요!
+          </div>
+        </div>
+      </a>
     </div>
 
     <div>
-      <div style="margin-left: 97px">
+      <div style="margin-left: 180px">
         <span style="font-size: 3rem"
           >{{ state.timer.minutes }} : {{ state.timer.seconds }}</span
         >
@@ -194,5 +207,28 @@ export default {
 }
 .custom-icon {
   font-size: 1.5rem;
+}
+.hoverbox {
+  background: #f0f8ff;
+  visibility: hidden;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-transition: all 0.25s;
+  -moz-transition: all 0.25s;
+  -ms-transition: all 0.25s;
+  -o-transition: all 0.25s;
+  transition: all 0.25s;
+}
+.infobutton:hover .hoverbox {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: all 0.25s;
+  -moz-transition: all 0.25s;
+  -ms-transition: all 0.25s;
+  -o-transition: all 0.25s;
+  transition: all 0.25s;
 }
 </style>
