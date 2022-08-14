@@ -367,6 +367,18 @@ export default {
       if (sirenMsg.value == "") {
         alert("신고 사유를 입력하세요!");
       } else {
+        console.log("addFriend 실행");
+        const msg = {
+          command: "createReport",
+          data: {
+            from_id: "rlwls1101@hanmail.net",
+            to_id: state.partner.email,
+            content: sirenMsg.value,
+          },
+        };
+        console.log(msg);
+        store.dispatch("meetings/send", msg);
+        /*
         store
           .dispatch("reports/registerReport", {
             from: "rlwls1101@hanmail.net",
@@ -376,7 +388,7 @@ export default {
           .then(function (result) {
             console.log("result-report", result);
             alert("신고가 접수되었습니다.");
-          });
+          });*/
         sirenClose();
       }
     };

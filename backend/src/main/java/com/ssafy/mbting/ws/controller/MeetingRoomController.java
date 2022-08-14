@@ -1,6 +1,8 @@
 package com.ssafy.mbting.ws.controller;
 
 import com.ssafy.mbting.api.request.AudioStageResult;
+import com.ssafy.mbting.api.request.ReportRegisterRequest;
+import com.ssafy.mbting.api.service.ReportService;
 import com.ssafy.mbting.ws.model.event.room.AddFriendEvent;
 import com.ssafy.mbting.ws.model.event.room.MeetingRoomAudioStageResultArriveEvent;
 import com.ssafy.mbting.ws.model.stompMessageBody.msg.AudioStageResultBody;
@@ -21,7 +23,7 @@ public class MeetingRoomController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
-
+    private final ReportService reportService;
     @MessageMapping("/indi/meetingAudioStageResult")
     public void receiveAudioStarted(Message<AudioStageResultBody> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
@@ -40,6 +42,7 @@ public class MeetingRoomController {
     // Todo: 친추 처리
     @MessageMapping("/indi/addFriend")
     public void receiveFriendRequest(Message<Void> message) {
+
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
 
         logger.debug("\n\n친구 추가 클릭 도착\nMessage: {}\n", message);
@@ -49,5 +52,14 @@ public class MeetingRoomController {
                 this,
                 Clock.systemDefaultZone(),
                 header.getSessionId()));
+    }
+
+    @MessageMapping("/indi/createReport")
+    public void receiveReportRequest(Message<ReportRegisterRequest> message){
+        logger.debug("\n\n신고 하기 요청 도착\nMessage: {}\n", message);
+        StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
+        ReportRegisterRequest reportRegisterRequest = message.getPayload();
+        logger.debug("\n\n신고 하기 요청 정보\n reportRegisterRequest: {}\n", reportRegisterRequest);
+        reportService.createReport(reportRegisterRequest);
     }
 }
