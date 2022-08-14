@@ -65,6 +65,7 @@ export default {
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       proposal: computed(() => store.getters["meetings/getProposal"]),
       mtsocket: computed(() => store.getters["meetings/getSocket"]),
+      ovsocket: computed(() => store.getters["meetings/getOvsocket"]),
     });
     onMounted(() => {
       connect();
@@ -168,6 +169,7 @@ export default {
                 router.push({ path: "/meetingmatch" });
               }
               if (obj.command == "accept") {
+                alert("매칭이 성사됬습니다 블라인드 소개팅으로 들어갑니다");
                 store.commit("meetings/SET_TOKEN", obj.data.openviduToken);
                 store.commit("meetings/SET_PARTNER", obj.data.opponent);
                 console.log(obj.data.openviduToken);
@@ -176,19 +178,42 @@ export default {
                 router.push({ path: "/room" });
               }
               if (obj.command == "opponentRefusal") {
+                alert("매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다");
                 state.mtsocket.disconnect();
                 store.commit("meetings/SET_SOCKET", null);
                 router.push({ name: "MeetingWait" });
               }
               if (obj.command == "noVideoStage") {
+                alert("미팅이 종료 됬습니다.");
+                console.log("noVideoStage");
+                state.ovsocket.disconnect();
+                store.commit("meetings/SET_OVSOCKET", null);
                 state.mtsocket.disconnect();
                 store.commit("meetings/SET_SOCKET", null);
-                router.push({ name: "MeetingWait" });
+                router.push({ name: "HomeView" });
               }
-              if (obj.command == "opponentRefusal") {
-                state.mtsocket.disconnect();
-                store.commit("meetings/SET_SOCKET", null);
-                router.push({ name: "MeetingWait" });
+              if (obj.command == "goVideoStage") {
+                alert("서로 그린 라이트를 눌러 화상으로 이동합니다");
+                store.commit("meetings/SET_VIDEOFLAG", true);
+              }
+              if (obj.command == "opponentLeft") {
+                if (obj.data.status == "INPROGRESS") {
+                  alert("상대방이 떠났습니다. 다시 대기열에 돌입합니다");
+                  state.mtsocket.disconnect();
+                  store.commit("meetings/SET_SOCKET", null);
+                  router.push({ name: "MeetingWait" });
+                }
+                if (obj.data.status == "INROOM") {
+                  alert("상대방이 떠났습니다.");
+                  store.commit("meetings/SET_VIDEOFLAG", false);
+                  console.log("INROOM");
+                  state.ovsocket.disconnect();
+                  store.commit("meetings/SET_OVSOCKET", null);
+                  store.commit("meetings/SET_OVSOCKET", null);
+                  state.mtsocket.disconnect();
+                  store.commit("meetings/SET_SOCKET", null);
+                  router.push({ name: "HomeView" });
+                }
               }
             },
             {

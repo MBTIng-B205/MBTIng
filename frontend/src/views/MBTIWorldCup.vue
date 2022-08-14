@@ -11,7 +11,7 @@
     <el-row style="flex-direction: row; justify-content: center">
       <el-card
         :class="{ activeCard: active == 'left' }"
-        style="padding: 0px"
+        style="padding: 0px; border-radius: 1rem"
         @click="game(left)"
         @mouseover="active = 'left'"
         @mouseout="active = ''"
@@ -23,7 +23,7 @@
       <div class="vs">VS</div>
       <el-card
         :class="{ activeCard: active == 'right' }"
-        style="padding: 0px"
+        style="padding: 0px; border-radius: 1rem"
         @click="game(right)"
         @mouseover="active = 'right'"
         @mouseout="active = ''"
@@ -144,6 +144,7 @@ export default {
 }
 .activeCard .el-card__body {
   background-color: rgb(255, 91, 136);
+  border-radius: 1rem;
 }
 .vs {
   font-weight: bold;

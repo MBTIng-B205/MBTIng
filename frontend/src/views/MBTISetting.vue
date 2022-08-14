@@ -77,11 +77,12 @@
       <router-link to="/mymbtitest">간단검사 하러가기</router-link>
       <el-footer>
         <el-button
-          type="warning"
+          type="danger"
           plain
           size="large"
           @click="clickSetting"
           style="margin-top: 50px"
+          round
           >확인</el-button
         >
       </el-footer>

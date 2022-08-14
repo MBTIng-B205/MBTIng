@@ -8,10 +8,12 @@
             <el-option value="mbti" label="MBTI" /> </el-select
         ></el-col>
         <el-col :span="12">
-          <el-input v-model="search" />
+          <el-input v-model="search" placeholder="검색어를 입력하세요" />
         </el-col>
         <el-col :span="6">
-          <el-button @click="onSearch" size="large"> 검색 </el-button>
+          <button class="mainButton" @click="onSearch" size="large">
+            검색
+          </button>
         </el-col>
       </el-row>
     </el-header>
@@ -20,45 +22,32 @@
       style="flex-direction: row; justify-content: flex-start"
     >
       <el-col :span="8" v-for="friend in state.friends" :key="friend">
-        <el-card
-          style="
-            cursor: pointer;
-            padding: 20px;
-            margin: auto;
-            margin-top: 20px;
-            margin-bottom: 20px;
-          "
-          @click="onFriendProfile(friend)"
-        >
-          <div>
-            <el-popconfirm
-              confirm-button-text="삭제"
-              cancel-button-text="취소"
-              title="친구를 삭제하시겠습니까?"
-              @confirm="deleteFriend(friend)"
-            >
-              <template #reference>
-                <el-button @click.stop class="delete" size="large"
-                  ><img src="@/assets/x.png"
-                /></el-button>
-              </template>
-            </el-popconfirm>
-          </div>
+        <el-card>
+          <button
+            @click.stop
+            class="magnifier"
+            size="large"
+            @click="friendProfileOpen(friend)"
+          >
+            <img src="@/assets/magnifier.png" />
+          </button>
 
           <img class="friendProfile" :src="friend.profileUrl" />
           <div style="font-weight: bold">
             <p>{{ friend.nickname }}</p>
             <p>{{ friend.mbti }}</p>
           </div>
-          <button class="buttonStyle" @click.stop="messageOpen(friend)">
+          <button class="messageButton" @click.stop="messageOpen(friend)">
             쪽지 보내기
           </button>
         </el-card>
       </el-col>
     </el-row>
 
-    <el-row v-else-if="state.searchFlag">검색한 친구가 없습니다!</el-row>
-    <el-row v-else> 친구를 추가해보세요! </el-row>
+    <el-row class="exceptionMsg" v-else-if="state.searchFlag"
+      >검색한 친구가 없습니다!</el-row
+    >
+    <el-row class="exceptionMsg" v-else> 친구를 추가해보세요! </el-row>
 
     <el-dialog v-model="messageDialog" @close="messageClose">
       <el-header style="text-align: left; padding-top: 10px">
@@ -73,10 +62,10 @@
         rows="10"
       />
       <div style="margin-top: 20px">
-        <el-button style="background-color: deeppink" @click="clickSend"
-          >전송</el-button
-        >
-        <el-button @click="messageClose" size="large">취소</el-button>
+        <button class="mainButton messageSend" @click="clickSend">전송</button>
+        <button class="mainButton messageCancel" @click="messageClose">
+          취소
+        </button>
       </div>
     </el-dialog>
 
@@ -112,6 +101,14 @@
             </tr>
           </tbody>
         </table>
+        <el-button
+          type="danger"
+          round
+          style="margin-top: 20px"
+          size="large"
+          @click="deleteFriend(friend)"
+          >친구 삭제</el-button
+        >
       </div>
     </el-dialog>
   </el-container>
@@ -148,7 +145,7 @@ export default {
     const messageDialog = ref(false);
     const message = ref("");
 
-    const onFriendProfile = function (friend) {
+    const friendProfileOpen = function (friend) {
       console.log(friend);
       state.friend = friend;
 
@@ -205,25 +202,28 @@ export default {
       }
     };
 
-    const deleteFriend = function (friend) {
+    const deleteFriend = function () {
       // 친구 삭제 기능
-      console.log(friend);
-      store
-        .dispatch("friends/deleteFriend", {
-          from: state.memberinfo.email,
-          to: friend.email,
-        })
-        .then(function (result) {
-          console.log("deleteResult", result);
-          store
-            .dispatch("friends/getFriendsList", state.memberinfo.email)
-            .then(function (result) {
-              console.log("result", result);
-              state.friends = result.data.body.friends;
-              console.log("friends", state.friends);
-              console.log("friend", state.friends[0]);
-            });
-        });
+      console.log(state.friend);
+      if (confirm("친구를 삭제하시겠습니까?")) {
+        store
+          .dispatch("friends/deleteFriend", {
+            from: state.memberinfo.email,
+            to: state.friend.email,
+          })
+          .then(function (result) {
+            console.log("deleteResult", result);
+            state.friendProfileDialog = false;
+            store
+              .dispatch("friends/getFriendsList", state.memberinfo.email)
+              .then(function (result) {
+                console.log("result", result);
+                state.friends = result.data.body.friends;
+                console.log("friends", state.friends);
+                console.log("friend", state.friends[0]);
+              });
+          });
+      }
     };
 
     const clickSend = function () {
@@ -272,7 +272,7 @@ export default {
       interests,
       messageDialog,
       message,
-      onFriendProfile,
+      friendProfileOpen,
       friendProfileClose,
       onSearch,
       deleteFriend,
@@ -313,14 +313,30 @@ table {
   width: 130px;
   color: rgb(255, 91, 136);
 }
-.delete {
+.magnifier {
+  cursor: pointer;
   float: right;
   border: 0;
+  border-radius: 10px;
+  background-color: white;
+  padding: 5px;
+  padding-bottom: 2px;
+}
+.magnifier:hover {
+  background-color: #fadce1;
 }
 .el-card {
   width: 250px;
   margin: 20px;
   font-size: 20px;
+  padding: 20px;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: solid 5px white;
+}
+.el-card:hover {
+  border: solid 5px #fadce1;
 }
 .el-dialog {
   padding: 0;
@@ -351,7 +367,30 @@ table {
   margin-top: 10px;
   margin-bottom: 20px;
 }
-.buttonStyle {
+input:focus {
+  border-color: palevioletred;
+}
+
+.mainButton {
+  cursor: pointer;
+  padding: 12px 19px;
+  height: 40px;
+  font-size: 14px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  line-height: 1;
+  align-items: center;
+  background-color: #ffffff;
+  color: #606266;
+}
+
+.mainButton:hover {
+  color: palevioletred;
+  background-color: #fbeff1;
+  border-color: #fbeff1;
+}
+
+.messageButton {
   cursor: pointer;
   width: 200px;
   background-color: rgb(255, 189, 207);
@@ -359,15 +398,36 @@ table {
   border-radius: 10px;
   border: solid rgb(255, 189, 207);
 }
-.buttonStyle:active {
+.messageButton:active {
   background-color: rgb(255, 91, 136);
   color: white;
 }
-.buttonStyle:hover {
+.messageButton:hover {
   background-color: rgb(255, 91, 136);
   color: white;
 }
 .activeCard .el-card__body {
   background-color: rgb(255, 91, 136);
+}
+.el-select .el-input.is-focus .el-input__wrapper {
+  box-shadow: 0 0 0 1px palevioletred;
+}
+.el-select-dropdown__item.selected {
+  color: palevioletred;
+}
+.exceptionMsg {
+  padding: 30px;
+  border-top: solid 2px rgb(255, 189, 207);
+  border-bottom: solid 2px rgb(255, 189, 207);
+  font-size: large;
+}
+.messageCancel {
+  margin-left: 18px;
+  border-radius: 20px;
+}
+.messageSend {
+  margin-left: 18px;
+  border-radius: 20px;
+  background-color: rgb(255, 189, 207);
 }
 </style>
