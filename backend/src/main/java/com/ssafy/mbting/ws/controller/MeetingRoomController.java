@@ -1,10 +1,15 @@
 package com.ssafy.mbting.ws.controller;
 
+import com.ssafy.mbting.api.controller.FriendController;
 import com.ssafy.mbting.api.request.AudioStageResult;
+
 import com.ssafy.mbting.api.request.ReportRegisterRequest;
 import com.ssafy.mbting.api.service.ReportService;
+
+import com.ssafy.mbting.api.service.FriendService;
 import com.ssafy.mbting.ws.model.event.room.AddFriendEvent;
 import com.ssafy.mbting.ws.model.event.room.MeetingRoomAudioStageResultArriveEvent;
+import com.ssafy.mbting.ws.model.stompMessageBody.msg.AddFriendBody;
 import com.ssafy.mbting.ws.model.stompMessageBody.msg.AudioStageResultBody;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,6 +29,7 @@ public class MeetingRoomController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
     private final ReportService reportService;
+    private final FriendController friendController;
     @MessageMapping("/indi/meetingAudioStageResult")
     public void receiveAudioStarted(Message<AudioStageResultBody> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
@@ -41,7 +47,7 @@ public class MeetingRoomController {
 
     // Todo: 친추 처리
     @MessageMapping("/indi/addFriend")
-    public void receiveFriendRequest(Message<Void> message) {
+    public void receiveFriendRequest(Message<AddFriendBody> message) {
 
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
 
@@ -52,6 +58,14 @@ public class MeetingRoomController {
                 this,
                 Clock.systemDefaultZone(),
                 header.getSessionId()));
+
+        AddFriendBody addFriendBody = message.getPayload();
+
+        logger.debug("addFriend 컨트롤러 호출함\nfromEmail: {}\ntoEmail: {}"
+                , addFriendBody.getFromEmail()
+                , addFriendBody.getToEmail());
+
+        friendController.create(addFriendBody.getFromEmail(), addFriendBody.getToEmail());
     }
 
     @MessageMapping("/indi/createReport")
