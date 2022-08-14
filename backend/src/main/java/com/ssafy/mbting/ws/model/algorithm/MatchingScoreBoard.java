@@ -47,7 +47,7 @@ public class MatchingScoreBoard {
     }
 
     private void addScore(String id, int score) {
-        logger.debug("id: {}, score: {}", id, score);
+        logger.debug("id: {}, score to add: {}", id, score);
 
         idScoreMap.putIfAbsent(id, 0);
         int oldScore = idScoreMap.get(id);

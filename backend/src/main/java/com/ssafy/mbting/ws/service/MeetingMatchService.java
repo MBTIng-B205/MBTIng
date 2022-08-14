@@ -2,6 +2,6 @@ package com.ssafy.mbting.ws.service;
 
 public interface MeetingMatchService {
 
-    boolean isEnoughSizeToStartMatching(int size);
+    int getEnoughSizeToStartMatching();
     void startMatching();
 }
