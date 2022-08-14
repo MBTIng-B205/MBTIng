@@ -34,7 +34,9 @@ public class FriendServiceImpl implements FriendService{
 
     @Override
     public Friend createFriend(Member fromMember, Member toMember) {
-        return friendRepository.save(Friend.of(fromMember, toMember));
+        Friend friend = friendRepository.findByFromIdAndToId(fromMember, toMember);
+        if (friend == null) friend = friendRepository.save(Friend.of(fromMember, toMember));
+        return friend;
     }
 
     @Override

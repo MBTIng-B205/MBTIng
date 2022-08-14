@@ -13,4 +13,5 @@ public class AddFriendBody {
 
     private String fromEmail;
     private String toEmail;
+    private Boolean addOrRemove;
 }

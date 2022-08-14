@@ -146,15 +146,16 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
     }
 
     @Override
-    public void setFriendResultToTrue(String sessionId) {
+    public void setFriendResult(String sessionId, Boolean addOrRemove) {
         appRepository.findStompUserBySessionId(sessionId).ifPresent(user -> {
             int indexOnRoom = user.getIndexOnRoom();
             String meetingRoomId = user.getMeetingRoomId();
             appRepository.findMeetingRoomByMeetingRoomId(meetingRoomId).ifPresent((room -> {
-                room.getMeetingRoomResults()[indexOnRoom].setFriendResult(true);
-                logger.debug("\n\n미팅룸 {}[{}] 의 친구 추가 여부를 True 로 세팅\nMeeting Room: {}\n"
+                room.getMeetingRoomResults()[indexOnRoom].setFriendResult(addOrRemove);
+                logger.debug("\n\n미팅룸 {}[{}] 의 친구 추가 여부를 {} 로 세팅\nMeeting Room: {}\n"
                         , meetingRoomId
                         , indexOnRoom
+                        , addOrRemove
                         , room);
             }));
         });

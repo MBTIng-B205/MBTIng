@@ -49,20 +49,28 @@ public class MeetingRoomController {
     public void receiveFriendRequest(Message<AddFriendBody> message) {
         StompHeaderAccessor header = StompHeaderAccessor.wrap(message);
 
-        logger.debug("\n\n친구 추가 클릭 도착\nMessage: {}\n", message);
+        AddFriendBody addFriendBody = message.getPayload();
+        Boolean addOrRemove = addFriendBody.getAddOrRemove();
+
+        logger.debug("\n\n친구 추가 클릭 도착\nAdd Friend: {}\n", addFriendBody);
 
         applicationEventPublisher.publishEvent(new AddFriendEvent(
                 this,
                 Clock.systemDefaultZone(),
-                header.getSessionId()));
+                header.getSessionId(),
+                addOrRemove));
 
-        AddFriendBody addFriendBody = message.getPayload();
+        String fromEmail = addFriendBody.getFromEmail();
+        String toEmail = addFriendBody.getToEmail();
 
         logger.debug("addFriend 컨트롤러 호출함\nfromEmail: {}\ntoEmail: {}"
-                , addFriendBody.getFromEmail()
-                , addFriendBody.getToEmail());
+                , fromEmail
+                , toEmail);
 
-        friendController.create(addFriendBody.getFromEmail(), addFriendBody.getToEmail());
+        if (addOrRemove)
+            friendController.create(fromEmail, toEmail);
+        else
+            friendController.delete(fromEmail, toEmail);
     }
 
     @MessageMapping("/indi/createReport")
