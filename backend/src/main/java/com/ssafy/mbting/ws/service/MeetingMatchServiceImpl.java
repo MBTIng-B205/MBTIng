@@ -26,6 +26,7 @@ import static java.util.Optional.ofNullable;
 @RequiredArgsConstructor
 public class MeetingMatchServiceImpl implements MeetingMatchService {
 
+    private boolean inProgress = false;
     @Value("${com.mbting.match.condition.enough.size}")
     private int enoughSizeToStartMatching;
     @Value("${com.mbting.match.condition.score.gender}")
@@ -37,7 +38,6 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
     private final AppRepository appRepository;
-    private boolean inProgress = false;
 
     public int getEnoughSizeToStartMatching() {
         return enoughSizeToStartMatching;

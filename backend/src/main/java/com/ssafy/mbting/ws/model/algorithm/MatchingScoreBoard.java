@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -51,9 +50,8 @@ public class MatchingScoreBoard {
 
         idScoreMap.putIfAbsent(id, 0);
         int oldScore = idScoreMap.get(id);
-        idScoreMap.put(id, oldScore + score);
-
-        int newScore = idScoreMap.get(id);
+        int newScore = oldScore + score;
+        idScoreMap.put(id, newScore);
 
         Set<String> oldIdSet = scoreIdSetMap.getOrDefault(oldScore, newHashSet());
         oldIdSet.remove(id);
@@ -69,7 +67,7 @@ public class MatchingScoreBoard {
             return set;
         });
 
-        logger.debug("\n\n후보 {} 에게 {} 점을 추가한 결과:\n[id, score]: {}\n[score,ids]: {}\n"
+        logger.debug("\n\n후보 {} 에게 {} 점을 추가한 결과:\n[id, score]: {}\n[score, ids]: {}\n"
                 , id
                 , score
                 , idScoreMap
