@@ -36,7 +36,7 @@ public class OpenviduServiceImpl implements OpenviduService {
     }
 
     public String getToken(String sessionName) {
-        logger.info("OpenVidu 토큰 생성 요청 들어옴");
+        logger.info("OpenVidu 토큰 생성 요청 들어옴 세션 이름: {}", sessionName);
         try {
             Session session = mapSessions.get(sessionName);
             if (session == null) session = openVidu.createSession();
