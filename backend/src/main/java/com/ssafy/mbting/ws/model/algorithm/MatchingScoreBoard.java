@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -17,6 +18,7 @@ public class MatchingScoreBoard {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Map<String, Integer> idScoreMap = newHashMap();
     private final Map<Integer, Set<String>> scoreIdSetMap = newHashMap();
+    private final Random random = new Random();
 
     private int genderScore;
     private int sidoScore;
@@ -43,11 +45,15 @@ public class MatchingScoreBoard {
                 , entry.getKey()
                 , entry.getValue());
 
-        return entry.getValue().stream().findFirst()
-                .orElseThrow(() -> new RuntimeException("Internal Server Error!"));
+        return getRandomItem(entry.getValue());
+    }
 
-        // Todo: 여기임
-//        Set<String> set = entry.getValue();
+    private String getRandomItem(Set<String> set) {
+
+        int i = 0, I = random.nextInt(set.size());
+        for (String id : set) if (i++ == I) return id;
+
+        return null;
     }
 
     private void addScore(String id, int score) {
