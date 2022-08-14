@@ -31,61 +31,73 @@
         </button></el-col
       >
     </el-row>
-    <table class="table" v-if="state.messageList.length != 0">
-      <colgroup>
-        <col width="10%" />
-        <col width="25%" />
-        <col width="40%" />
-        <col width="25%" />
-      </colgroup>
+    <div style="width: 100%; height: 500px">
+      <table class="table" v-if="state.messageList.length != 0">
+        <colgroup>
+          <col width="10%" />
+          <col width="25%" />
+          <col width="40%" />
+          <col width="25%" />
+        </colgroup>
 
-      <thead>
-        <tr>
-          <th>
-            <label class="form-checkbox"
-              ><input type="checkbox" v-model="selectAll" @click="onSelect"
-            /></label>
-          </th>
-          <th>보낸사람</th>
-          <th>내용</th>
-          <th>날짜</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class="cell"
-          v-for="message in state.messageList"
-          :key="message"
-          @click="onMsg(message)"
-          :class="{ read: !message.read }"
-        >
-          <td>
-            <label class="form-checkbox">
-              <input
-                type="checkbox"
-                :value="message.id"
-                v-model="state.selected"
-                @click.stop
-              />
-              <message class="form-icon"></message>
-            </label>
-          </td>
-          <td class="tableName">{{ message.sender.nickname }}</td>
-          <td class="tableMsg">{{ message.content }}</td>
-          <td>
-            {{
-              message.sendTime.substring(0, 10) +
-              " " +
-              message.sendTime.substring(11, 19)
-            }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <el-row class="exceptionMsg" v-else-if="state.searchFlag"
-      >검색한 쪽지가 없습니다!</el-row
-    >
-    <el-row class="exceptionMsg" v-else>받은 쪽지가 없습니다!</el-row>
+        <thead>
+          <tr>
+            <th>
+              <label class="form-checkbox"
+                ><input type="checkbox" v-model="selectAll" @click="onSelect"
+              /></label>
+            </th>
+            <th>보낸사람</th>
+            <th>내용</th>
+            <th>날짜</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="cell"
+            v-for="message in state.messageList"
+            :key="message"
+            @click="onMsg(message)"
+            :class="{ read: !message.read }"
+          >
+            <td>
+              <label class="form-checkbox">
+                <input
+                  type="checkbox"
+                  :value="message.id"
+                  v-model="state.selected"
+                  @click.stop
+                />
+                <message class="form-icon"></message>
+              </label>
+            </td>
+            <td class="tableName">{{ message.sender.nickname }}</td>
+            <td class="tableMsg">{{ message.content }}</td>
+            <td>
+              {{
+                message.sendTime.substring(0, 10) +
+                " " +
+                message.sendTime.substring(11, 19)
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <el-row class="exceptionMsg" v-else-if="state.searchFlag"
+        >검색한 쪽지가 없습니다!</el-row
+      >
+      <el-row class="exceptionMsg" v-else>받은 쪽지가 없습니다!</el-row>
+    </div>
+    <div style="margin: 0 auto; margin-top: 20px">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        @current-change="handleCurrentChange"
+        :current-page="state.currentPage"
+        :page-size="8"
+        :total="state.msgcnt"
+      />
+    </div>
 
     <el-dialog v-model="state.receiveDialog" @close="receiveClose" draggable>
       <el-header style="text-align: left; padding-top: 10px">
@@ -194,16 +206,6 @@
         >
       </div>
     </el-dialog>
-    <div style="margin: 0 auto; margin-top: 20px">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        @current-change="handleCurrentChange"
-        :current-page="state.currentPage"
-        :page-size="8"
-        :total="state.msgcnt"
-      />
-    </div>
   </el-container>
 </template>
 

@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import MBTITest from "@/views/MBTITest";
+import MBTIResult from "@/views/MBTIResult";
 import MyMBTITest from "@/views/MyMBTITest";
 import MyMBTIResult from "@/views/MyMBTIResult";
 import YourMBTITest from "@/views/YourMBTITest";
@@ -37,6 +39,8 @@ const routes = [
     name: "MBTISetting",
     component: MBTISetting,
   },
+  { path: "/mbtitest", name: "MBTITest", component: MBTITest },
+  { path: "/mbtiresult", name: "MBTIResult", component: MBTIResult },
   {
     path: "/mymbtitest",
     name: "MyMBTITest",

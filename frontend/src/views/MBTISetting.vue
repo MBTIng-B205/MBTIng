@@ -1,7 +1,7 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
+      <img class="logo" src="@/assets/logo.png" alt="logo" />
     </el-header>
     <el-card style="text-align: center">
       <el-header style="font-size: xx-large"
@@ -74,7 +74,7 @@
         </el-button-group>
       </el-form>
       <div>자신의 MBTI를 모르시나요?</div>
-      <router-link to="/mymbtitest">간단검사 하러가기</router-link>
+      <router-link to="/mbtitest">간단검사 하러가기</router-link>
       <el-footer>
         <el-button
           type="danger"
@@ -135,10 +135,8 @@ export default {
       document.getElementById(inactive).style.color = "black";
       // console.log(form.mbti[idx]);
     };
-    const goHome = function () {
-      router.push({ name: "HomeView" });
-    };
-    return { form, image, clickSetting, clickValue, goHome };
+
+    return { form, image, clickSetting, clickValue };
   },
 };
 </script>
