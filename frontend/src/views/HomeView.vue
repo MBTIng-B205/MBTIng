@@ -173,7 +173,7 @@ export default {
   width: 800px;
   position: absolute;
   left: 42%;
-  bottom: -5%;
+  bottom: -6%;
   z-index: 1;
 }
 .bg {
