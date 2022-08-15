@@ -1,7 +1,7 @@
 <template>
   <main-header />
 
-  <el-container style="height: 620px">
+  <el-container style="height: 654px">
     <el-aside width="240px" height="100%"
       ><el-menu background-color="white">
         <el-menu-item>

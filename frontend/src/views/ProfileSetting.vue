@@ -256,7 +256,9 @@ export default {
 td.current:not(.disabled),
 .el-date-table-cell__text,
 #el-popper-container-8708,
-.el-select-dropdown__item:hover {
+.el-select-dropdown__item:hover,
+.el-select-dropdown__item,
+.selected {
   --el-color-primary: #f56c6c;
   --el-color-primary-light-3: #f89898;
   --el-color-primary-light-5: #fab6b6;
@@ -265,5 +267,6 @@ td.current:not(.disabled),
   --el-color-primary-light-9: #fef0f0;
   --el-color-primary-dark-2: #c45656;
   --el-datepicker-active-color: #f56c6c;
+  --el-datepicker-hover-text-color: #f56c6c;
 }
 </style>
