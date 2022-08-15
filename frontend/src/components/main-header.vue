@@ -647,7 +647,8 @@ export default {
   --el-icon-active-color: #f56c6c;
 }
 
-::v-deep svg {
+.el-dialog__close,
+#el-popper-container-9894 {
   --el-color-primary: #f56c6c;
   --el-color-primary-light-3: #f89898;
   --el-color-primary-light-5: #fab6b6;
