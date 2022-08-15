@@ -185,12 +185,12 @@ export default {
       state.session.on("signal:public-chat", (event) => {
         chat.value.addMessage(
           event.data,
-          JSON.parse(event.data).sender === state.partner.nickname,
+          JSON.parse(event.data).sender === state.memberinfo.nickname,
           false
         );
       });
       state.session
-        .connect(state.token, { clientData: state.partner.nickname })
+        .connect(state.token, { clientData: state.memberinfo.nickname })
         .then(() => {
           let publisher = state.OV.initPublisher(undefined, {
             audioSource: undefined, // The source of audio. If undefined default microphone
@@ -332,7 +332,7 @@ export default {
 
       let messageData = {
         content: content,
-        sender: state.partner.nickname,
+        sender: state.memberinfo.nickname,
         // time: current,
       };
 
