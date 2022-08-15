@@ -332,7 +332,7 @@ export default {
 
       let messageData = {
         content: content,
-        sender: state.partner.nickname,
+        sender: state.memberinfo.nickname,
         // time: current,
       };
 
