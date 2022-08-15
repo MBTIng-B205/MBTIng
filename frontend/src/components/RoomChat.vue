@@ -1,7 +1,16 @@
 <template>
   <div
     class="wrapper"
-    style="display: flex; flex-direction: column-reverse; overflow: hidden"
+    style="
+      display: flex;
+      flex-direction: column-reverse;
+      overflow: hidden;
+      width: 300px;
+      height: 550px;
+      position: absolute;
+      right: 10px;
+      top: 15px;
+    "
   >
     <!-- chat-bar -->
     <div
@@ -10,10 +19,11 @@
       id="chat-bar"
       style="
         background-color: white;
-        margin-bottom: 30px;
+        margin-bottom: 50px;
         overflow-y: auto;
         border-radius: 10px;
         margin-left: 5px;
+        height: 500px;
       "
     >
       <!-- 채팅 내용 -->
@@ -58,7 +68,7 @@
       <el-input
         v-model="state.message"
         @keydown.enter="sendMessage"
-        style="width: 230px; margin-right: 3px"
+        style="width: 240px; margin-right: 3px"
       >
       </el-input>
       <el-button
@@ -67,6 +77,7 @@
         :icon="Promotion"
         @click="sendMessage()"
         size="large"
+        style="width: 50px; height: 40px"
       />
     </div>
   </div>
