@@ -19,4 +19,9 @@ public class AdminController {
     public void register(@PathVariable("inprogress") Boolean inProgress) {
         meetingMatchService.setInProgress(inProgress);
     }
+
+    @GetMapping("/match/inprogress")
+    public Boolean register() {
+        return meetingMatchService.getInProgress();
+    }
 }
