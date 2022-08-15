@@ -43,6 +43,11 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
         return enoughSizeToStartMatching;
     }
 
+    public void setInProgress(boolean inProgress) {
+        this.inProgress = inProgress;
+        logger.debug("inProgress 를 강제로 true 로 바꿨습니다.");
+    }
+
     public void startMatching() {
 
         logger.debug("\n\n\n          == ****************************** ==\n          == ******* START MATCHING ******* ==\n          == ****************************** ==\n\n");
