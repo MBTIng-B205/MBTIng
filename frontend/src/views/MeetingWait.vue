@@ -240,7 +240,9 @@ export default {
         (error) => {
           // 소켓 연결 실패
           console.log("소켓 연결 실패", error);
-          this.connected = false;
+          alert("대기열에 진입에 실패했습니다.");
+          store.commit("meetings/SET_SOCKET", null);
+          router.push({ name: "HomeView" });
         }
       );
     };

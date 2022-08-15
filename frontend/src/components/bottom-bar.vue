@@ -127,6 +127,16 @@
         >친구취소</el-button
       >
       <el-button
+        v-else
+        type="info"
+        :icon="WarningFilled"
+        size="large"
+        round
+        @click="addFriend"
+        style="visibility: hidden"
+        >친구취소</el-button
+      >
+      <el-button
         type="danger"
         :icon="WarningFilled"
         size="large"
