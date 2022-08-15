@@ -43,67 +43,82 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
         return enoughSizeToStartMatching;
     }
 
+    public boolean getInProgress() {
+        return inProgress;
+    }
+
+    public void setInProgress(boolean inProgress) {
+        this.inProgress = inProgress;
+        logger.debug("inProgress 를 강제로 {} 로 바꿨습니다.", inProgress);
+    }
+
     public void startMatching() {
+        try {
 
-        logger.debug("\n\n\n          == ****************************** ==\n          == ******* START MATCHING ******* ==\n          == ****************************** ==\n\n");
+            logger.debug("\n\n\n          == ****************************** ==\n          == ******* START MATCHING ******* ==\n          == ****************************** ==\n\n");
 
-        if (inProgress) {
-            logger.debug("매칭이 진행중이기 때문에 매칭을 시작하지 않습니다.");
-            return;
-        }
-        inProgress = true;
+            if (inProgress) {
+                logger.debug("매칭이 진행중이기 때문에 매칭을 시작하지 않습니다.");
+                return;
+            }
+            inProgress = true;
 
-        String subject, matched;
+            String subject, matched;
 
-        subject = appRepository.getFirstSessionId().orElseThrow(() -> new RuntimeException("Queue Empty!"));
+            subject = appRepository.getFirstSessionId().orElseThrow(() -> new RuntimeException("Queue Empty!"));
 
-        appRepository.leaveFromQueue(subject);
+            appRepository.leaveFromQueue(subject);
 
-        MeetingUser subjectFeatures = ofNullable(appRepository.findStompUserBySessionId(subject)
-                .orElseThrow(() -> new RuntimeException("Session Not Found!"))
-                .getMeetingUser()).orElseThrow(() -> new RuntimeException("No Meeting User!"));
+            MeetingUser subjectFeatures = ofNullable(appRepository.findStompUserBySessionId(subject)
+                    .orElseThrow(() -> new RuntimeException("Session Not Found!"))
+                    .getMeetingUser()).orElseThrow(() -> new RuntimeException("No Meeting User!"));
 
-        MatchingScoreBoard scoreBoard = MatchingScoreBoard.builder()
-                .genderScore(genderScore)
-                .sidoScore(sidoScore)
-                .interestScore(interestScore)
-                .build();
+            MatchingScoreBoard scoreBoard = MatchingScoreBoard.builder()
+                    .genderScore(genderScore)
+                    .sidoScore(sidoScore)
+                    .interestScore(interestScore)
+                    .build();
 
-        Gender targetGender = subjectFeatures.getGender() == MALE ? FEMALE : MALE;
-        logger.debug("targetGender: {}", targetGender);
-        appRepository.getGenderTable().forEach((gender, ids) -> {
-            if (gender == targetGender) ids.forEach(scoreBoard::addGenderScore);
-        });
-
-        String subjectSido = subjectFeatures.getSido();
-        logger.debug("subjectSido: {}", subjectSido);
-        appRepository.getSidoTable().forEach((sido, ids) -> {
-            if (Objects.equals(sido, subjectSido)) ids.forEach(scoreBoard::addSidoScore);
-        });
-
-        Map<String, Set<String>> interestTable = appRepository.getInterestTable();
-        subjectFeatures.getInterests().forEach(subjectInterest -> {
-            logger.debug("subjectInterest: {}", subjectInterest);
-            interestTable.computeIfPresent(subjectInterest, (interest, ids) -> {
-                ids.forEach(scoreBoard::addInterestScore);
-                return ids;
+            Gender targetGender = subjectFeatures.getGender() == MALE ? FEMALE : MALE;
+            logger.debug("targetGender: {}", targetGender);
+            appRepository.getGenderTable().forEach((gender, ids) -> {
+                if (gender == targetGender) ids.forEach(scoreBoard::addGenderScore);
             });
-        });
 
-        matched = scoreBoard.getBestTarget();
+            String subjectSido = subjectFeatures.getSido();
+            logger.debug("subjectSido: {}", subjectSido);
+            appRepository.getSidoTable().forEach((sido, ids) -> {
+                if (Objects.equals(sido, subjectSido)) ids.forEach(scoreBoard::addSidoScore);
+            });
 
-        appRepository.leaveFromQueue(matched);
+            Map<String, Set<String>> interestTable = appRepository.getInterestTable();
+            subjectFeatures.getInterests().forEach(subjectInterest -> {
+                logger.debug("subjectInterest: {}", subjectInterest);
+                interestTable.computeIfPresent(subjectInterest, (interest, ids) -> {
+                    ids.forEach(scoreBoard::addInterestScore);
+                    return ids;
+                });
+            });
 
-        applicationEventPublisher.publishEvent(new WaitingMeetingUserMatchedEvent(
-                this,
-                Clock.systemDefaultZone(),
-                subject,
-                matched));
+            matched = scoreBoard.getBestTarget();
 
-        inProgress = false;
+            appRepository.leaveFromQueue(matched);
 
-        applicationEventPublisher.publishEvent(new RequestToStartMatchingEvent(
-                this,
-                Clock.systemDefaultZone()));
+            applicationEventPublisher.publishEvent(new WaitingMeetingUserMatchedEvent(
+                    this,
+                    Clock.systemDefaultZone(),
+                    subject,
+                    matched));
+
+            inProgress = false;
+
+            applicationEventPublisher.publishEvent(new RequestToStartMatchingEvent(
+                    this,
+                    Clock.systemDefaultZone()));
+            
+        } catch (Exception e) {
+            logger.error("매칭 중 오류 발생: {}", e.getMessage());
+            inProgress = false;
+        }
     }
 }
