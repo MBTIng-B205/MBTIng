@@ -6,6 +6,14 @@
       style="width: 200px; height: 94px; cursor: pointer"
     />
   </div>
+  <el-button
+    style="position: absolute; margin-top: 25px; right: 0; margin-right: 10px"
+    type="danger"
+    size="large"
+    round
+    @click="goHome"
+    >소개팅종료</el-button
+  >
   <el-container
     style="display: flex; flex-direction: column; background-color: #fadce1"
   >
@@ -192,12 +200,12 @@ export default {
       state.session.on("signal:public-chat", (event) => {
         chat.value.addMessage(
           event.data,
-          JSON.parse(event.data).sender === state.partner.nickname,
+          JSON.parse(event.data).sender === state.memberinfo.nickname,
           false
         );
       });
       state.session
-        .connect(state.token, { clientData: state.partner.nickname })
+        .connect(state.token, { clientData: state.memberinfo.nickname })
         .then(() => {
           let publisher = state.OV.initPublisher(undefined, {
             audioSource: undefined, // The source of audio. If undefined default microphone
@@ -339,7 +347,7 @@ export default {
 
       let messageData = {
         content: content,
-        sender: state.partner.nickname,
+        sender: state.memberinfo.nickname,
         // time: current,
       };
 
