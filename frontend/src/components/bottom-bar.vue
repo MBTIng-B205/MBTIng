@@ -166,8 +166,10 @@ import {
 import { reactive, watchEffect, computed } from "vue";
 import { useStore } from "vuex";
 import { useTimer } from "vue-timer-hook";
+import { useRouter } from "vue-router";
 export default {
   setup(props, { emit }) {
+    const router = useRouter();
     const store = useStore();
     const state = reactive({
       chatflag: false,
@@ -178,10 +180,12 @@ export default {
       partner: computed(() => store.getters["meetings/getPartner"]),
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       videoflag: computed(() => store.getters["meetings/getVideoflag"]),
+      ovsocket: computed(() => store.getters["meetings/getOvsocket"]),
+      mtsocket: computed(() => store.getters["meetings/getSocket"]),
     });
 
     state.time = new Date();
-    state.time.setSeconds(state.time.getSeconds() + 600); // 10 minutes timer
+    state.time.setSeconds(state.time.getSeconds() + 10); // 10 minutes timer
     state.timer = useTimer(state.time);
     state.timer.start();
     const restartFive = () => {
@@ -202,7 +206,10 @@ export default {
     const stopWatchEffect = watchEffect(() => {
       if (state.timer.isRunning == false) {
         console.log("타이머 다됨 !!!!!!!!!!!!!!!!!!!!!!!!");
-        timeout();
+        if (state.mtsocket != null) {
+          timeout();
+        }
+        goHome();
       }
     });
     const greenWatchEffect = watchEffect(() => {
@@ -260,9 +267,23 @@ export default {
       store.dispatch("meetings/send", msg);
       state.friendflag = !state.friendflag;
     };
+    const goHome = function () {
+      console.log(state.mtsocket);
+      store.commit("meetings/SET_VIDEOFLAG", false);
+      if (state.mtsocket != null) {
+        state.mtsocket.disconnect();
+      }
+      store.commit("meetings/SET_SOCKET", null);
+      if (state.ovsocket != null) {
+        state.ovsocket.disconnect();
+      }
+      store.commit("meetings/SET_OVSOCKET", null);
+      router.push({ name: "HomeView" });
+    };
 
     return {
       state,
+      goHome,
       greenWatchEffect,
       stopWatchEffect,
       timeout,

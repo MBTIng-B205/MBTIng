@@ -434,11 +434,15 @@ export default {
       router.push({ name: "HomeView" });
       console.log(state.mtsocket);
       store.commit("meetings/SET_VIDEOFLAG", false);
-      state.mtsocket.disconnect();
+      if (state.mtsocket != null) {
+        state.mtsocket.disconnect();
+      }
       store.commit("meetings/SET_SOCKET", null);
       console.log(state.mtsocket);
       console.log(state.session);
-      state.session.disconnect();
+      if (state.session != null) {
+        state.session.disconnect();
+      }
       store.commit("meetings/SET_OVSOCKET", null);
     };
 
