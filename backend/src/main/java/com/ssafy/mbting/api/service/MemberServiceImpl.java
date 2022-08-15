@@ -29,14 +29,14 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member getUserByEmail(String email) {
 		// 디비에 유저 정보 조회 (userId 를 통한 조회).
-		return memberRepository.findByEmailAndDeleted(email,false);
+		return memberRepository.findByEmail(email);
 
 	}
 
 	@Transactional
 	@Override
 	public Member updateMember(MemberUpdateRequest userRegisterInfo ) {
-		Member updatemember =memberRepository.findByEmailAndDeleted(userRegisterInfo.getEmail(),false);
+		Member updatemember =memberRepository.findByEmail(userRegisterInfo.getEmail());
 
 
 		interestMemberService.deleteAllByMember(updatemember);
@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	@Transactional
 	public boolean deleteMember(String email) {
-		Member member = memberRepository.findByEmailAndDeleted(email,false);
+		Member member = memberRepository.findByEmail(email);
 		member.setDeleted(true);
 		return true;
 	}

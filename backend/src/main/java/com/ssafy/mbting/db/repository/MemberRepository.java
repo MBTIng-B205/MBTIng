@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Member findByEmailAndDeleted(String email, boolean deleted);
+    Member findByEmail(String email);
     Member findByNickname(String nickname);
     Long countAllByNicknameAndDeleted(String nickname, boolean deleted);
 }
