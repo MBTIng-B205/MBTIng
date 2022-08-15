@@ -119,6 +119,10 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
         } catch (Exception e) {
             logger.error("매칭 중 오류 발생: {}", e.getMessage());
             inProgress = false;
+
+            applicationEventPublisher.publishEvent(new RequestToStartMatchingEvent(
+                    this,
+                    Clock.systemDefaultZone()));
         }
     }
 }
