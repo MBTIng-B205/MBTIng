@@ -185,12 +185,12 @@ export default {
       state.session.on("signal:public-chat", (event) => {
         chat.value.addMessage(
           event.data,
-          JSON.parse(event.data).sender === state.partner.nickname,
+          JSON.parse(event.data).sender === state.memberinfo.nickname,
           false
         );
       });
       state.session
-        .connect(state.token, { clientData: state.partner.nickname })
+        .connect(state.token, { clientData: state.memberinfo.nickname })
         .then(() => {
           let publisher = state.OV.initPublisher(undefined, {
             audioSource: undefined, // The source of audio. If undefined default microphone
@@ -371,24 +371,14 @@ export default {
         const msg = {
           command: "createReport",
           data: {
-            from_id: "rlwls1101@hanmail.net",
+            from_id: state.memberinfo.email,
             to_id: state.partner.email,
             content: sirenMsg.value,
           },
         };
         console.log(msg);
         store.dispatch("meetings/send", msg);
-        /*
-        store
-          .dispatch("reports/registerReport", {
-            from: "rlwls1101@hanmail.net",
-            to: state.partner.email,
-            content: sirenMsg.value,
-          })
-          .then(function (result) {
-            console.log("result-report", result);
-            alert("신고가 접수되었습니다.");
-          });*/
+
         sirenClose();
       }
     };
