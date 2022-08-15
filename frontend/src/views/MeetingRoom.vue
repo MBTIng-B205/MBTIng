@@ -6,6 +6,14 @@
       style="width: 200px; height: 94px; cursor: pointer"
     />
   </div>
+  <el-button
+    style="position: absolute; margin-top: 25px; right: 0; margin-right: 10px"
+    type="danger"
+    size="large"
+    round
+    @click="goHome"
+    >소개팅종료</el-button
+  >
   <el-container
     style="display: flex; flex-direction: column; background-color: #fadce1"
   >
