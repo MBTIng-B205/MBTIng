@@ -45,7 +45,7 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
 
     public void setInProgress(boolean inProgress) {
         this.inProgress = inProgress;
-        logger.debug("inProgress 를 강제로 true 로 바꿨습니다.");
+        logger.debug("inProgress 를 강제로 {} 로 바꿨습니다.", inProgress);
     }
 
     public void startMatching() {
