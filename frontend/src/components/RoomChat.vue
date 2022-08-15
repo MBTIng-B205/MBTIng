@@ -33,12 +33,14 @@
           <div v-if="chat.isMyMessage" class="" style="margin-bottom: 10px">
             <div
               style="
-                background: #f56c6c;
+                background: rgb(255, 189, 207);
                 border-radius: 10px;
-                width: 280px;
+                width: 250px;
                 padding-top: 5px;
                 padding-left: 10px;
-                color: white;
+                padding-right: 5px;
+                margin-left: 13px;
+                word-break: break-all;
               "
             >
               나 :
@@ -51,9 +53,12 @@
               style="
                 background: #dddddd;
                 border-radius: 10px;
-                width: 280px;
+                width: 250px;
                 padding-top: 5px;
                 padding-left: 10px;
+                padding-right: 5px;
+                margin-left: 13px;
+                word-break: break-all;
               "
             >
               {{ chat.userId }} :
@@ -169,7 +174,7 @@ export default {
 }
 .chat-bar::-webkit-scrollbar-thumb {
   height: 30%;
-  background: rgb(255, 189, 207);
+  background: #f56c6c;
   border-radius: 10px;
 }
 .chat-bar::-webkit-scrollbar-track {
