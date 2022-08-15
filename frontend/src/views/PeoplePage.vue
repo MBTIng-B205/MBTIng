@@ -141,4 +141,15 @@ export default {
   --el-select-input-focus-border-color: #f56c6c;
   --el-menu-hover-text-color: #f56c6c;
 }
+.el-main::-webkit-scrollbar {
+  width: 8px;
+}
+.el-main::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: palevioletred;
+  border-radius: 10px;
+}
+.el-main::-webkit-scrollbar-track {
+  background: rgb(33, 122, 244, 0.1);
+}
 </style>
