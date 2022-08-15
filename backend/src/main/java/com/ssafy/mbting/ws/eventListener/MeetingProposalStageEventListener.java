@@ -110,10 +110,14 @@ public class MeetingProposalStageEventListener {
                 , stompUsers[1].getEmail()
                 , stompUsers[0].getEmail());
 
-        // Todo: 하드코딩 되어 있음!!!
-        Member[] opponents = new Member[]{
-                memberService.getUserByEmail("wp29dud@naver.com"),
-                memberService.getUserByEmail("rlwls1101@hanmail.net")};
+//        // Todo: 하드코딩 되어 있음!!!
+//        Member[] opponents = new Member[]{
+//                memberService.getUserByEmail("wp29dud@naver.com"),
+//                memberService.getUserByEmail("rlwls1101@hanmail.net")};
+
+        Member[] opponents = new Member[] {
+                memberService.getUserByEmail(stompUsers[1].getEmail()),
+                memberService.getUserByEmail(stompUsers[0].getEmail())};
 
         IntStream.range(0, 2).forEach(i -> simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(stompUsers[i].getEmail()).toString(),
