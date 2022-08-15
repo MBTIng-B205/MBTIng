@@ -25,8 +25,8 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public Report createReport(ReportRegisterRequest reportRegisterRequest) {
-        Member reporter =memberRepository.findByEmail(reportRegisterRequest.getFrom_id());
-        Member reported = memberRepository.findByEmail(reportRegisterRequest.getTo_id());
+        Member reporter =memberRepository.findByEmailAndDeleted(reportRegisterRequest.getFrom_id(),false);
+        Member reported = memberRepository.findByEmailAndDeleted(reportRegisterRequest.getTo_id(),false);
         Report report = new Report();
         report.setFrom_id(reporter);
         report.setTo_id(reported);
