@@ -1,6 +1,6 @@
 import axios from "axios";
 const base = {
-  baseUrl: "http://localhost:8080/api/message",
+  baseUrl: `${process.env.VUE_APP_API_SERVER_BASE_URL}/message`,
   headers: {
     "Content-type": "application/json",
   },
