@@ -32,6 +32,7 @@ public class AppStompServiceImpl implements AppStompService {
     private final MemberService memberService;
     private final AppRepository appRepository;
     private final MeetingRoomService meetingRoomService;
+    private final MeetingMatchService meetingMatchService;
 
     @Override
     public void connect(String sessionId, ConnectHeader connectHeader) {
@@ -101,8 +102,8 @@ public class AppStompServiceImpl implements AppStompService {
         appRepository.joinToQueue(sessionId);
         applicationEventPublisher.publishEvent(new RequestToStartMatchingEvent(
                 this,
-                Clock.systemDefaultZone()
-        ));
+                Clock.systemDefaultZone(),
+                meetingMatchService.getEnoughSizeToStartMatching()));
     }
 
     @Override

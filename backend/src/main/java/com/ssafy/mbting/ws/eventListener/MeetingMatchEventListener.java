@@ -50,9 +50,14 @@ public class MeetingMatchEventListener {
     @Async
     @EventListener
     public void onRequestToStartMatching(RequestToStartMatchingEvent event) {
-        logger.debug("\n\n매칭 시작 요청 이벤트 발생함\n이벤트 소스: {}\n", event.getSource());
 
-        if (!waitingMeetingService.isEnoughSizeToStartMatching()) return;
+        int minSize = event.getMinSize();
+
+        logger.debug("\n\n매칭 시작 요청 이벤트 발생함\n최소 큐 사이즈 (매칭 시작 조건): {}\n이벤트 소스: {}\n"
+                , minSize
+                , event.getSource());
+
+        if (waitingMeetingService.getQueueSize() < minSize) return;
 
         applicationEventPublisher.publishEvent(new EnoughToStartMatchingEvent(
                 this,

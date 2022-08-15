@@ -8,7 +8,10 @@ import java.time.Clock;
 @Getter
 public class RequestToStartMatchingEvent extends ApplicationEvent {
 
-    public RequestToStartMatchingEvent(Object source, Clock clock) {
+    private final int minSize;
+
+    public RequestToStartMatchingEvent(Object source, Clock clock, int minSize) {
         super(source, clock);
+        this.minSize = minSize;
     }
 }

@@ -54,6 +54,17 @@
             @click="updateMainVideoStreamManager(sub)"
             style="width: 100%; height: 100%; margin-top: 0; margin-bottom: 0"
           />
+          <div>
+            <span
+              style="
+                font-size: 50px;
+                font-weight: bold;
+                position: absolute;
+                right: 361px;
+              "
+              >{{ state.partner.mbti }}</span
+            >
+          </div>
         </div>
       </div>
       <div v-else class="mbtiinfo">
@@ -63,6 +74,18 @@
           alt=""
           style="width: 500px; height: 500px"
         />
+        <div>
+          <span
+            style="
+              font-size: 50px;
+              font-weight: bold;
+              position: absolute;
+              left: 202px;
+              bottom: -30px;
+            "
+            >{{ state.partner.mbti }}</span
+          >
+        </div>
       </div>
 
       <div
@@ -401,11 +424,15 @@ export default {
       router.push({ name: "HomeView" });
       console.log(state.mtsocket);
       store.commit("meetings/SET_VIDEOFLAG", false);
-      state.mtsocket.disconnect();
+      if (state.mtsocket != null) {
+        state.mtsocket.disconnect();
+      }
       store.commit("meetings/SET_SOCKET", null);
       console.log(state.mtsocket);
       console.log(state.session);
-      state.session.disconnect();
+      if (state.session != null) {
+        state.session.disconnect();
+      }
       store.commit("meetings/SET_OVSOCKET", null);
     };
 

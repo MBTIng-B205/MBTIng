@@ -27,6 +27,7 @@ import static java.util.Optional.ofNullable;
 public class MeetingMatchServiceImpl implements MeetingMatchService {
 
     private boolean inProgress = false;
+    private int sizeToRetryMatching = 2;
     @Value("${com.mbting.match.condition.enough.size}")
     private int enoughSizeToStartMatching;
     @Value("${com.mbting.match.condition.score.gender}")
@@ -114,7 +115,8 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
 
             applicationEventPublisher.publishEvent(new RequestToStartMatchingEvent(
                     this,
-                    Clock.systemDefaultZone()));
+                    Clock.systemDefaultZone(),
+                    sizeToRetryMatching));
             
         } catch (Exception e) {
             logger.error("매칭 중 오류 발생: {}", e.getMessage());
@@ -122,7 +124,8 @@ public class MeetingMatchServiceImpl implements MeetingMatchService {
 
             applicationEventPublisher.publishEvent(new RequestToStartMatchingEvent(
                     this,
-                    Clock.systemDefaultZone()));
+                    Clock.systemDefaultZone(),
+                    sizeToRetryMatching));
         }
     }
 }

@@ -137,7 +137,9 @@ export default {
     ];
     const goHome = function () {
       router.push({ name: "HomeView" });
-      state.mtsocket.disconnect();
+      if (state.mtsocket != null) {
+        state.mtsocket.disconnect();
+      }
       store.commit("meetings/SET_SOCKET", null);
     };
 
@@ -181,16 +183,22 @@ export default {
               }
               if (obj.command == "opponentRefusal") {
                 alert("매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다");
-                state.mtsocket.disconnect();
+                if (state.mtsocket != null) {
+                  state.mtsocket.disconnect();
+                }
                 store.commit("meetings/SET_SOCKET", null);
                 router.push({ name: "MeetingWait" });
               }
               if (obj.command == "noVideoStage") {
                 alert("미팅이 종료 됬습니다.");
                 console.log("noVideoStage");
-                state.ovsocket.disconnect();
+                if (state.ovsocket != null) {
+                  state.ovsocket.disconnect();
+                }
                 store.commit("meetings/SET_OVSOCKET", null);
-                state.mtsocket.disconnect();
+                if (state.mtsocket != null) {
+                  state.mtsocket.disconnect();
+                }
                 store.commit("meetings/SET_SOCKET", null);
                 router.push({ name: "HomeView" });
               }
@@ -209,10 +217,13 @@ export default {
                   alert("상대방이 떠났습니다.");
                   store.commit("meetings/SET_VIDEOFLAG", false);
                   console.log("INROOM");
-                  state.ovsocket.disconnect();
+                  if (state.ovsocket != null) {
+                    state.ovsocket.disconnect();
+                  }
                   store.commit("meetings/SET_OVSOCKET", null);
-                  store.commit("meetings/SET_OVSOCKET", null);
-                  state.mtsocket.disconnect();
+                  if (state.mtsocket != null) {
+                    state.mtsocket.disconnect();
+                  }
                   store.commit("meetings/SET_SOCKET", null);
                   router.push({ name: "HomeView" });
                 }
@@ -229,7 +240,9 @@ export default {
         (error) => {
           // 소켓 연결 실패
           console.log("소켓 연결 실패", error);
-          this.connected = false;
+          alert("대기열에 진입에 실패했습니다.");
+          store.commit("meetings/SET_SOCKET", null);
+          router.push({ name: "HomeView" });
         }
       );
     };
