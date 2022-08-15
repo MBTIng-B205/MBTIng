@@ -499,7 +499,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-header {
   background-color: rgb(255, 189, 207);
 }

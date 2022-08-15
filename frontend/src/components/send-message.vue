@@ -305,7 +305,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-header {
   background-color: rgb(255, 189, 207);
 }
@@ -377,6 +377,7 @@ input {
 }
 .exceptionMsg {
   padding: 30px;
+  border-top: solid 2px rgb(255, 189, 207);
   border-bottom: solid 2px rgb(255, 189, 207);
   font-size: large;
 }
