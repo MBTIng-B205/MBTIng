@@ -3,9 +3,17 @@
     <img
       src="@/assets/logo.png"
       @click="goHome"
-      style="width: 200px; height: 94px"
+      style="width: 200px; height: 94px; cursor: pointer"
     />
   </div>
+  <el-button
+    style="position: absolute; margin-top: 25px; right: 0; margin-right: 10px"
+    type="danger"
+    size="large"
+    round
+    @click="goHome"
+    >소개팅종료</el-button
+  >
   <el-container
     style="display: flex; flex-direction: column; background-color: #fadce1"
   >
@@ -86,20 +94,27 @@
 
   <!-- report dialog -->
   <el-dialog v-model="sirenDialog" @close="sirenClose">
-    <div style="font-weight: bold; float: left; margin: 10px">
+    <el-row
+      style="
+        padding: 10px;
+        flex-direction: colunm;
+        align-content: flex-start;
+        background-color: #fab6b6;
+      "
+    >
       신고대상자 : {{ state.partner.nickname }}
-    </div>
+    </el-row>
     <el-input
       v-model="sirenMsg"
       type="textarea"
       placeholder="신고사유를 입력해주세요"
       rows="5"
     ></el-input>
-    <div style="margin-top: 20px">
-      <el-button type="danger" @click="clickSiren" size="large"
+    <div style="margin-top: 20px; text-align: center">
+      <el-button type="danger" @click="clickSiren" size="large" round
         >신고하기</el-button
       >
-      <el-button @click="sirenClose" size="large">취소</el-button>
+      <el-button @click="sirenClose" size="large" round plain>취소</el-button>
     </div>
   </el-dialog>
 </template>
@@ -185,12 +200,12 @@ export default {
       state.session.on("signal:public-chat", (event) => {
         chat.value.addMessage(
           event.data,
-          JSON.parse(event.data).sender === state.partner.nickname,
+          JSON.parse(event.data).sender === state.memberinfo.nickname,
           false
         );
       });
       state.session
-        .connect(state.token, { clientData: state.partner.nickname })
+        .connect(state.token, { clientData: state.memberinfo.nickname })
         .then(() => {
           let publisher = state.OV.initPublisher(undefined, {
             audioSource: undefined, // The source of audio. If undefined default microphone
@@ -332,7 +347,7 @@ export default {
 
       let messageData = {
         content: content,
-        sender: state.partner.nickname,
+        sender: state.memberinfo.nickname,
         // time: current,
       };
 

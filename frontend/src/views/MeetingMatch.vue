@@ -1,7 +1,13 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
+      <img
+        class="logo"
+        @click="goHome"
+        src="@/assets/logo.png"
+        alt="logo"
+        style="cursor: pointer"
+      />
       <el-button
         style="float: right; margin-top: 25px"
         type="danger"

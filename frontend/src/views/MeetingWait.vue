@@ -1,7 +1,12 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img @click="goHome" class="logo" src="@/assets/logo.png" />
+      <img
+        @click="goHome"
+        class="logo"
+        src="@/assets/logo.png"
+        style="cursor: pointer"
+      />
       <el-button
         style="float: right; margin-top: 25px"
         type="danger"
@@ -138,6 +143,11 @@ export default {
 
     const connect = function () {
       let testemail = Math.random().toString(36).substring(2, 12);
+      const member = {
+        email: testemail,
+        nickname: testemail,
+      };
+      store.commit("accounts/SET_MEMBER_INFO", member);
       const serverURL = process.env.VUE_APP_WS_SERVER_BASE_URL + "/ws/connect";
       let socket = new SockJS(serverURL);
       const stompClient = Stomp.over(socket);

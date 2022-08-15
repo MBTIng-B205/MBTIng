@@ -8,12 +8,14 @@
       class="startbtn"
       src="@/assets/heart.png"
       alt="example"
+      style="z-index: 2"
     />
     <img
       v-show="state.memberinfo"
       class="startbtnlogin"
       src="@/assets/heart_login.png"
       alt=""
+      style="z-index: 1"
     />
     <img class="mainimg" src="@/assets/main.png" alt="" />
 

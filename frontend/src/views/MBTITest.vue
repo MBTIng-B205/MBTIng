@@ -1,7 +1,12 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" alt="logo" />
+      <img
+        class="logo"
+        src="@/assets/logo.png"
+        alt="logo"
+        style="cursor: pointer"
+      />
     </el-header>
     <el-card style="padding: 0px">
       <div class="question">

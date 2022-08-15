@@ -31,8 +31,12 @@
       >
     </el-row>
 
-    <div style="width: 100%; height: 500px">
-      <table class="table" v-if="state.messageList.length != 0">
+    <div style="height: 600px">
+      <table
+        class="table"
+        v-if="state.messageList.length != 0"
+        style="width: 100%"
+      >
         <colgroup>
           <col width="10%" />
           <col width="25%" />
@@ -305,7 +309,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-header {
   background-color: rgb(255, 189, 207);
 }
@@ -377,6 +381,7 @@ input {
 }
 .exceptionMsg {
   padding: 30px;
+  border-top: solid 2px rgb(255, 189, 207);
   border-bottom: solid 2px rgb(255, 189, 207);
   font-size: large;
 }
