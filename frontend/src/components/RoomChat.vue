@@ -1,34 +1,68 @@
 <template>
   <div
     class="wrapper"
-    style="display: flex; flex-direction: column-reverse; overflow-y: auto"
+    style="
+      display: flex;
+      flex-direction: column-reverse;
+      overflow: hidden;
+      width: 300px;
+      height: 550px;
+      position: absolute;
+      right: 10px;
+      top: 15px;
+    "
   >
     <!-- chat-bar -->
-    <div ref="content" style="background-color: white; margin-bottom: 20px">
+    <div
+      ref="content"
+      class="chat-bar"
+      id="chat-bar"
+      style="
+        background-color: white;
+        margin-bottom: 50px;
+        overflow-y: auto;
+        border-radius: 10px;
+        margin-left: 5px;
+        height: 500px;
+      "
+    >
       <!-- 채팅 내용 -->
-      <ul id="chat-bar" style="list-style-type: none; overflow-y: auto">
-        <li
-          class=""
-          v-for="(chat, idx) in state.chats"
-          :key="idx"
-          style="border-radius: 1px"
-        >
+      <ul style="list-style-type: none; padding: 0">
+        <li class="" v-for="(chat, idx) in state.chats" :key="idx" style="">
           <!-- 내가 보낸 채팅인 경우 -->
-          <div v-if="chat.isMyMessage" class="" style="">
-            <div>
-              <p>
-                나 :
-                {{ chat.content.content }}
-              </p>
+          <div v-if="chat.isMyMessage" class="" style="margin-bottom: 10px">
+            <div
+              style="
+                background: rgb(255, 189, 207);
+                border-radius: 10px;
+                width: 250px;
+                padding-top: 5px;
+                padding-left: 10px;
+                padding-right: 5px;
+                margin-left: 13px;
+                word-break: break-all;
+              "
+            >
+              나 :
+              {{ chat.content.content }}
             </div>
           </div>
           <!-- 다른 사람이 보낸 채팅인 경우 -->
-          <div v-else>
-            <div>
-              <p style="color: #f56c6c">
-                {{ chat.userId }} :
-                {{ chat.content.content }}
-              </p>
+          <div v-else style="margin-bottom: 10px">
+            <div
+              style="
+                background: #dddddd;
+                border-radius: 10px;
+                width: 250px;
+                padding-top: 5px;
+                padding-left: 10px;
+                padding-right: 5px;
+                margin-left: 13px;
+                word-break: break-all;
+              "
+            >
+              {{ chat.userId }} :
+              {{ chat.content.content }}
             </div>
           </div>
         </li>
@@ -39,7 +73,7 @@
       <el-input
         v-model="state.message"
         @keydown.enter="sendMessage"
-        style="width: 230px; margin-right: 3px"
+        style="width: 240px; margin-right: 3px"
       >
       </el-input>
       <el-button
@@ -48,6 +82,7 @@
         :icon="Promotion"
         @click="sendMessage()"
         size="large"
+        style="width: 50px; height: 40px"
       />
     </div>
   </div>
@@ -134,15 +169,15 @@ export default {
 };
 </script>
 <style>
-.wrapper::-webkit-scrollbar {
+.chat-bar::-webkit-scrollbar {
   width: 8px;
 }
-.wrapper::-webkit-scrollbar-thumb {
+.chat-bar::-webkit-scrollbar-thumb {
   height: 30%;
-  background: rgb(255, 189, 207);
+  background: #f56c6c;
   border-radius: 10px;
 }
-.wrapper::-webkit-scrollbar-track {
+.chat-bar::-webkit-scrollbar-track {
   background: rgb(33, 122, 244, 0.1);
 }
 .controller > button,

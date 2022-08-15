@@ -8,12 +8,14 @@
       class="startbtn"
       src="@/assets/heart.png"
       alt="example"
+      style="z-index: 2"
     />
     <img
       v-show="state.memberinfo"
       class="startbtnlogin"
       src="@/assets/heart_login.png"
       alt=""
+      style="z-index: 1"
     />
     <img class="mainimg" src="@/assets/main.png" alt="" />
 
@@ -75,19 +77,22 @@ export default {
       console.log(state.memberinfo.profileUrl);
     }
     const meetingStart = function () {
-      router.push({ name: "MeetingWait" });
+      let jwt = null;
+      jwt = sessionStorage.getItem("access-token");
+      if (jwt != null) router.push({ name: "MeetingWait" });
+      else alert("로그인을 먼저 진행해주세요");
     };
 
     const contents1 = [
       {
         thumb: require("@/assets/mbti001.png"),
         title: "나의 MBTI 테스트",
-        site: "/mymbtitest",
+        site: "/yourmbtitest",
       },
       {
         thumb: require("@/assets/mbti002.png"),
         title: "나의 이상형 MBTI 테스트",
-        site: "/yourmbtitest",
+        site: "/mymbtitest",
       },
       {
         thumb: require("@/assets/mbti003.png"),

@@ -31,8 +31,12 @@
         </button></el-col
       >
     </el-row>
-    <div style="width: 100%; height: 500px">
-      <table class="table" v-if="state.messageList.length != 0">
+    <div style="height: 600px">
+      <table
+        class="table"
+        v-if="state.messageList.length != 0"
+        style="width: 100%"
+      >
         <colgroup>
           <col width="10%" />
           <col width="25%" />
@@ -58,7 +62,7 @@
             v-for="message in state.messageList"
             :key="message"
             @click="onMsg(message)"
-            :class="{ read: !message.read }"
+            :class="{ read: message.read }"
           >
             <td>
               <label class="form-checkbox">
@@ -499,7 +503,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-header {
   background-color: rgb(255, 189, 207);
 }
@@ -576,7 +580,7 @@ input {
   zoom: 1.5;
 }
 .read {
-  font-weight: bold;
+  color: #9a9a9a;
 }
 .el-select-dropdown__item.selected {
   color: palevioletred;

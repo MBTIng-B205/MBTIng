@@ -1,7 +1,7 @@
 <template>
   <main-header />
 
-  <el-container style="height: 620px">
+  <el-container style="height: 654px">
     <el-aside width="240px" height="100%"
       ><el-menu background-color="white">
         <el-menu-item>
@@ -140,5 +140,16 @@ export default {
   --el-color-primary-dark-2: #c45656;
   --el-select-input-focus-border-color: #f56c6c;
   --el-menu-hover-text-color: #f56c6c;
+}
+.el-main::-webkit-scrollbar {
+  width: 8px;
+}
+.el-main::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: palevioletred;
+  border-radius: 10px;
+}
+.el-main::-webkit-scrollbar-track {
+  background: rgb(33, 122, 244, 0.1);
 }
 </style>
