@@ -7,7 +7,57 @@
       background-color: rgb(255, 189, 207);
     "
   >
-    <div class="leftside" style="margin-left: 2rem; display: flex">
+    <div
+      class="leftside"
+      style="margin-left: 2rem; display: flex"
+      v-if="!state.videoflag"
+    >
+      <el-button
+        type="success"
+        :icon="BellFilled"
+        style="margin-right: 7px"
+        @click="greenlight"
+        size="large"
+        circle
+      />
+      <el-button
+        type="danger"
+        :icon="BellFilled"
+        style="margin-right: 15px"
+        @click="redlight"
+        size="large"
+        circle
+      />
+      <a href="#" class="info">
+        <img
+          style="width: 40px; height: 40px"
+          src="@/assets/ask.png"
+          class="question"
+        />
+        <div
+          class="Bubble bubblePosition hoverBubble"
+          style="
+            border-radius: 1rem;
+            width: 350px;
+            height: 50px;
+            position: absolute;
+            top: 1px;
+          "
+        >
+          <div style="margin-top: 0.5rem; margin-left: 0.25rem">
+            모두 그린라이트를 누르면 화상모드로 전환됩니다!
+          </div>
+          <div style="margin-left: 0.25rem">
+            상대방이 마음에 들지 않으면 레드라이트를 누르세요!
+          </div>
+        </div>
+      </a>
+    </div>
+    <div
+      class="leftside"
+      style="margin-left: 2rem; display: flex; visibility: hidden"
+      v-else
+    >
       <el-button
         type="success"
         :icon="BellFilled"
@@ -50,7 +100,7 @@
       </a>
     </div>
 
-    <div>
+    <div style="postion: absolute">
       <div style="margin-left: 180px">
         <span style="font-size: 3rem"
           >{{ state.timer.minutes }} : {{ state.timer.seconds }}</span
@@ -59,7 +109,7 @@
     </div>
     <div class="rightside" style="margin-right: 2rem">
       <el-button
-        v-if="!state.friendflag"
+        v-if="!state.friendflag && state.videoflag == true"
         type="primary"
         :icon="WarningFilled"
         size="large"
@@ -68,7 +118,7 @@
         >친구추가</el-button
       >
       <el-button
-        v-else
+        v-else-if="state.friendflag && state.videoflag == true"
         type="info"
         :icon="WarningFilled"
         size="large"
