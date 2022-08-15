@@ -1,7 +1,12 @@
 <template>
   <el-container style="background-color: #fadce1">
     <el-header>
-      <img class="logo" src="@/assets/logo.png" alt="logo" />
+      <img
+        class="logo"
+        src="@/assets/logo.png"
+        alt="logo"
+        style="cursor: pointer"
+      />
     </el-header>
     <el-card style="text-align: center; padding: 0">
       <el-row type="flex" justify="space-around">
@@ -31,10 +36,7 @@
                 v-model="form.nickname"
                 style="width: 220px; margin-left: 30px"
               ></el-input>
-              <el-button
-                @click="nameCheck"
-                style="margin-left: 10px"
-                size="large"
+              <el-button @click="nameCheck" style="margin-left: 10px"
                 >중복확인</el-button
               >
             </el-form-item>
@@ -60,7 +62,7 @@
               <el-select
                 v-model="form.sido"
                 placeholder="거주 지역을 선택하세요"
-                style="margin-left: 30px"
+                style="margin-left: 30px; width: 220px"
               >
                 <el-option
                   v-for="item in option"
@@ -74,7 +76,7 @@
               <el-form-item label="관심사" style="margin-bottom: 10px">
                 <el-checkbox-group
                   v-model="form.interests"
-                  style="width: 380px; align-items: center"
+                  style="width: 380px; padding-left: 10px; align-items: center"
                 >
                   <el-checkbox label="캠핑" name="캠핑" />
                   <el-checkbox label="맛집탐방" name="맛집탐방" />
@@ -249,13 +251,19 @@ export default {
   align-content: center;
   flex-direction: column;
 }
+.el-form-item__label {
+  color: rgb(255, 91, 136);
+}
+
 .el-form-item,
 .el-input__wrapper,
 .el-date-table,
 td.current:not(.disabled),
 .el-date-table-cell__text,
 #el-popper-container-8708,
-.el-select-dropdown__item:hover {
+.el-select-dropdown__item:hover,
+.el-select-dropdown__item,
+.selected {
   --el-color-primary: #f56c6c;
   --el-color-primary-light-3: #f89898;
   --el-color-primary-light-5: #fab6b6;
@@ -264,5 +272,6 @@ td.current:not(.disabled),
   --el-color-primary-light-9: #fef0f0;
   --el-color-primary-dark-2: #c45656;
   --el-datepicker-active-color: #f56c6c;
+  --el-datepicker-hover-text-color: #f56c6c;
 }
 </style>

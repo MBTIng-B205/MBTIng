@@ -44,7 +44,7 @@
             모두 그린라이트를 누르면 화상모드로 전환됩니다!
           </div>
           <div style="margin-left: 0.25rem">
-            상대방이 맘에 들지 않으면 레드라이트를 누르세요!
+            상대방이 마음에 들지 않으면 레드라이트를 누르세요!
           </div>
         </div>
       </a>
@@ -117,6 +117,7 @@ export default {
       timer: null,
       partner: computed(() => store.getters["meetings/getPartner"]),
       memberinfo: computed(() => store.getters["accounts/getMember"]),
+      videoflag: computed(() => store.getters["meetings/getVideoflag"]),
     });
 
     state.time = new Date();
@@ -144,7 +145,11 @@ export default {
         timeout();
       }
     });
-
+    const greenWatchEffect = watchEffect(() => {
+      if (state.videoflag == true) {
+        restartFive();
+      }
+    });
     const reportOnOff = () => {
       state.reportflag = !state.reportflag;
       console.log(state.reportflag);
@@ -198,6 +203,7 @@ export default {
 
     return {
       state,
+      greenWatchEffect,
       stopWatchEffect,
       timeout,
       restartFive,
