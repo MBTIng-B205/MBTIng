@@ -117,6 +117,7 @@ export default {
       timer: null,
       partner: computed(() => store.getters["meetings/getPartner"]),
       memberinfo: computed(() => store.getters["accounts/getMember"]),
+      videoflag: computed(() => store.getters["meetings/getVideoflag"]),
     });
 
     state.time = new Date();
@@ -144,7 +145,11 @@ export default {
         timeout();
       }
     });
-
+    const greenWatchEffect = watchEffect(() => {
+      if (state.videoflag == true) {
+        restartFive();
+      }
+    });
     const reportOnOff = () => {
       state.reportflag = !state.reportflag;
       console.log(state.reportflag);
@@ -198,6 +203,7 @@ export default {
 
     return {
       state,
+      greenWatchEffect,
       stopWatchEffect,
       timeout,
       restartFive,
