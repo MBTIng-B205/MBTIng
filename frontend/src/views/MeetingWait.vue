@@ -137,7 +137,6 @@ export default {
     };
 
     const connect = function () {
-      let testemail = Math.random().toString(36).substring(2, 12);
       const serverURL = process.env.VUE_APP_WS_SERVER_BASE_URL + "/ws/connect";
       let socket = new SockJS(serverURL);
       const stompClient = Stomp.over(socket);
@@ -145,9 +144,8 @@ export default {
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
       state.mtsocket.connect(
         {
-          email: `${testemail}`,
-          // accessToken: sessionStorage.getItem("access-token"),
-          // email: state.memberinfo.email,
+          accessToken: sessionStorage.getItem("access-token"),
+          email: state.memberinfo.email,
         },
         (frame) => {
           // 소켓 연결 성공
@@ -157,8 +155,7 @@ export default {
           // 이런형태를 pub sub 구조라고 합니다.
           // console.log(state.memberinfo.email);
           state.mtsocket.subscribe(
-            `/ws/sub/indi/${testemail}`,
-            // `/ws/sub/indi/${state.memberinfo.email}`,
+            `/ws/sub/indi/${state.memberinfo.email}`,
             (res) => {
               //prop
               console.log("받은 메시지", res.body);
@@ -217,13 +214,10 @@ export default {
               }
             },
             {
-              mbti: "ISTP",
-              gender: "MALE",
-              sido: "서울",
-              interests: [],
-              // gender: state.memberinfo.gender,
-              // sido: state.memberinfo.sido,
-              // interests: state.memberinfo.interests,
+              mbti: state.memberinfo.mbti,
+              gender: state.memberinfo.gender,
+              sido: state.memberinfo.sido,
+              interests: state.memberinfo.interests,
             }
           );
         },

@@ -371,7 +371,7 @@ export default {
         const msg = {
           command: "createReport",
           data: {
-            from_id: "rlwls1101@hanmail.net",
+            from_id: state.memberinfo.email,
             to_id: state.partner.email,
             content: sirenMsg.value,
           },

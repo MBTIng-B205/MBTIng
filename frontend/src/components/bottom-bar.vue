@@ -186,8 +186,8 @@ export default {
       const msg = {
         command: "addFriend",
         data: {
-          fromEmail: "rlwls1101@hanmail.net",
-          toEmail: "wp29dud@naver.com",
+          fromEmail: state.memberinfo.email,
+          toEmail: state.partner.email,
           addOrRemove: !state.friendflag,
         },
       };
