@@ -62,7 +62,7 @@
             v-for="message in state.messageList"
             :key="message"
             @click="onMsg(message)"
-            :class="{ read: !message.read }"
+            :class="{ read: message.read }"
           >
             <td>
               <label class="form-checkbox">
@@ -580,7 +580,7 @@ input {
   zoom: 1.5;
 }
 .read {
-  font-weight: bold;
+  color: #9a9a9a;
 }
 .el-select-dropdown__item.selected {
   color: palevioletred;
