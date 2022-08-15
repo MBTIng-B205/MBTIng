@@ -87,12 +87,12 @@ export default {
       {
         thumb: require("@/assets/mbti001.png"),
         title: "나의 MBTI 테스트",
-        site: "/mymbtitest",
+        site: "/yourmbtitest",
       },
       {
         thumb: require("@/assets/mbti002.png"),
         title: "나의 이상형 MBTI 테스트",
-        site: "/yourmbtitest",
+        site: "/mymbtitest",
       },
       {
         thumb: require("@/assets/mbti003.png"),
