@@ -86,20 +86,27 @@
 
   <!-- report dialog -->
   <el-dialog v-model="sirenDialog" @close="sirenClose">
-    <div style="font-weight: bold; float: left; margin: 10px">
+    <el-row
+      style="
+        padding: 10px;
+        flex-direction: colunm;
+        align-content: flex-start;
+        background-color: #fab6b6;
+      "
+    >
       신고대상자 : {{ state.partner.nickname }}
-    </div>
+    </el-row>
     <el-input
       v-model="sirenMsg"
       type="textarea"
       placeholder="신고사유를 입력해주세요"
       rows="5"
     ></el-input>
-    <div style="margin-top: 20px">
-      <el-button type="danger" @click="clickSiren" size="large"
+    <div style="margin-top: 20px; text-align: center">
+      <el-button type="danger" @click="clickSiren" size="large" round
         >신고하기</el-button
       >
-      <el-button @click="sirenClose" size="large">취소</el-button>
+      <el-button @click="sirenClose" size="large" round plain>취소</el-button>
     </div>
   </el-dialog>
 </template>
