@@ -1,7 +1,13 @@
 <template>
   <div class="navbar">
     <div style="display: absolute">
-      <img class="logo" @click="goHome" src="@/assets/logo.png" alt="logo" />
+      <img
+        class="logo"
+        @click="goHome"
+        src="@/assets/logo.png"
+        alt="logo"
+        style="cursor: pointer"
+      />
     </div>
 
     <el-dropdown v-if="state.memberinfo">

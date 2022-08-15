@@ -3,7 +3,7 @@
     <img
       src="@/assets/logo.png"
       @click="goHome"
-      style="width: 200px; height: 94px"
+      style="width: 200px; height: 94px; cursor: pointer"
     />
   </div>
   <el-container
