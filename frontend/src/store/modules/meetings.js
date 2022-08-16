@@ -10,8 +10,20 @@ export const meetings = {
     chats: [],
     partner: null,
     videoflag: false,
+    alertdialog: false,
+    alertmsg: null,
+    alertcommand: null,
   },
   mutations: {
+    SET_ALERTCOMMAND: (state, alertcommand) => {
+      state.alertcommand = alertcommand;
+    },
+    SET_ALERTMSG: (state, alertmsg) => {
+      state.alertmsg = alertmsg;
+    },
+    SET_ALERTDIALOG: (state, alertdialog) => {
+      state.alertdialog = alertdialog;
+    },
     SET_OVSOCKET: (state, ovsocket) => {
       state.ovsocket = ovsocket;
     },
@@ -38,6 +50,15 @@ export const meetings = {
     },
   },
   getters: {
+    getAlertcommand(state) {
+      return state.alertcommand;
+    },
+    getAlertdialog(state) {
+      return state.alertdialog;
+    },
+    getAlertmsg(state) {
+      return state.alertmsg;
+    },
     getOvsocket(state) {
       return state.ovsocket;
     },
