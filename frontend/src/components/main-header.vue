@@ -37,7 +37,12 @@
     />
   </div>
 
-  <el-dialog v-model="state.mypageDialog" @close="mypageClose" top="20px">
+  <el-dialog
+    v-model="state.mypageDialog"
+    @close="mypageClose"
+    width="40%"
+    top="20px"
+  >
     <div style="text-align: center">
       <img class="profile" :src="state.memberinfo.profileUrl" />
       <table class="mypageTable">
@@ -83,9 +88,8 @@
   <el-dialog
     v-model="state.mypageUpdateDialog"
     @close="mypageUpdateClose"
-    style="margin-top: 50px; margin-bottom: 20px"
     top="0px"
-    margin-bottom="0px"
+    width="40%"
   >
     <div class="mypage" style="text-align: center">
       <el-row class="filebox">
@@ -191,8 +195,13 @@
             </tr>
           </tbody></table
       ></el-form>
-      <el-footer>
-        <el-button @click.prevent="updateInfo" size="large" round
+      <el-footer style="height: 20px">
+        <el-button
+          @click.prevent="updateInfo"
+          size="large"
+          type="danger"
+          plain
+          round
           >수정</el-button
         >
         <el-button
@@ -205,6 +214,7 @@
       </el-footer>
     </div>
   </el-dialog>
+
   <el-dialog top="250px" v-model="state.alertDialogVisible" width="30%" center>
     <el-row style="top: 12px; font-size: 16.5px">{{ state.alertMsg }}</el-row>
     <template #footer>
