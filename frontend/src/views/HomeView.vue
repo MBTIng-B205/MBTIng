@@ -1,6 +1,31 @@
 <template>
   <main-header />
   <!-- background -->
+  <div
+    style="
+      width: 480px;
+      position: absolute;
+      z-index: 2;
+      color: #00001;
+      left: 10%;
+      top: 18%;
+    "
+  >
+    <h3>MBTI를 통해서 마음이 통하는 친구를 만나보세요!</h3>
+
+    <h4 style="line-height: 1px; margin-left: 1rem">
+      <span style="color: deeppink">♥</span>
+      하트버튼을 클릭하면 매칭이 시작됩니다.
+    </h4>
+    <h4 style="line-height: 0.25px; margin-left: 1rem">
+      <span style="color: deeppink">♥</span>
+      블라인드 소개팅 동안 상대방이 마음에 들면 그린라이트를 누르세요.
+    </h4>
+    <h4 style="line-height: 0.25px; margin-left: 1rem">
+      <span style="color: deeppink">♥</span>
+      화상소개팅으로 연결됩니다 : )
+    </h4>
+  </div>
   <div class="bg">
     <div class="bg0"></div>
     <img
@@ -130,7 +155,7 @@ export default {
   margin: 200px 350px 200px 350px;
   cursor: pointer;
   position: absolute;
-  left: 25%;
+  left: 42%;
   top: -30%;
   z-index: 2;
 }
@@ -139,7 +164,7 @@ export default {
   width: 200px;
   margin: 200px 300px 200px 300px;
   position: absolute;
-  left: 25%;
+  left: 42%;
   top: -45%;
   z-index: 2;
 }
@@ -147,8 +172,8 @@ export default {
   height: 500px;
   width: 800px;
   position: absolute;
-  left: 25%;
-  bottom: -5%;
+  left: 42%;
+  bottom: -6%;
   z-index: 1;
 }
 .bg {

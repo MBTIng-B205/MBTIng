@@ -54,7 +54,6 @@ public class MessageInitData {
                     .build());
         }
         messageRepository.saveAll(messages);
-
         logger.info("\n\n{}개의 메시지가 들어감\n", messages.size());
     }
 }
