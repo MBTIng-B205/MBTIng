@@ -17,12 +17,14 @@
           <el-space direction="vertical">
             <el-button
               id="00"
+              class="buttons"
               @click="clickValue(0, 'I', 0)"
               style="background: #f1f1b3"
               >I</el-button
             >
             <el-button
               id="01"
+              class="buttons"
               @click="clickValue(0, 'E', 1)"
               style="background: #bde4d7"
               >E</el-button
@@ -33,12 +35,14 @@
           <el-space direction="vertical">
             <el-button
               id="10"
+              class="buttons"
               @click="clickValue(1, 'N', 0)"
               style="background: #facdca"
               >N</el-button
             >
             <el-button
               id="11"
+              class="buttons"
               @click="clickValue(1, 'S', 1)"
               style="background: #c0e8ea"
               >S</el-button
@@ -48,6 +52,7 @@
         <el-button-group>
           <el-space direction="vertical">
             <el-button
+              class="buttons"
               id="20"
               @click="clickValue(2, 'F', 0)"
               style="background: #efc7d6"
@@ -55,6 +60,7 @@
             >
             <el-button
               id="21"
+              class="buttons"
               @click="clickValue(2, 'T', 1)"
               style="background: #e2d9e7"
               >T</el-button
@@ -65,12 +71,14 @@
           <el-space direction="vertical">
             <el-button
               id="30"
+              class="buttons"
               @click="clickValue(3, 'J', 0)"
               style="background: #d8dceb"
               >J</el-button
             >
             <el-button
               id="31"
+              class="buttons"
               @click="clickValue(3, 'P', 1)"
               style="background: #cce2ee"
               >P</el-button
@@ -125,7 +133,6 @@ export default {
       form.alertMsg = message;
       form.alertDialogVisible = true;
     };
-    const image = "@/assets/BG_Heart.gif";
 
     const clickSetting = function () {
       if (
@@ -152,12 +159,12 @@ export default {
       const active = "" + idx + sel;
       // console.log(active);
       // console.log(inactive);
-      document.getElementById(active).style.color = "white";
-      document.getElementById(inactive).style.color = "black";
+      document.getElementById(active).style.color = "#f56c6c";
+      document.getElementById(inactive).style.color = "white";
       // console.log(form.mbti[idx]);
     };
 
-    return { form, image, clickSetting, clickValue, alertDialog };
+    return { form, clickSetting, clickValue, alertDialog };
   },
 };
 </script>
