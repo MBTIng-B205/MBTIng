@@ -93,6 +93,16 @@
       </el-footer>
     </el-card>
   </el-container>
+  <el-dialog v-model="form.alertDialogVisible" width="30%" center top="250px">
+    <el-row style="top: 12px; font-size: 16.5px">{{ form.alertMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="form.alertDialogVisible = false"
+          >확인</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -107,8 +117,14 @@ export default {
       mbti: {},
       color: {},
       memberinfo: computed(() => store.getters["accounts/getMember"]),
+      alertMsg: "",
+      alertDialogVisible: false,
     });
 
+    const alertDialog = function (message) {
+      form.alertMsg = message;
+      form.alertDialogVisible = true;
+    };
     const image = "@/assets/BG_Heart.gif";
 
     const clickSetting = function () {
@@ -125,7 +141,7 @@ export default {
         store.commit("accounts/SET_MEMBER_INFO", form.memberinfo);
         router.push({ name: "ProfileSetting" });
       } else {
-        alert("MBTI를 선택해주세요!");
+        alertDialog("MBTI를 선택해주세요!");
       }
     };
 
@@ -141,7 +157,7 @@ export default {
       // console.log(form.mbti[idx]);
     };
 
-    return { form, image, clickSetting, clickValue };
+    return { form, image, clickSetting, clickValue, alertDialog };
   },
 };
 </script>
