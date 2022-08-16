@@ -66,7 +66,7 @@ public class AppMemberInitData {
                 .gender(Gender.FEMALE)
                 .mbti("INFJ")
                 .birth(LocalDate.of(1994, 10, 10))
-                .profileUrl(fileuri + "tnwl.JPG")
+                .profileUrl(fileuri + "tnwl.jpg")
                 .sido("서울")
                 .build();
         Member f3 = Member.builder()
@@ -74,7 +74,7 @@ public class AppMemberInitData {
                 .email("duddn@naver.com")
                 .gender(Gender.FEMALE)
                 .mbti("ISTJ")
-                .profileUrl(fileuri + "duddn.JPG")
+                .profileUrl(fileuri + "duddn.jpg")
                 .birth(LocalDate.of(1994, 3, 1))
                 .sido("대전")
                 .build();
@@ -83,7 +83,7 @@ public class AppMemberInitData {
                 .email("ehdrm@naver.com")
                 .gender(Gender.FEMALE)
                 .mbti("ENTJ")
-                .profileUrl(fileuri + "ehdrm.JPG")
+                .profileUrl(fileuri + "ehdrm.jpg")
                 .birth(LocalDate.of(1994, 4, 4))
                 .sido("대전")
                 .build();
@@ -101,7 +101,7 @@ public class AppMemberInitData {
                 .email("gywls@naver.com")
                 .gender(Gender.FEMALE)
                 .mbti("ESTP")
-                .profileUrl(fileuri + "gywls.JPG")
+                .profileUrl(fileuri + "gywls.jpg")
                 .birth(LocalDate.of(1980, 4, 4))
                 .sido("대전")
                 .build();
@@ -110,7 +110,7 @@ public class AppMemberInitData {
                 .email("gPfl@naver.com")
                 .gender(Gender.FEMALE)
                 .mbti("ISTJ")
-                .profileUrl(fileuri + "gPfl.JPG")
+                .profileUrl(fileuri + "gPfl.jpg")
                 .birth(LocalDate.of(1994, 4, 4))
                 .sido("대전")
                 .build();
@@ -120,7 +120,7 @@ public class AppMemberInitData {
                 .gender(Gender.MALE)
                 .mbti("INFJ")
                 .birth(LocalDate.of(1985, 9, 19))
-                .profileUrl(fileuri + "wndrl.JPG")
+                .profileUrl(fileuri + "wndrl.jpg")
                 .sido("서울")
                 .build();
         Member f9 = Member.builder()
@@ -129,7 +129,7 @@ public class AppMemberInitData {
                 .gender(Gender.MALE)
                 .mbti("ENTJ")
                 .birth(LocalDate.of(1985, 9, 19))
-                .profileUrl(fileuri + "rhkdtn.JPG")
+                .profileUrl(fileuri + "rhkdtn.jpg")
                 .sido("서울")
                 .build();
 
