@@ -13,8 +13,12 @@ export const meetings = {
     alertdialog: false,
     alertmsg: null,
     alertcommand: null,
+    chataddflag: false,
   },
   mutations: {
+    SET_CHATADDFLAG: (state, chataddflag) => {
+      state.chataddflag = chataddflag;
+    },
     SET_ALERTCOMMAND: (state, alertcommand) => {
       state.alertcommand = alertcommand;
     },
@@ -50,6 +54,9 @@ export const meetings = {
     },
   },
   getters: {
+    getChataddflag(state) {
+      return state.chataddflag;
+    },
     getAlertcommand(state) {
       return state.alertcommand;
     },

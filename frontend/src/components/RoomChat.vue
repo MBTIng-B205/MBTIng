@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
 import { Promotion } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 export default {
@@ -106,6 +106,7 @@ export default {
       message: "",
       subscribers: props.subscribers,
       chats: store.getters["meetings/getChats"],
+      chataddflag: computed(() => store.getters["meetings/getChataddflag"]),
       chat: [],
     });
 
@@ -134,8 +135,12 @@ export default {
       // 내가 보낸 메시지인 경우
       if (isMyMessage) {
         message.sender += " (You)";
+      } else {
+        store.commit("meetings/SET_CHATADDFLAG", true);
+        console.log(state.chataddflag);
+        alert(state.chataddflag);
+        alert("상대가 보낸 메시지");
       }
-
       let chatBar = document.querySelector("#chat-bar");
       console.log(chatBar, "chatbar");
       let isScrollBottom =

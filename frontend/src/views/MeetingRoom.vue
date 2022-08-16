@@ -282,6 +282,9 @@ export default {
 
     const chatOnOff = ({ chatflag }) => {
       state.chatflag = chatflag;
+      if (chatflag == true) {
+        store.commit("meetings/SET_CHATADDFLAG", false);
+      }
     };
 
     const reportOnOff = ({ reportflag }) => {
@@ -414,7 +417,10 @@ export default {
     const clickSiren = function () {
       console.log("신고", sirenMsg.value);
       if (sirenMsg.value == "") {
-        alert("신고 사유를 입력하세요!");
+        store.commit("meetings/SET_ALERTCOMMAND", "reportnull");
+        store.commit("meetings/SET_ALERTDIALOG", true);
+        store.commit("meetings/SET_ALERTMSG", "신고 사유를 입력하세요!");
+        //alert("신고 사유를 입력하세요!");
       } else {
         console.log("addFriend 실행");
         const msg = {
@@ -468,6 +474,8 @@ export default {
       } else if (state.alertcommand == "opponentleft") {
         store.commit("meetings/SET_ALERTCOMMAND", null);
         router.push({ name: "HomeView" });
+      } else if (state.alertcommand == "reportnull") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
       }
     };
     return {
