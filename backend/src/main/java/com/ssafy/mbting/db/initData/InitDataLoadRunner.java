@@ -22,8 +22,8 @@ public class InitDataLoadRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         if ("create".equalsIgnoreCase(ddlAuto)) {
             logger.info("\n\n초기 데이터 로딩을 시작합니다.\n");
-            messageInitData.create();
-            friendInitData.create();
+            //messageInitData.create();
+            //friendInitData.create();
             appMemberInitData.create();
             logger.info("\n\n초기 데이터 로딩을 마쳤습니다.\n");
         } else {
