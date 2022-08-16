@@ -192,7 +192,7 @@ export default {
 .bg2 {
   height: 30px;
   width: 100%;
-  background-color: #e8e8e8;
+  background-color: white;
 }
 
 .el-row {
