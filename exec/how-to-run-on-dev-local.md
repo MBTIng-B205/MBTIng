@@ -32,6 +32,23 @@ WebRTC 에서 화상, 음성 통신을 위해 HTTPS 가 강제되는데
 
 브라우저에서 `https://localhost:4443/` 에 접속하여 `고급` 에서 허용해야 한다.
 
+## 환경 변수 파일
+
+로컬 환경 변수가 설정된 파일(.env.local)을 다음 경로에 넣는다.
+
+- frontend/[.env.local](./server-files/frontend/.env.local)
+
+.env.local
+```properties
+VUE_APP_API_SERVER_BASE_URL = "http://localhost:8080/api"
+VUE_APP_KAKAO_CLIENT_ID = "여기_KAKAO_DEV_REST_API_KEY_넣기"
+VUE_APP_KAKAO_LOGIN_REDIRECT_URI = "http://localhost/loginview"
+VUE_APP_KAKAO_LOGOUT_REDIRECT_URI = "http://localhost/logoutview"
+VUE_APP_WS_SERVER_BASE_URL = "http://localhost:8080"
+VUE_APP_OPENVIDU_SERVER_URL = "https://localhost:4443"
+VUE_APP_OPENVIDU_SERVER_SECRET = "MY_SECRET"
+```
+
 ## Run Frontend
 
 frontend 폴더에서 다음을 실행
