@@ -77,6 +77,16 @@
       </el-card>
     </el-col>
   </el-row>
+  <el-dialog v-model="state.homeDialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px"
+      >로그인을 먼저 진행해주세요. 로그인 페이지로 이동합니다</el-row
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="gologin">확인</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -96,6 +106,7 @@ export default {
     const store = useStore();
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
+      homeDialog: false,
     });
     console.log(state.memberinfo);
     if (state.memberinfo != null) {
@@ -105,9 +116,14 @@ export default {
       let jwt = null;
       jwt = sessionStorage.getItem("access-token");
       if (jwt != null) router.push({ name: "MeetingWait" });
-      else alert("로그인을 먼저 진행해주세요");
+      else state.homeDialog = true;
     };
-
+    const gologin = function () {
+      state.homeDialog = false;
+      window.location.replace(
+        `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code`
+      );
+    };
     const contents1 = [
       {
         thumb: require("@/assets/mbti001.png"),
@@ -132,6 +148,7 @@ export default {
     ];
     return {
       meetingStart,
+      gologin,
       mypageDialog,
       Avatar,
       Comment,
