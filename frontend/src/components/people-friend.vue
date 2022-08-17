@@ -69,7 +69,12 @@
       </div>
     </el-dialog>
 
-    <el-dialog v-model="state.friendProfileDialog" @close="friendProfileClose">
+    <el-dialog
+      v-model="state.friendProfileDialog"
+      @close="friendProfileClose"
+      width="40%"
+      top="7px"
+    >
       <div>
         <img class="profile" :src="state.friend.profileUrl" />
         <table>
@@ -106,10 +111,39 @@
           round
           style="margin-top: 20px"
           size="large"
-          @click="deleteFriend(friend)"
+          @click="confirmOpen('친구를 삭제하시겠습니까?')"
           >친구 삭제</el-button
         >
       </div>
+    </el-dialog>
+
+    <el-dialog top="250px" v-model="state.alertDialog" width="30%" center>
+      <el-row style="top: 12px; font-size: 16.5px">{{ state.alertMsg }}</el-row>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="danger" round @click="state.alertDialog = false"
+            >확인</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
+
+    <el-dialog top="250px" v-model="state.confirmDialog" width="30%" center>
+      <el-row style="top: 12px; font-size: 16.5px">{{
+        state.confirmMsg
+      }}</el-row>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="danger" round @click="deleteFriend">삭제</el-button>
+          <el-button
+            type="danger"
+            round
+            plain
+            @click="state.confirmDialog = false"
+            >취소</el-button
+          >
+        </span>
+      </template>
     </el-dialog>
   </el-container>
 </template>
@@ -127,6 +161,10 @@ export default {
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       searchFlag: false,
       friendProfileDialog: false,
+      alertDialog: false,
+      alertMsg: "",
+      confirmDialog: false,
+      confirmMsg: "",
       friends: [],
       friend: {},
       toFriend: {},
@@ -171,9 +209,9 @@ export default {
 
     const onSearch = function () {
       if (key.value == "") {
-        alert("검색키를 선택하세요");
+        alertOpen("검색키를 선택하세요");
       } else if (search.value == "") {
-        alert("검색어를 입력하세요");
+        alertOpen("검색어를 입력하세요");
       } else {
         state.searchFlag = true;
         if (key.value == "nickname") {
@@ -204,32 +242,31 @@ export default {
 
     const deleteFriend = function () {
       // 친구 삭제 기능
+      state.confirmDialog = false;
       console.log(state.friend);
-      if (confirm("친구를 삭제하시겠습니까?")) {
-        store
-          .dispatch("friends/deleteFriend", {
-            from: state.memberinfo.email,
-            to: state.friend.email,
-          })
-          .then(function (result) {
-            console.log("deleteResult", result);
-            state.friendProfileDialog = false;
-            store
-              .dispatch("friends/getFriendsList", state.memberinfo.email)
-              .then(function (result) {
-                console.log("result", result);
-                state.friends = result.data.body.friends;
-                console.log("friends", state.friends);
-                console.log("friend", state.friends[0]);
-              });
-          });
-      }
+      store
+        .dispatch("friends/deleteFriend", {
+          from: state.memberinfo.email,
+          to: state.friend.email,
+        })
+        .then(function (result) {
+          console.log("deleteResult", result);
+          state.friendProfileDialog = false;
+          store
+            .dispatch("friends/getFriendsList", state.memberinfo.email)
+            .then(function (result) {
+              console.log("result", result);
+              state.friends = result.data.body.friends;
+              console.log("friends", state.friends);
+              console.log("friend", state.friends[0]);
+            });
+        });
     };
 
     const clickSend = function () {
       console.log("clickSend", message);
       if (message.value == "") {
-        alert("보낼 내용을 입력하세요!");
+        alertOpen("보낼 내용을 입력하세요!");
       } else {
         console.log(
           "send",
@@ -248,7 +285,7 @@ export default {
           })
           .then(function (result) {
             console.log("sendmsg", result);
-            alert("쪽지 전송 완료!");
+            alertOpen("쪽지가 전송되었습니다!");
           });
         messageClose();
       }
@@ -265,6 +302,16 @@ export default {
       messageDialog.value = true;
     };
 
+    const confirmOpen = function (msg) {
+      state.confirmMsg = msg;
+      state.confirmDialog = true;
+    };
+
+    const alertOpen = function (msg) {
+      state.alertMsg = msg;
+      state.alertDialog = true;
+    };
+
     return {
       state,
       search,
@@ -279,6 +326,8 @@ export default {
       clickSend,
       messageClose,
       messageOpen,
+      confirmOpen,
+      alertOpen,
     };
   },
 };

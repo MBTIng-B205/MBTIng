@@ -129,6 +129,17 @@
       </div>
     </el-dialog>
   </el-container>
+
+  <el-dialog top="250px" v-model="state.alertDialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.alertMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="state.alertDialog = false"
+          >확인</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -154,6 +165,8 @@ export default {
       messageId: "",
       messageDialog: false,
       selected: [],
+      alertDialog: false,
+      alertMsg: "",
     });
 
     onMounted(() => {
@@ -175,9 +188,9 @@ export default {
 
     const onSearch = function () {
       if (key.value == "") {
-        alert("검색키를 선택하세요");
+        alertOpen("검색키를 선택하세요");
       } else if (search.value == "") {
-        alert("검색어를 입력하세요");
+        alertOpen("검색어를 입력하세요");
       } else {
         console.log("search", key.value + " " + search.value);
         state.searchFlag = true;
@@ -239,7 +252,7 @@ export default {
             });
         })
         .catch(function (error) {
-          alert(error);
+          alertOpen(error);
         });
     };
 
@@ -293,6 +306,11 @@ export default {
         });
     };
 
+    const alertOpen = function (msg) {
+      state.alertMsg = msg;
+      state.alertDialog = true;
+    };
+
     return {
       key,
       search,
@@ -304,6 +322,7 @@ export default {
       onMsg,
       handleClose,
       handleCurrentChange,
+      alertOpen,
     };
   },
 };

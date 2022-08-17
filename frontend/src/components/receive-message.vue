@@ -115,7 +115,7 @@
         <img
           v-else
           class="friendIcon"
-          @click="addFriend"
+          @click="confirmOpen('친구추가 하시겠습니까?')"
           src="@/assets/add-friend.png"
         />
         <img
@@ -211,6 +211,32 @@
       </div>
     </el-dialog>
   </el-container>
+  <el-dialog top="250px" v-model="state.alertDialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.alertMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="state.alertDialog = false"
+          >확인</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+
+  <el-dialog top="250px" v-model="state.confirmDialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.confirmMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="addFriend">확인</el-button>
+        <el-button
+          type="danger"
+          round
+          plain
+          @click="state.confirmDialog = false"
+          >취소</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -238,6 +264,10 @@ export default {
       selected: [],
       sendDialog: false,
       sendMsg: "",
+      alertDialog: false,
+      alertMsg: "",
+      confirmDialog: false,
+      confirmMsg: "",
     });
 
     const sirenDialog = ref(false);
@@ -262,9 +292,9 @@ export default {
 
     const onSearch = function () {
       if (key.value == "") {
-        alert("검색키를 선택하세요");
+        alertOpen("검색키를 선택하세요");
       } else if (search.value == "") {
-        alert("검색어를 입력하세요");
+        alertOpen("검색어를 입력하세요");
       } else {
         console.log("search", key.value + " " + search.value);
         state.searchFlag = true;
@@ -350,7 +380,7 @@ export default {
             });
         })
         .catch(function (error) {
-          alert(error);
+          alertOpen(error);
         });
     };
 
@@ -398,7 +428,7 @@ export default {
       console.log("clickSend", state.sendMsg);
 
       if (state.sendMsg == "") {
-        alert("보낼 내용을 입력하세요!");
+        alertOpen("보낼 내용을 입력하세요!");
       } else {
         // 쪽지 보내기
         console.log("sender");
@@ -410,7 +440,7 @@ export default {
           })
           .then(function (result) {
             console.log("sendmsg", result);
-            alert("쪽지 전송 완료!");
+            alertOpen("쪽지 전송 완료!");
           });
         sendClose();
       }
@@ -428,7 +458,7 @@ export default {
     const clickSiren = function () {
       console.log("신고", sirenMsg.value);
       if (sirenMsg.value == "") {
-        alert("신고 사유를 입력하세요!");
+        alertOpen("신고 사유를 입력하세요!");
       } else {
         store
           .dispatch("reports/registerReport", {
@@ -438,24 +468,23 @@ export default {
           })
           .then(function (result) {
             console.log("result-report", result);
-            alert("신고가 접수되었습니다.");
+            alertOpen("신고가 접수되었습니다.");
           });
         sirenClose();
       }
     };
 
     const addFriend = function () {
-      if (confirm("친구추가 하시겠습니까?")) {
-        store
-          .dispatch("friends/addFriend", {
-            from: state.memberinfo.email,
-            to: state.message.sender.email,
-          })
-          .then(function (result) {
-            console.log("addResult", result);
-            state.friendFlag = true;
-          });
-      }
+      state.confirmDialog = false;
+      store
+        .dispatch("friends/addFriend", {
+          from: state.memberinfo.email,
+          to: state.message.sender.email,
+        })
+        .then(function (result) {
+          console.log("addResult", result);
+          state.friendFlag = true;
+        });
     };
 
     const handleCurrentChange = function (val) {
@@ -475,6 +504,16 @@ export default {
           state.msgcnt = result.data.body.pagingResponse.totalcount;
           console.log("messageList", state.messageList + " " + state.msgcnt);
         });
+    };
+
+    const confirmOpen = function (msg) {
+      state.confirmMsg = msg;
+      state.confirmDialog = true;
+    };
+
+    const alertOpen = function (msg) {
+      state.alertMsg = msg;
+      state.alertDialog = true;
     };
 
     return {
@@ -498,6 +537,8 @@ export default {
       clickSiren,
       addFriend,
       handleCurrentChange,
+      confirmOpen,
+      alertOpen,
     };
   },
 };
