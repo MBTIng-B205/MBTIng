@@ -116,7 +116,11 @@ export default {
         });
       } else if (list.length == size) {
         // 다음 라운드 넘어갈 때 섞기
-        alertDialog(size + "강전 시작!");
+        if (size === 2) {
+          alertDialog("결승전 시작!");
+        } else {
+          alertDialog(size + "강전 시작!");
+        }
         list.sort(() => Math.random() - 0.5);
         size = size / 2;
         left.value = list.shift();
