@@ -149,6 +149,9 @@ export default {
       } else if (state.alertcommand == "proposalrefuse") {
         store.commit("meetings/SET_ALERTCOMMAND", null);
         router.push({ name: "MeetingWait" });
+      } else {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        router.push({ name: "MeetingWait" });
       }
     };
     return {
