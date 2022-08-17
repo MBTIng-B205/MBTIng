@@ -222,6 +222,7 @@ export default {
               }
               if (obj.command == "opponentLeft") {
                 if (obj.data.status == "INPROGRESS") {
+                  alert("매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다");
                   /*
                   store.commit("meetings/SET_ALERTCOMMAND", "proposalrefuse");
                   store.commit("meetings/SET_ALERTDIALOG", true);
