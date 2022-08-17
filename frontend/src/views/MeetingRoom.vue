@@ -87,17 +87,34 @@
             alt=""
             style="width: 500px; height: 500px"
           />
-          <div>
-            <span
-              style="
-                font-size: 50px;
-                font-weight: bold;
-                position: absolute;
-                left: 202px;
-                bottom: -30px;
-              "
-              >{{ state.partner.mbti }}</span
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              position: absolute;
+              top: 480px;
+              font-size: 20px;
+              width: 500px;
+            "
+          >
+            <!-- <span
+            style="
+              font-size: 50px;
+              font-weight: bold;
+              position: absolute;
+              left: 202px;
+              bottom: -30px;
+            "
+            >{{ state.partner.mbti }}</span
+          > -->
+            <div class="tag">#{{ state.partner.mbti }}</div>
+            <div
+              class="tag"
+              v-for="(interest, index) in state.partner.interests"
+              :key="index"
             >
+              #{{ interest }}
+            </div>
           </div>
         </div>
       </div>
@@ -515,6 +532,12 @@ export default {
 </script>
 
 <style scoped>
+.tag {
+  border-radius: 20px;
+  background-color: azure;
+  margin-right: 10px;
+  padding: 7px;
+}
 .el-container {
   display: flex;
   justify-content: center;
