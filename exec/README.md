@@ -10,8 +10,8 @@
 
 ## DB 덤프 파일 최신본
 
-- [DB 덤프](./db-dump/mbtisgt.sql)
+- [DB 덤프](./db-dump/)
 
 ## 시연 시나리오
 
-- [시연 시나리오](./demo-scenario/README.md)
+- 시연 시나리오
