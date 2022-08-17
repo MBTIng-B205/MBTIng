@@ -188,6 +188,7 @@ export default {
                 //router.push({ path: "/room" });
               }
               if (obj.command == "opponentRefusal") {
+                alert("매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다");
                 if (state.mtsocket != null) {
                   state.mtsocket.disconnect();
                 }
