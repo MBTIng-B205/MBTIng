@@ -173,18 +173,20 @@ export default {
                 router.push({ path: "/meetingmatch" });
               }
               if (obj.command == "accept") {
+                /*
                 store.commit("meetings/SET_ALERTCOMMAND", "proposalaccept");
                 store.commit("meetings/SET_ALERTDIALOG", true);
                 store.commit(
                   "meetings/SET_ALERTMSG",
                   "매칭이 성사됬습니다 블라인드 소개팅으로 들어갑니다"
                 );
-
+                */
                 store.commit("meetings/SET_TOKEN", obj.data.openviduToken);
                 store.commit("meetings/SET_PARTNER", obj.data.opponent);
                 console.log(obj.data.openviduToken);
                 console.log(obj.data.opponent);
                 meetingAudioStarted();
+                router.push({ path: "/room" });
               }
               if (obj.command == "opponentRefusal") {
                 if (state.mtsocket != null) {
@@ -221,12 +223,13 @@ export default {
               }
               if (obj.command == "opponentLeft") {
                 if (obj.data.status == "INPROGRESS") {
+                  /*
                   store.commit("meetings/SET_ALERTCOMMAND", "proposalrefuse");
                   store.commit("meetings/SET_ALERTDIALOG", true);
                   store.commit(
                     "meetings/SET_ALERTMSG",
                     "매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다"
-                  );
+                  );*/
                   state.mtsocket.disconnect();
                   store.commit("meetings/SET_SOCKET", null);
                   router.push({ name: "MeetingWait" });
