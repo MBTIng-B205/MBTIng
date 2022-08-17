@@ -236,6 +236,8 @@ export default {
     });
     onMounted(() => {
       joinSession();
+      console.log(state.partner);
+      console.log(state.partner.interests);
     });
     const chat = ref(null);
     const joinSession = () => {
