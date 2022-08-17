@@ -42,15 +42,15 @@ public class AppMemberInitData {
                 .profileUrl(fileuri + "wpdud.jpg")
                 .sido("대전")
                 .build();
-        Member d2 = Member.builder()
-                .nickname("이기진")
-                .email("rlwls1101@hanmail.net")
-                .gender(Gender.MALE)
-                .mbti("ISTP")
-                .birth(LocalDate.of(1995, 4, 3))
-                .profileUrl(fileuri + "wpdud.jpg")
-                .sido("대전")
-                .build();
+//        Member d2 = Member.builder()
+//                .nickname("이기진")
+//                .email("rlwls1101@hanmail.net")
+//                .gender(Gender.MALE)
+//                .mbti("ISTP")
+//                .birth(LocalDate.of(1999, 2, 2))
+//                .profileUrl(fileuri + "wpdud.jpg")
+//                .sido("대전")
+//                .build();
         Member f1 = Member.builder()
                 .nickname("아이유")
                 .email("dldb@naver.com")
@@ -134,7 +134,7 @@ public class AppMemberInitData {
                 .build();
 
         devs.add(d1);
-        devs.add(d2);
+//        devs.add(d2);
         devs.add(f1);
         devs.add(f2);
         devs.add(f3);
@@ -166,16 +166,16 @@ public class AppMemberInitData {
                     .toId(d1)
                     .build());
         });
-        fl.forEach((f) -> {
-            friends.add(Friend.builder()
-                    .fromId(d2)
-                    .toId(f)
-                    .build());
-            friends.add(Friend.builder()
-                    .fromId(f)
-                    .toId(d2)
-                    .build());
-        });
+//        fl.forEach((f) -> {
+//            friends.add(Friend.builder()
+//                    .fromId(d2)
+//                    .toId(f)
+//                    .build());
+//            friends.add(Friend.builder()
+//                    .fromId(f)
+//                    .toId(d2)
+//                    .build());
+//        });
         friendRepository.saveAll(friends);
         List<Message> messages = new ArrayList<>();
         messages.add(Message.builder().fromId(f7).toId(d1).readByTo(true).content("대전 어디사세요 제영님?").build());
@@ -190,17 +190,17 @@ public class AppMemberInitData {
         messages.add(Message.builder().fromId(d1).toId(f8).content("유성온천 할리스 앞에서 뵐게요").build());
         messages.add(Message.builder().fromId(d1).toId(f9).content("안녕하세요~ 자주 연락해요 저희").build());
 
-        messages.add(Message.builder().fromId(f7).toId(d2).readByTo(true).content("대전 어디사세요 제영님?").build());
-        messages.add(Message.builder().fromId(f8).toId(d2).readByTo(true).content("제영님 내일 저녁 7시에 뵈요").build());
-        messages.add(Message.builder().fromId(f9).toId(d2).readByTo(true).content("안녕하세요 반갑습니다").build());
-        messages.add(Message.builder().fromId(f2).toId(d2).content("제영님 카톡 친추해요").build());
-        messages.add(Message.builder().fromId(f3).toId(d2).content("송 투더 제 투더 영 ~ yeah").build());
-        messages.add(Message.builder().fromId(f5).toId(d2).content("너 납치된거야").build());
-        messages.add(Message.builder().fromId(f6).toId(d2).content("제영님 만나서 커피한잔 어떠세요").build());
-
-        messages.add(Message.builder().fromId(d2).toId(f7).content("한밭대 앞에서 살고 있습니다").build());
-        messages.add(Message.builder().fromId(d2).toId(f8).content("유성온천 할리스 앞에서 뵐게요").build());
-        messages.add(Message.builder().fromId(d2).toId(f9).content("안녕하세요~ 자주 연락해요 저희").build());
+//        messages.add(Message.builder().fromId(f7).toId(d2).readByTo(true).content("대전 어디사세요 제영님?").build());
+//        messages.add(Message.builder().fromId(f8).toId(d2).readByTo(true).content("제영님 내일 저녁 7시에 뵈요").build());
+//        messages.add(Message.builder().fromId(f9).toId(d2).readByTo(true).content("안녕하세요 반갑습니다").build());
+//        messages.add(Message.builder().fromId(f2).toId(d2).content("제영님 카톡 친추해요").build());
+//        messages.add(Message.builder().fromId(f3).toId(d2).content("송 투더 제 투더 영 ~ yeah").build());
+//        messages.add(Message.builder().fromId(f5).toId(d2).content("너 납치된거야").build());
+//        messages.add(Message.builder().fromId(f6).toId(d2).content("제영님 만나서 커피한잔 어떠세요").build());
+//
+//        messages.add(Message.builder().fromId(d2).toId(f7).content("한밭대 앞에서 살고 있습니다").build());
+//        messages.add(Message.builder().fromId(d2).toId(f8).content("유성온천 할리스 앞에서 뵐게요").build());
+//        messages.add(Message.builder().fromId(d2).toId(f9).content("안녕하세요~ 자주 연락해요 저희").build());
 
 
         messageRepository.saveAll(messages);
