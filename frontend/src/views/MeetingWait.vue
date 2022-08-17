@@ -173,20 +173,19 @@ export default {
                 router.push({ path: "/meetingmatch" });
               }
               if (obj.command == "accept") {
-                /*
                 store.commit("meetings/SET_ALERTCOMMAND", "proposalaccept");
                 store.commit("meetings/SET_ALERTDIALOG", true);
                 store.commit(
                   "meetings/SET_ALERTMSG",
                   "매칭이 성사됬습니다 블라인드 소개팅으로 들어갑니다"
                 );
-                */
+
                 store.commit("meetings/SET_TOKEN", obj.data.openviduToken);
                 store.commit("meetings/SET_PARTNER", obj.data.opponent);
                 console.log(obj.data.openviduToken);
                 console.log(obj.data.opponent);
                 meetingAudioStarted();
-                router.push({ path: "/room" });
+                //router.push({ path: "/room" });
               }
               if (obj.command == "opponentRefusal") {
                 if (state.mtsocket != null) {

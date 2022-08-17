@@ -70,7 +70,7 @@
       </el-row>
     </el-card>
   </el-container>
-  <!--
+
   <el-dialog top="250px" v-model="state.alertdialog" width="30%" center>
     <el-row style="top: 12px; font-size: 16.5px">{{ state.alertmsg }}</el-row>
     <template #footer>
@@ -79,7 +79,6 @@
       </span>
     </template>
   </el-dialog>
-  -->
 </template>
 
 <script>
@@ -148,13 +147,14 @@ export default {
       if (state.alertcommand == "proposalaccept") {
         store.commit("meetings/SET_ALERTCOMMAND", null);
         router.push({ path: "/room" });
-      } else if (state.alertcommand == "proposalrefuse") {
+      }
+      /*else if (state.alertcommand == "proposalrefuse") {
         store.commit("meetings/SET_ALERTCOMMAND", null);
         router.push({ name: "MeetingWait" });
       } else {
         store.commit("meetings/SET_ALERTCOMMAND", null);
         router.push({ name: "MeetingWait" });
-      }
+      }*/
     };
     return {
       state,
