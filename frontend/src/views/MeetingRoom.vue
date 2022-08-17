@@ -34,7 +34,7 @@
           @audioOnOff="audioOnOff"
         ></video-controller>
       </div>
-      <div v-if="state.videoflag">
+      <div>
         <div
           class="video1-wrapper"
           style="
@@ -67,7 +67,7 @@
           </div>
         </div>
       </div>
-      <div v-else class="mbtiinfo">
+      <div v-if="!state.videoflag" class="mbtiinfo">
         <!-- <div class="mbtiinfo"></div> -->
         <img
           src="@/assets/meetingimg.png"
