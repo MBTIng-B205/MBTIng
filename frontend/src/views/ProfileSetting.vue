@@ -102,6 +102,16 @@
       </el-row>
     </el-card>
   </el-container>
+  <el-dialog v-model="form.alertDialogVisible" width="30%" center top="250px">
+    <el-row style="top: 12px; font-size: 16.5px">{{ form.alertMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="form.alertDialogVisible = false"
+          >확인</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -194,8 +204,14 @@ export default {
       sido: "",
       interests: [],
       memberinfo: computed(() => store.getters["accounts/getMember"]),
+      alertMsg: "",
+      alertDialogVisible: false,
     });
     // console.log(form);
+    const alertDialog = function (message) {
+      form.alertMsg = message;
+      form.alertDialogVisible = true;
+    };
 
     let flag = false;
     const nameCheck = function () {
@@ -204,7 +220,7 @@ export default {
       store.dispatch("accounts/getUserName", { nickname }).then(function (res) {
         console.log("res", res);
         if (res.data.body === true) {
-          alert("사용가능한 닉네임 입니다.");
+          alertDialog("사용가능한 닉네임 입니다.");
           flag = true;
         } else {
           alert("중복 된 닉네임입니다.");
@@ -215,7 +231,7 @@ export default {
 
     const signup = function () {
       if (flag === false) {
-        alert("닉네임 중복검사를 눌러주세요");
+        alertDialog("닉네임 중복검사를 눌러주세요");
       } else {
         form.memberinfo.nickname = form.nickname;
         form.memberinfo.gender = form.gender;
@@ -231,7 +247,7 @@ export default {
       }
     };
 
-    return { signup, nameCheck, option, form };
+    return { signup, nameCheck, option, form, alertDialog };
   },
 };
 </script>

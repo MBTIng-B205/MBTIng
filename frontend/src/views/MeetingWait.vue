@@ -173,16 +173,20 @@ export default {
                 router.push({ path: "/meetingmatch" });
               }
               if (obj.command == "accept") {
-                alert("매칭이 성사됬습니다 블라인드 소개팅으로 들어갑니다");
+                store.commit("meetings/SET_ALERTCOMMAND", "proposalaccept");
+                store.commit("meetings/SET_ALERTDIALOG", true);
+                store.commit(
+                  "meetings/SET_ALERTMSG",
+                  "매칭이 성사됬습니다 블라인드 소개팅으로 들어갑니다"
+                );
+
                 store.commit("meetings/SET_TOKEN", obj.data.openviduToken);
                 store.commit("meetings/SET_PARTNER", obj.data.opponent);
                 console.log(obj.data.openviduToken);
                 console.log(obj.data.opponent);
                 meetingAudioStarted();
-                router.push({ path: "/room" });
               }
               if (obj.command == "opponentRefusal") {
-                alert("매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다");
                 if (state.mtsocket != null) {
                   state.mtsocket.disconnect();
                 }
@@ -190,7 +194,10 @@ export default {
                 router.push({ name: "MeetingWait" });
               }
               if (obj.command == "noVideoStage") {
-                alert("미팅이 종료 됬습니다.");
+                store.commit("meetings/SET_ALERTCOMMAND", "audiorefuse");
+                store.commit("meetings/SET_ALERTDIALOG", true);
+                store.commit("meetings/SET_ALERTMSG", "미팅이 종료 됬습니다.");
+
                 console.log("noVideoStage");
                 if (state.ovsocket != null) {
                   state.ovsocket.disconnect();
@@ -200,21 +207,38 @@ export default {
                   state.mtsocket.disconnect();
                 }
                 store.commit("meetings/SET_SOCKET", null);
-                router.push({ name: "HomeView" });
+                //router.push({ name: "HomeView" });
               }
               if (obj.command == "goVideoStage") {
-                alert("서로 그린 라이트를 눌러 화상으로 이동합니다");
+                store.commit("meetings/SET_ALERTCOMMAND", "audioaccept");
+                store.commit("meetings/SET_ALERTDIALOG", true);
+                store.commit(
+                  "meetings/SET_ALERTMSG",
+                  "서로 그린 라이트를 눌러 화상으로 이동합니다"
+                );
+
                 store.commit("meetings/SET_VIDEOFLAG", true);
               }
               if (obj.command == "opponentLeft") {
                 if (obj.data.status == "INPROGRESS") {
-                  alert("상대방이 떠났습니다. 다시 대기열에 돌입합니다");
+                  store.commit("meetings/SET_ALERTCOMMAND", "proposalrefuse");
+                  store.commit("meetings/SET_ALERTDIALOG", true);
+                  store.commit(
+                    "meetings/SET_ALERTMSG",
+                    "매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다"
+                  );
                   state.mtsocket.disconnect();
                   store.commit("meetings/SET_SOCKET", null);
                   router.push({ name: "MeetingWait" });
                 }
                 if (obj.data.status == "INROOM") {
-                  alert("상대방이 떠났습니다.");
+                  store.commit("meetings/SET_ALERTCOMMAND", "opponentleft");
+                  store.commit("meetings/SET_ALERTDIALOG", true);
+                  store.commit(
+                    "meetings/SET_ALERTMSG",
+                    "상대방이 떠났습니다 홈화면으로 이동합니다"
+                  );
+
                   store.commit("meetings/SET_VIDEOFLAG", false);
                   console.log("INROOM");
                   if (state.ovsocket != null) {
@@ -225,7 +249,7 @@ export default {
                     state.mtsocket.disconnect();
                   }
                   store.commit("meetings/SET_SOCKET", null);
-                  router.push({ name: "HomeView" });
+                  //router.push({ name: "HomeView" });
                 }
               }
             },
@@ -240,7 +264,7 @@ export default {
         (error) => {
           // 소켓 연결 실패
           console.log("소켓 연결 실패", error);
-          alert("대기열에 진입에 실패했습니다.");
+          //alert("대기열에 진입에 실패했습니다.");
           store.commit("meetings/SET_SOCKET", null);
           router.push({ name: "HomeView" });
         }

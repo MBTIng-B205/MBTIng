@@ -140,6 +140,14 @@
       <el-button @click="sirenClose" size="large" round plain>취소</el-button>
     </div>
   </el-dialog>
+  <el-dialog top="250px" v-model="state.alertdialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.alertmsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="closedialog">확인</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -191,6 +199,9 @@ export default {
       mySessionId: "SessionA",
       chatflag: false,
       videoflag: computed(() => store.getters["meetings/getVideoflag"]),
+      alertdialog: computed(() => store.getters["meetings/getAlertdialog"]),
+      alertmsg: computed(() => store.getters["meetings/getAlertmsg"]),
+      alertcommand: computed(() => store.getters["meetings/getAlertcommand"]),
     });
     onMounted(() => {
       joinSession();
@@ -271,6 +282,9 @@ export default {
 
     const chatOnOff = ({ chatflag }) => {
       state.chatflag = chatflag;
+      if (chatflag == true) {
+        store.commit("meetings/SET_CHATADDFLAG", false);
+      }
     };
 
     const reportOnOff = ({ reportflag }) => {
@@ -403,7 +417,10 @@ export default {
     const clickSiren = function () {
       console.log("신고", sirenMsg.value);
       if (sirenMsg.value == "") {
-        alert("신고 사유를 입력하세요!");
+        store.commit("meetings/SET_ALERTCOMMAND", "reportnull");
+        store.commit("meetings/SET_ALERTDIALOG", true);
+        store.commit("meetings/SET_ALERTMSG", "신고 사유를 입력하세요!");
+        //alert("신고 사유를 입력하세요!");
       } else {
         console.log("addFriend 실행");
         const msg = {
@@ -435,10 +452,26 @@ export default {
       }
       store.commit("meetings/SET_OVSOCKET", null);
     };
-
+    const closedialog = function () {
+      store.commit("meetings/SET_ALERTDIALOG", false);
+      store.commit("meetings/SET_ALERTMSG", null);
+      if (state.alertcommand == "audiorefuse") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        router.push({ name: "HomeView" });
+      } else if (state.alertcommand == "audioaccept") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        // router.push({ name: "MeetingWait" });
+      } else if (state.alertcommand == "opponentleft") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        router.push({ name: "HomeView" });
+      } else if (state.alertcommand == "reportnull") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+      }
+    };
     return {
       state,
       chat,
+      closedialog,
       joinSession,
       leaveSession,
       reportOnOff,

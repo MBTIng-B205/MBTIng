@@ -40,11 +40,21 @@
       </el-card>
     </el-row>
   </el-container>
+  <el-dialog v-model="state.alertDialogVisible" width="30%" center top="250px">
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.alertMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="state.alertDialogVisible = false"
+          >확인</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
 import { useRouter } from "vue-router";
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 
 export default {
   setup() {
@@ -84,6 +94,15 @@ export default {
       right.value = list.shift();
       console.log(left.value + " " + right.value);
     });
+    const state = reactive({
+      alertMsg: "",
+      alertDialogVisible: false,
+    });
+
+    const alertDialog = function (message) {
+      state.alertMsg = message;
+      state.alertDialogVisible = true;
+    };
 
     const game = function (i) {
       console.log(active.value);
@@ -97,7 +116,7 @@ export default {
         });
       } else if (list.length == size) {
         // 다음 라운드 넘어갈 때 섞기
-        alert(size + "강전 시작!");
+        alertDialog(size + "강전 시작!");
         list.sort(() => Math.random() - 0.5);
         size = size / 2;
         left.value = list.shift();
@@ -113,6 +132,8 @@ export default {
     };
 
     return {
+      state,
+      alertDialog,
       left,
       right,
       active,
