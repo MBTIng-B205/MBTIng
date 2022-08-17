@@ -81,6 +81,7 @@
             position: absolute;
             top: 480px;
             font-size: 20px;
+            width: 500px;
           "
         >
           <!-- <span
