@@ -34,37 +34,27 @@
           @audioOnOff="audioOnOff"
         ></video-controller>
       </div>
-      <div>
-        <div
-          v-if="!state.videoflag"
-          style="z-index:1 position: absolute;
-            left: 24%;
-            margin-top: 0;
-            margin-bottom: 0;
-            width: 840px;
-            height: 550px;
-            background-color: #fadce1"
-        ></div>
-        <div
-          class="video1-wrapper"
-          style="
-            position: absolute;
-            left: 24%;
-            margin-top: 0;
-            margin-bottom: 0;
-            width: 840px;
-            height: 550px;
-          "
-        >
-          <user-video
-            class="uservideo-you"
-            v-for="sub in state.subscribers"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-            style="width: 100%; height: 100%; margin-top: 0; margin-bottom: 0"
-          />
-          <div>
+
+      <div
+        class="video1-wrapper"
+        style="
+          position: absolute;
+          left: 24%;
+          margin-top: 0;
+          margin-bottom: 0;
+          width: 840px;
+          height: 550px;
+        "
+      >
+        <user-video
+          class="uservideo-you"
+          v-for="sub in state.subscribers"
+          :key="sub.stream.connection.connectionId"
+          :stream-manager="sub"
+          @click="updateMainVideoStreamManager(sub)"
+          style="width: 100%; height: 100%; margin-top: 0; margin-bottom: 0"
+        />
+        <!-- <div>
             <span
               style="
                 font-size: 50px;
@@ -74,27 +64,38 @@
               "
               >{{ state.partner.mbti }}</span
             >
-          </div>
-        </div>
+          </div> -->
       </div>
-      <div v-if="!state.videoflag" class="mbtiinfo" style="z-index: 2">
-        <!-- <div class="mbtiinfo"></div> -->
-        <img
-          src="@/assets/meetingimg.png"
-          alt=""
-          style="width: 500px; height: 500px"
-        />
-        <div>
-          <span
-            style="
-              font-size: 50px;
-              font-weight: bold;
-              position: absolute;
-              left: 202px;
-              bottom: -30px;
-            "
-            >{{ state.partner.mbti }}</span
-          >
+
+      <div v-if="!state.videoflag">
+        <div
+          style="z-index:1 position: absolute;
+            left: 24%;
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 840px;
+            height: 550px;
+            background-color: #fadce1"
+        ></div>
+        <div class="mbtiinfo" style="z-index: 2">
+          <!-- <div class="mbtiinfo"></div> -->
+          <img
+            src="@/assets/meetingimg.png"
+            alt=""
+            style="width: 500px; height: 500px"
+          />
+          <div>
+            <span
+              style="
+                font-size: 50px;
+                font-weight: bold;
+                position: absolute;
+                left: 202px;
+                bottom: -30px;
+              "
+              >{{ state.partner.mbti }}</span
+            >
+          </div>
         </div>
       </div>
 
