@@ -70,6 +70,7 @@
       </el-row>
     </el-card>
   </el-container>
+  <!--
   <el-dialog top="250px" v-model="state.alertdialog" width="30%" center>
     <el-row style="top: 12px; font-size: 16.5px">{{ state.alertmsg }}</el-row>
     <template #footer>
@@ -78,6 +79,7 @@
       </span>
     </template>
   </el-dialog>
+  -->
 </template>
 
 <script>
