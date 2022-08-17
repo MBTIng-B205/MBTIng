@@ -69,13 +69,16 @@
 
       <div v-if="!state.videoflag">
         <div
-          style="z-index:1 position: absolute;
-            left: 24%;
-            margin-top: 0;
-            margin-bottom: 0;
+          style="
+            left: 20%;
+            margin-top: 0px;
+            margin-bottom: 0px;
             width: 840px;
             height: 550px;
-            background-color: #fadce1"
+            background-color: rgb(250, 220, 225);
+            z-index: 1;
+            position: absolute;
+          "
         ></div>
         <div class="mbtiinfo" style="z-index: 2">
           <!-- <div class="mbtiinfo"></div> -->
