@@ -74,8 +74,16 @@
           alt=""
           style="width: 500px; height: 500px"
         />
-        <div>
-          <span
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            top: 480px;
+            font-size: 20px;
+          "
+        >
+          <!-- <span
             style="
               font-size: 50px;
               font-weight: bold;
@@ -84,7 +92,15 @@
               bottom: -30px;
             "
             >{{ state.partner.mbti }}</span
+          > -->
+          <div class="tag">#{{ state.partner.mbti }}</div>
+          <div
+            class="tag"
+            v-for="(interest, index) in state.partner.interests"
+            :key="index"
           >
+            #{{ interest }}
+          </div>
         </div>
       </div>
 
@@ -203,6 +219,7 @@ export default {
       alertmsg: computed(() => store.getters["meetings/getAlertmsg"]),
       alertcommand: computed(() => store.getters["meetings/getAlertcommand"]),
     });
+
     onMounted(() => {
       joinSession();
     });
@@ -554,5 +571,11 @@ export default {
   margin-right: auto;
   align-self: flex-start;
   border-radius: 20px;
+}
+.tag {
+  border-radius: 20px;
+  background-color: azure;
+  margin-right: 10px;
+  padding: 7px;
 }
 </style>
