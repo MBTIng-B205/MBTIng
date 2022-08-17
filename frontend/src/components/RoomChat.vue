@@ -137,9 +137,6 @@ export default {
         message.sender += " (You)";
       } else {
         store.commit("meetings/SET_CHATADDFLAG", true);
-        console.log(state.chataddflag);
-        alert(state.chataddflag);
-        alert("상대가 보낸 메시지");
       }
       let chatBar = document.querySelector("#chat-bar");
       console.log(chatBar, "chatbar");

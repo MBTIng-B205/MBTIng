@@ -151,14 +151,15 @@
         size="large"
         round
       />
-
-      <svg
-        height="12"
-        width="12"
-        style="position: absolute; bottom: 78px; right: 33px"
-      >
-        <circle cx="6" cy="6" r="5" style="fill: red; stroke: red" />
-      </svg>
+      <div class="msgaddflagsvg" v-if="state.chataddflag">
+        <svg
+          height="12"
+          width="12"
+          style="position: absolute; bottom: 78px; right: 33px"
+        >
+          <circle cx="6" cy="6" r="5" style="fill: red; stroke: red" />
+        </svg>
+      </div>
     </div>
   </div>
 </template>
@@ -222,8 +223,13 @@ export default {
     });
 
     const checkaddchat = watchEffect(() => {
-      console.log(state.chataddflag);
-      alert(state.chataddflag);
+      //let svgtag = document.querySelector(".msgaddflagsvg");
+      //console.log(svgtag);
+      if (state.chataddflag) {
+        if (state.chatflag) {
+          store.commit("meetings/SET_CHATADDFLAG", false);
+        }
+      }
     });
     const greenWatchEffect = watchEffect(() => {
       if (state.videoflag == true) {
