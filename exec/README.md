@@ -14,4 +14,4 @@
 
 ## 시연 시나리오
 
-- 시연 시나리오
+- [시연 시나리오](./demo-scenario/demo-scenario.pdf)
