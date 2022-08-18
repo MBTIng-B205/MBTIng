@@ -110,7 +110,7 @@
             <div class="tag">#{{ state.partner.mbti }}</div>
             <div
               class="tag"
-              v-for="(interest, index) in state.partner.interests"
+              v-for="(interest, index) in state.partner.interests.slice(0, 3)"
               :key="index"
             >
               #{{ interest }}
