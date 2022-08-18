@@ -98,6 +98,7 @@
             "
           >
             <!-- <span
+
             style="
               font-size: 50px;
               font-weight: bold;
@@ -107,6 +108,7 @@
             "
             >{{ state.partner.mbti }}</span
           > -->
+
             <div class="tag">#{{ state.partner.mbti }}</div>
             <div
               class="tag"
@@ -234,6 +236,7 @@ export default {
       alertmsg: computed(() => store.getters["meetings/getAlertmsg"]),
       alertcommand: computed(() => store.getters["meetings/getAlertcommand"]),
     });
+
     onMounted(() => {
       joinSession();
       console.log(state.partner);
@@ -583,5 +586,11 @@ export default {
   margin-right: auto;
   align-self: flex-start;
   border-radius: 20px;
+}
+.tag {
+  border-radius: 20px;
+  background-color: azure;
+  margin-right: 10px;
+  padding: 7px;
 }
 </style>
