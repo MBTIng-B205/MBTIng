@@ -52,7 +52,7 @@
 
 #### ✔소개팅매칭
 
-
+<img src="./exec/images/meeting-matching.gif" alt="meeting-matching" style="zoom:80%;" />
 
 #### ✔소개팅룸
 
@@ -79,6 +79,8 @@
 <img src="./exec/images/mbti-worldcup.gif" alt="mbti-worldcup" style="zoom:80%;" />
 
 - **MBTI별 매칭성공률**
+
+![mbti-graph](./exec/images/mbti-graph.gif)
 
 
 
