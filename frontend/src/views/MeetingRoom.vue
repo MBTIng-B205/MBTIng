@@ -67,8 +67,9 @@
           </div> -->
       </div>
 
-      <div v-if="!state.videoflag">
+      <div>
         <div
+          v-if="!state.videoflag"
           style="
             left: 20%;
             margin-top: 0px;
@@ -83,6 +84,7 @@
         <div class="mbtiinfo" style="z-index: 2">
           <!-- <div class="mbtiinfo"></div> -->
           <img
+            v-if="!state.videoflag"
             src="@/assets/meetingimg.png"
             alt=""
             style="width: 500px; height: 500px"
