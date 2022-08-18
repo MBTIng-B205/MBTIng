@@ -6,7 +6,7 @@
 
 ## 프로젝트에서 사용하는 외부 서비스
 
-- [카카오 로그인](./kakao-login.pdf)
+- [카카오 로그인](./third-party/kakao-login.pdf)
 
 ## DB 덤프 파일 최신본
 
