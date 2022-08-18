@@ -283,10 +283,8 @@ export default {
           size: 8,
         })
         .then(function (result) {
-          console.log("result", result);
           state.messageList = result.data.body.messages;
           state.msgcnt = result.data.body.pagingResponse.totalcount;
-          console.log("messageList", state.messageList);
         });
     });
 
@@ -296,7 +294,6 @@ export default {
       } else if (search.value == "") {
         alertOpen("검색어를 입력하세요");
       } else {
-        console.log("search", key.value + " " + search.value);
         state.searchFlag = true;
         store
           .dispatch("messages/getReceiveList", {
@@ -307,16 +304,13 @@ export default {
             size: 8,
           })
           .then(function (result) {
-            console.log("search-result", result);
             state.messageList = result.data.body.messages;
             state.msgcnt = result.data.body.pagingResponse.totalcount;
-            console.log("search-messageList", state.messageList);
           });
       }
     };
 
     const onSelect = function () {
-      console.log(selectAll.value);
       if (!selectAll.value) {
         state.selected = [];
         for (let index in state.messageList) {
@@ -328,14 +322,11 @@ export default {
     };
 
     const onRead = function () {
-      console.log("read", state.selected.value);
       store
         .dispatch("messages/readList", {
           list: state.selected,
         })
-        .then(function (result) {
-          console.log("result", result);
-
+        .then(function () {
           store
             .dispatch("messages/getReceiveList", {
               email: state.memberinfo.email,
@@ -345,24 +336,19 @@ export default {
               size: 8,
             })
             .then(function (result) {
-              console.log("result", result);
               state.messageList = result.data.body.messages;
               state.msgcnt = result.data.body.pagingResponse.totalcount;
-              console.log("read-messageList", state.messageList);
               state.selected = [];
             });
         });
     };
 
     const onDelete = function () {
-      console.log("delete", state.selected);
       store
         .dispatch("messages/deleteReceiveList", {
           list: state.selected,
         })
-        .then(function (result) {
-          console.log("result", result);
-
+        .then(function () {
           store
             .dispatch("messages/getReceiveList", {
               email: state.memberinfo.email,
@@ -372,11 +358,9 @@ export default {
               size: 8,
             })
             .then(function (result) {
-              console.log("result", result);
               state.messageList = result.data.body.messages;
               state.msgcnt = result.data.body.pagingResponse.totalcount;
               state.currentPage = 1;
-              console.log("delete-messageList", state.messageList);
             });
         })
         .catch(function (error) {
@@ -385,11 +369,9 @@ export default {
     };
 
     const onMsg = async function (i) {
-      console.log(i);
       await store
         .dispatch("messages/getMessage", { id: i.id, type: "to" })
         .then(function (result) {
-          console.log("result", result);
           state.message = result.data.body;
           store
             .dispatch("messages/getReceiveList", {
@@ -400,11 +382,9 @@ export default {
               size: 8,
             })
             .then(function (result) {
-              console.log("search-result", result);
               state.messageList = result.data.body.messages;
               state.msgcnt = result.data.body.pagingResponse.totalcount;
               state.friendFlag = state.message.tofriendflag;
-              console.log("search-messageList", state.messageList);
             });
         });
 
@@ -425,21 +405,17 @@ export default {
     };
 
     const clickSend = function () {
-      console.log("clickSend", state.sendMsg);
-
       if (state.sendMsg == "") {
         alertOpen("보낼 내용을 입력하세요!");
       } else {
         // 쪽지 보내기
-        console.log("sender");
         store
           .dispatch("messages/sendMsg", {
             senderId: state.memberinfo.email,
             receiverId: state.message.sender.email,
             content: state.sendMsg,
           })
-          .then(function (result) {
-            console.log("sendmsg", result);
+          .then(function () {
             alertOpen("쪽지 전송 완료!");
           });
         sendClose();
@@ -456,7 +432,6 @@ export default {
     };
 
     const clickSiren = function () {
-      console.log("신고", sirenMsg.value);
       if (sirenMsg.value == "") {
         alertOpen("신고 사유를 입력하세요!");
       } else {
@@ -466,8 +441,7 @@ export default {
             to: state.message.sender.email,
             content: sirenMsg.value,
           })
-          .then(function (result) {
-            console.log("result-report", result);
+          .then(function () {
             alertOpen("신고가 접수되었습니다.");
           });
         sirenClose();
@@ -481,14 +455,12 @@ export default {
           from: state.memberinfo.email,
           to: state.message.sender.email,
         })
-        .then(function (result) {
-          console.log("addResult", result);
+        .then(function () {
           state.friendFlag = true;
         });
     };
 
     const handleCurrentChange = function (val) {
-      console.log("page", val);
       state.currentPage = val;
       store
         .dispatch("messages/getReceiveList", {
@@ -499,10 +471,8 @@ export default {
           size: 8,
         })
         .then(function (result) {
-          console.log("result", result);
           state.messageList = result.data.body.messages;
           state.msgcnt = result.data.body.pagingResponse.totalcount;
-          console.log("messageList", state.messageList + " " + state.msgcnt);
         });
     };
 

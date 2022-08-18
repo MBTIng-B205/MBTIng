@@ -206,7 +206,6 @@ export default {
 
     const chatOnOff = () => {
       state.chatflag = !state.chatflag;
-      console.log(state.chatflag);
 
       emit("chatOnOff", {
         chatflag: state.chatflag,
@@ -214,7 +213,6 @@ export default {
     };
     const stopWatchEffect = watchEffect(() => {
       if (state.timer.isRunning == false) {
-        console.log("타이머 다됨 !!!!!!!!!!!!!!!!!!!!!!!!");
         if (state.mtsocket != null) {
           timeout();
         }
@@ -223,8 +221,6 @@ export default {
     });
 
     const checkaddchat = watchEffect(() => {
-      //let svgtag = document.querySelector(".msgaddflagsvg");
-      //console.log(svgtag);
       if (state.chataddflag) {
         if (state.chatflag) {
           store.commit("meetings/SET_CHATADDFLAG", false);
@@ -238,42 +234,34 @@ export default {
     });
     const reportOnOff = () => {
       state.reportflag = !state.reportflag;
-      console.log(state.reportflag);
 
       emit("reportOnOff", {
         reportflag: state.reportflag,
       });
     };
     const greenlight = function () {
-      console.log("GREEN 실행");
       const msg = {
         command: "meetingAudioStageResult",
         data: { result: "GREEN" },
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     const redlight = function () {
-      console.log("RED 실행");
       const msg = {
         command: "meetingAudioStageResult",
         data: { result: "RED" },
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     const timeout = function () {
-      console.log("TIMEOUT 실행");
       const msg = {
         command: "meetingAudioStageResult",
         data: { result: "TIMEOUT" },
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
 
     const addFriend = function () {
-      console.log("Friend 실행");
       const msg = {
         command: "addFriend",
         data: {
@@ -282,12 +270,10 @@ export default {
           addOrRemove: !state.friendflag,
         },
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
       state.friendflag = !state.friendflag;
     };
     const goHome = function () {
-      console.log(state.mtsocket);
       store.commit("meetings/SET_VIDEOFLAG", false);
       if (state.mtsocket != null) {
         state.mtsocket.disconnect();

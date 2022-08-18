@@ -148,7 +148,6 @@ export default {
       let socket = new SockJS(serverURL);
       const stompClient = Stomp.over(socket);
       store.commit("meetings/SET_SOCKET", stompClient);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
       state.mtsocket.connect(
         {
           accessToken: sessionStorage.getItem("access-token"),
@@ -160,14 +159,11 @@ export default {
           console.log("소켓 연결 성공", frame);
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
-          // console.log(state.memberinfo.email);
           state.mtsocket.subscribe(
             `/ws/sub/indi/${state.memberinfo.email}`,
             (res) => {
               //prop
-              console.log("받은 메시지", res.body);
               const obj = JSON.parse(res.body);
-              console.log(obj);
               if (obj.command == "proposal") {
                 store.commit("meetings/SET_PROPOSAL", obj.data);
                 router.push({ path: "/meetingmatch" });
@@ -182,8 +178,6 @@ export default {
 
                 store.commit("meetings/SET_TOKEN", obj.data.openviduToken);
                 store.commit("meetings/SET_PARTNER", obj.data.opponent);
-                console.log(obj.data.openviduToken);
-                console.log(obj.data.opponent);
                 meetingAudioStarted();
                 //router.push({ path: "/room" });
               }
@@ -200,7 +194,6 @@ export default {
                 store.commit("meetings/SET_ALERTDIALOG", true);
                 store.commit("meetings/SET_ALERTMSG", "미팅이 종료 됬습니다.");
 
-                console.log("noVideoStage");
                 if (state.ovsocket != null) {
                   state.ovsocket.disconnect();
                 }
@@ -244,7 +237,6 @@ export default {
                   );
 
                   store.commit("meetings/SET_VIDEOFLAG", false);
-                  console.log("INROOM");
                   if (state.ovsocket != null) {
                     state.ovsocket.disconnect();
                   }
@@ -275,12 +267,10 @@ export default {
       );
     };
     const meetingAudioStarted = function () {
-      console.log("proposalRefuse 실행");
       const msg = {
         command: "meetingAudioStarted",
         data: {},
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     return { loading, svg, Info, goHome, connect, meetingAudioStarted };

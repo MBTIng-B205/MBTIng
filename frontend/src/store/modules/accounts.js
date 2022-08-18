@@ -29,8 +29,6 @@ export const accounts = {
   actions: {
     checkCode({ state }, { code }) {
       console.log("state", state);
-      console.log("axios", code);
-      //const url = "api/login";
       return axios.get(`${base.baseUrl}/login?code=${code}`);
     },
 
@@ -45,10 +43,7 @@ export const accounts = {
         profileUrl: state.member.profileUrl,
         interests: state.member.interests,
       };
-      console.log(params, "이것이다.");
-      let jwt = sessionStorage.getItem("access-token");
-      console.log(jwt);
-      console.log(params);
+
       return axios.post(`${base.baseUrl}/users`, params, {
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +51,6 @@ export const accounts = {
       });
     },
     profileUpload({ state }, upfile) {
-      console.log("ProfileUpload 확인", upfile);
       let formData = new FormData();
       formData.append("upfile", upfile);
       return axios.post(
@@ -71,7 +65,6 @@ export const accounts = {
     },
     getMemberinfo() {
       let jwt = sessionStorage.getItem("access-token");
-      console.log("jwt", jwt);
       axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
       return axios.get(`${base.baseUrl}/users/me`);
     },
@@ -88,19 +81,13 @@ export const accounts = {
         profileUrl: profileUrl,
         sido: sido,
       };
-      console.log(params);
-      let jwt = sessionStorage.getItem("access-token");
-      console.log(jwt);
-      console.log("updateparams", params);
       return axios.put(`${base.baseUrl}/users`, params);
     },
     deleteMemberinfo({ state }) {
-      console.log(state.member.email);
       return axios.delete(`${base.baseUrl}/users/?email=${state.member.email}`);
     },
     getUserName({ state }, { nickname }) {
       console.log("state", state);
-      console.log("nick", nickname);
       return axios.get(`${base.baseUrl}/users/`, {
         params: {
           nickname: nickname,

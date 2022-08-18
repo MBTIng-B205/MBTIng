@@ -44,9 +44,6 @@ export const meetings = {
       state.partner = partner;
     },
     SAVE_CHAT: (state, chats) => {
-      console.log(state);
-      console.log(chats.chats);
-
       state.chats = chats.chats;
     },
     SET_VIDEOFLAG: (state, videoflag) => {
@@ -91,8 +88,6 @@ export const meetings = {
   // 체크 필요
   actions: {
     send({ state }, data) {
-      console.log("send 실행");
-      console.log(data);
       state.mtsocket.send(
         `/ws/msg/indi/${data.command}`,
         JSON.stringify(data.data),

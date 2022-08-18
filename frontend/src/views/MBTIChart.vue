@@ -835,8 +835,6 @@ export default {
       first.value = dataList[mbti.value].labels[firstIndex];
       second.value = dataList[mbti.value].labels[secondIndex];
       third.value = dataList[mbti.value].labels[thirdIndex];
-
-      console.log(first.value + " " + second.value + " " + third.value);
     };
 
     const goHome = function () {

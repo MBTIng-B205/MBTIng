@@ -207,7 +207,7 @@ export default {
       alertMsg: "",
       alertDialogVisible: false,
     });
-    // console.log(form);
+
     const alertDialog = function (message) {
       form.alertMsg = message;
       form.alertDialogVisible = true;
@@ -216,9 +216,7 @@ export default {
     let flag = false;
     const nameCheck = function () {
       const nickname = form.nickname;
-      console.log("이거는프로필 닉네임", nickname);
       store.dispatch("accounts/getUserName", { nickname }).then(function (res) {
-        console.log("res", res);
         if (res.data.body === true) {
           alertDialog("사용가능한 닉네임 입니다.");
           flag = true;
@@ -242,7 +240,6 @@ export default {
         store.commit("accounts/SET_MEMBER_INFO", form.memberinfo);
         //date => date.toISOString().slice(0, 10);
         store.dispatch("accounts/signup");
-        // console.log(form.memberinfo);
         router.push({ name: "HomeView" });
       }
     };

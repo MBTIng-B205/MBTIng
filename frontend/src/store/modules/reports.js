@@ -11,13 +11,11 @@ export const reports = {
   actions: {
     registerReport({ state }, { to, from, content }) {
       console.log(state);
-      console.log("registerReport");
       const params = {
         to_id: to,
         from_id: from,
         content: content,
       };
-      console.log(params);
       return axios.post(`${base.baseUrl}`, params, {
         headers: {
           "Content-Type": "application/json",

@@ -115,22 +115,18 @@ export default {
       ISTJ: "ISTJ는 대화를 주도하기보다 조용하게 분위기를 지켜보는 스타일입니다.",
     };
     const proposalAccept = function () {
-      console.log("proposalAccept 실행");
       const msg = {
         command: "proposalResult",
         data: true,
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
 
     const proposalRefuse = function () {
-      console.log("proposalRefuse 실행");
       const msg = {
         command: "proposalResult",
         data: false,
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
       state.mtsocket.disconnect();
       store.commit("meetings/SET_SOCKET", null);

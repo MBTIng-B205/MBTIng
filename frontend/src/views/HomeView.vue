@@ -108,10 +108,7 @@ export default {
       memberinfo: computed(() => store.getters["accounts/getMember"]),
       homeDialog: false,
     });
-    console.log(state.memberinfo);
-    if (state.memberinfo != null) {
-      console.log(state.memberinfo.profileUrl);
-    }
+
     const meetingStart = function () {
       let jwt = null;
       jwt = sessionStorage.getItem("access-token");

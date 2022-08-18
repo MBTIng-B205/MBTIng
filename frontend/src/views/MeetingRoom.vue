@@ -239,8 +239,6 @@ export default {
 
     onMounted(() => {
       joinSession();
-      console.log(state.partner);
-      console.log(state.partner.interests);
     });
     const chat = ref(null);
     const joinSession = () => {
@@ -249,16 +247,13 @@ export default {
       store.commit("meetings/SET_OVSOCKET", state.session);
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
-        console.log(subscriber, "이거다");
         state.subscribers.push(subscriber);
-        console.log("streamCreated");
       });
 
       state.session.on("streamDestroyed", ({ stream }) => {
         const index = state.subscribers.indexOf(stream.streamManager, 0);
         if (index >= 0) {
           state.subscribers.splice(index, 1);
-          console.log("streamDestroyed");
         }
       });
 
@@ -303,7 +298,6 @@ export default {
     };
 
     const videoOnOff = ({ video }) => {
-      console.log("video");
       state.publisher.publishVideo(video);
     };
 
@@ -312,7 +306,6 @@ export default {
     //greenlight 2개 video cam on
     //send
     const audioOnOff = ({ audio }) => {
-      console.log("audio");
       state.publisher.publishAudio(audio);
     };
 
@@ -324,10 +317,7 @@ export default {
     };
 
     const reportOnOff = ({ reportflag }) => {
-      console.log("여기왔니?");
-      console.log("reportflag" + reportflag);
       sirenDialog.value = reportflag;
-      console.log("sirenDialog" + sirenDialog.value);
     };
 
     const leaveSession = () => {
@@ -430,9 +420,7 @@ export default {
           to: [],
           type: "public-chat",
         })
-        .then(() => {
-          console.log(messageData);
-        })
+        .then(() => {})
         .catch((error) => {
           console.log(error);
         });
@@ -451,14 +439,12 @@ export default {
     };
 
     const clickSiren = function () {
-      console.log("신고", sirenMsg.value);
       if (sirenMsg.value == "") {
         store.commit("meetings/SET_ALERTCOMMAND", "reportnull");
         store.commit("meetings/SET_ALERTDIALOG", true);
         store.commit("meetings/SET_ALERTMSG", "신고 사유를 입력하세요!");
         //alert("신고 사유를 입력하세요!");
       } else {
-        console.log("addFriend 실행");
         const msg = {
           command: "createReport",
           data: {
@@ -467,7 +453,6 @@ export default {
             content: sirenMsg.value,
           },
         };
-        console.log(msg);
         store.dispatch("meetings/send", msg);
 
         sirenClose();
@@ -475,14 +460,11 @@ export default {
     };
     const goHome = function () {
       router.push({ name: "HomeView" });
-      console.log(state.mtsocket);
       store.commit("meetings/SET_VIDEOFLAG", false);
       if (state.mtsocket != null) {
         state.mtsocket.disconnect();
       }
       store.commit("meetings/SET_SOCKET", null);
-      console.log(state.mtsocket);
-      console.log(state.session);
       if (state.session != null) {
         state.session.disconnect();
       }

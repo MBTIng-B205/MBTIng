@@ -174,9 +174,7 @@ export default {
       store
         .dispatch("friends/getFriendsList", state.memberinfo.email)
         .then(function (result) {
-          console.log("result", result);
           state.friends = result.data.body.friends;
-          console.log("friends", state.friends);
         });
     });
 
@@ -184,7 +182,6 @@ export default {
     const message = ref("");
 
     const friendProfileOpen = function (friend) {
-      console.log(friend);
       state.friend = friend;
 
       if (friend.interests.length != 0) {
@@ -198,8 +195,6 @@ export default {
       } else {
         interests.value = "선택한 관심사가 없습니다.";
       }
-
-      console.log(interests.value);
       state.friendProfileDialog = true;
     };
 
@@ -221,9 +216,7 @@ export default {
               email: state.memberinfo.email,
             })
             .then(function (result) {
-              console.log("result", result);
               state.friends = result.data.body.friends;
-              console.log("friends-nickname", state.friends);
             });
         } else {
           store
@@ -232,9 +225,7 @@ export default {
               email: state.memberinfo.email,
             })
             .then(function (result) {
-              console.log("result", result);
               state.friends = result.data.body.friends;
-              console.log("friends-mbti", state.friends);
             });
         }
       }
@@ -243,48 +234,32 @@ export default {
     const deleteFriend = function () {
       // 친구 삭제 기능
       state.confirmDialog = false;
-      console.log(state.friend);
       store
         .dispatch("friends/deleteFriend", {
           from: state.memberinfo.email,
           to: state.friend.email,
         })
-        .then(function (result) {
-          console.log("deleteResult", result);
+        .then(function () {
           state.friendProfileDialog = false;
           store
             .dispatch("friends/getFriendsList", state.memberinfo.email)
             .then(function (result) {
-              console.log("result", result);
               state.friends = result.data.body.friends;
-              console.log("friends", state.friends);
-              console.log("friend", state.friends[0]);
             });
         });
     };
 
     const clickSend = function () {
-      console.log("clickSend", message);
       if (message.value == "") {
         alertOpen("보낼 내용을 입력하세요!");
       } else {
-        console.log(
-          "send",
-          state.memberinfo.email +
-            " " +
-            state.toFriend.email +
-            " " +
-            message.value
-        );
-
         store
           .dispatch("messages/sendMsg", {
             senderId: state.memberinfo.email,
             receiverId: state.toFriend.email,
             content: message.value,
           })
-          .then(function (result) {
-            console.log("sendmsg", result);
+          .then(function () {
             alertOpen("쪽지가 전송되었습니다!");
           });
         messageClose();
@@ -297,7 +272,6 @@ export default {
     };
 
     const messageOpen = function (friend) {
-      //console.log(friend);
       state.toFriend = friend;
       messageDialog.value = true;
     };

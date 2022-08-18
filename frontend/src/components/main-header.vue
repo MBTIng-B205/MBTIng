@@ -257,7 +257,6 @@ export default {
         store.commit("accounts/SET_MEMBER_INFO", res.data.body);
         state.memberinfo = computed(() => store.getters["accounts/getMember"]);
         changeMember();
-        console.log("table", state.member.nickname);
       });
     });
     const state = reactive({
@@ -419,10 +418,7 @@ export default {
 
     const onFileSelected = function (event) {
       event.preventDefault();
-      console.log(event.target.files);
-      //console.log(uploadimage.value);
       state.image = event.target.files[0];
-      console.log("img", state.image);
       store
         .dispatch("accounts/profileUpload", state.image)
         .then(function (res) {
@@ -433,14 +429,12 @@ export default {
 
     const nameCheck = function () {
       const nickname = state.member.nickname;
-      console.log("이거는프로필 닉네임", nickname);
       if (nickname === state.memberinfo.nickname) {
         alertDialog("현재와 같은 닉네임입니다.");
       } else {
         store
           .dispatch("accounts/getUserName", { nickname })
           .then(function (res) {
-            console.log("res", res);
             if (res.data.body === true) {
               alertDialog("사용가능한 닉네임 입니다.");
             } else {
@@ -456,13 +450,11 @@ export default {
     const goHome = function () {
       router.push({ name: "HomeView" });
     };
-    console.log(state.memberinfo);
     const goPeople = function () {
       router.push({ name: "friend" });
     };
     const goMyPage = function () {
       mypageOpen();
-      console.log("mypage", state.memberinfo);
     };
 
     const mypageOpen = function () {
@@ -482,7 +474,6 @@ export default {
         state.interests = "선택한 관심사가 없습니다.";
       }
       state.mypageDialog = true;
-      console.log("mypageOpen");
     };
 
     const mypageClose = function () {
@@ -490,13 +481,11 @@ export default {
     };
 
     const mypageUpdateOpen = function () {
-      console.log(state.mypageUpdateDialog);
       state.mypageDialog = false;
       state.mypageUpdateDialog = true;
     };
 
     const mypageUpdateClose = function () {
-      console.log("mypageUpdateClost", state.mypageUpdateDialog);
       changeMember();
       state.mypageUpdateDialog = false;
     };
@@ -510,9 +499,6 @@ export default {
       state.member.interests = state.memberinfo.interests;
     };
     const updateInfo = async function () {
-      console.log("updateInfo", state.member);
-      console.log("mbti", state.member.mbti);
-      console.log("check", state.memberinfo);
       await store
         .dispatch("accounts/updateMemberinfo", {
           mbti: state.member.mbti,
@@ -522,9 +508,7 @@ export default {
           sido: state.member.sido,
         })
         .then(function (result) {
-          console.log(result);
           store.commit("accounts/SET_MEMBER_INFO", result.data.body.member);
-          console.log("!!!!!", state.memberinfo);
         })
         .catch(function (err) {
           console.log(err);
@@ -536,11 +520,9 @@ export default {
       // 회원 탈퇴
       store
         .dispatch("accounts/deleteMemberinfo")
-        .then(function (result) {
-          console.log(result);
+        .then(function () {
           sessionStorage.removeItem("access-token");
           store.commit("accounts/SET_MEMBER_INFO", null);
-          console.log(store.state.member);
           state.mypageUpdateDialog = false;
           router.push({ name: "HomeView" });
         })

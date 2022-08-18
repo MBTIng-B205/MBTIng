@@ -87,12 +87,9 @@ export default {
       for (let index = 0; index < 16; index++) {
         list.push(index);
       }
-      console.log(list);
       list.sort(() => Math.random() - 0.5);
-      console.log(list);
       left.value = list.shift();
       right.value = list.shift();
-      console.log(left.value + " " + right.value);
     });
     const state = reactive({
       alertMsg: "",
@@ -105,8 +102,6 @@ export default {
     };
 
     const game = function (i) {
-      console.log(active.value);
-      console.log(size + " " + list);
       list.push(i);
       if (list.length == 1) {
         // 최종 결과

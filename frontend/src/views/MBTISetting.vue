@@ -142,8 +142,6 @@ export default {
         form.mbti[3] != null
       ) {
         const str = form.mbti[0] + form.mbti[1] + form.mbti[2] + form.mbti[3];
-        // console.log("선택 완료", str);
-        // console.log("form", form.memberinfo);
         form.memberinfo.mbti = str;
         store.commit("accounts/SET_MEMBER_INFO", form.memberinfo);
         router.push({ name: "ProfileSetting" });
@@ -157,11 +155,9 @@ export default {
       const i = Math.abs(sel - 1);
       const inactive = "" + idx + i;
       const active = "" + idx + sel;
-      // console.log(active);
-      // console.log(inactive);
+
       document.getElementById(active).style.color = "#f56c6c";
       document.getElementById(inactive).style.color = "white";
-      // console.log(form.mbti[idx]);
     };
 
     return { form, clickSetting, clickValue, alertDialog };

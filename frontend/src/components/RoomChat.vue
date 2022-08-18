@@ -115,19 +115,13 @@ export default {
 
       if (strippeddMessage === "") return;
 
-      console.log("보낼 메시지 : " + strippeddMessage);
-
       emit("message", {
         content: strippeddMessage,
         to: state.selectedUser,
       });
 
       event.preventDefault(); // enter키 누를 때 줄바꿈 방지
-      console.log(state.message, "보내기");
       state.message = ""; // 메시지 창 초기화
-      console.log(state.message, "보낸후");
-
-      console.log(state.subscribers);
     };
 
     const addMessage = async (messageData, isMyMessage) => {
@@ -139,7 +133,6 @@ export default {
         store.commit("meetings/SET_CHATADDFLAG", true);
       }
       let chatBar = document.querySelector("#chat-bar");
-      console.log(chatBar, "chatbar");
       let isScrollBottom =
         chatBar.scrollHeight - chatBar.scrollTop <= chatBar.clientHeight + 2;
 
@@ -157,8 +150,6 @@ export default {
       if (isScrollBottom) {
         chatBar.scrollTo({ top: chatBar.scrollHeight, behavior: "smooth" });
       }
-
-      console.log("메시지 수신 완료");
     };
 
     return {

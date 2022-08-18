@@ -179,10 +179,8 @@ export default {
           size: 7,
         })
         .then(function (result) {
-          console.log("result", result);
           state.messageList = result.data.body.messages;
           state.msgcnt = result.data.body.pagingResponse.totalcount;
-          console.log("messageList", state.messageList + " " + state.msgcnt);
         });
     });
 
@@ -192,7 +190,6 @@ export default {
       } else if (search.value == "") {
         alertOpen("검색어를 입력하세요");
       } else {
-        console.log("search", key.value + " " + search.value);
         state.searchFlag = true;
         store
           .dispatch("messages/getSendList", {
@@ -203,16 +200,13 @@ export default {
             size: 7,
           })
           .then(function (result) {
-            console.log("search-result", result);
             state.messageList = result.data.body.messages;
             state.msgcnt = result.data.body.pagingResponse.totalcount;
-            console.log("search-messageList", state.messageList);
           });
       }
     };
 
     const onSelect = function () {
-      console.log(selectAll.value);
       if (!selectAll.value) {
         state.selected = [];
         for (let index in state.messageList) {
@@ -224,14 +218,11 @@ export default {
     };
 
     const onDelete = function () {
-      console.log("delete", state.selected);
       store
         .dispatch("messages/deleteSendList", {
           list: state.selected,
         })
-        .then(function (result) {
-          console.log("result", result);
-
+        .then(function () {
           store
             .dispatch("messages/getSendList", {
               email: state.memberinfo.email,
@@ -241,14 +232,9 @@ export default {
               size: 7,
             })
             .then(function (result) {
-              console.log("result", result);
               state.messageList = result.data.body.messages;
               state.msgcnt = result.data.body.pagingResponse.totalcount;
               state.currentPage = 1;
-              console.log(
-                "delete-messageList",
-                state.messageList + " " + state.msgcnt
-              );
             });
         })
         .catch(function (error) {
@@ -257,12 +243,10 @@ export default {
     };
 
     const onMsg = async function (i) {
-      console.log(i);
       state.messageId = i.id;
       await store
         .dispatch("messages/getMessage", { id: i.id, type: "from" })
         .then(function (result) {
-          console.log("result", result);
           state.message = result.data.body;
           store
             .dispatch("messages/getSendList", {
@@ -273,11 +257,9 @@ export default {
               size: 7,
             })
             .then(function (result) {
-              console.log("search-result", result);
               state.messageList = result.data.body.messages;
               state.msgcnt = result.data.body.pagingResponse.totalcount;
               state.friendFlag = state.message.fromfriendflag;
-              console.log("search-messageList", state.messageList);
             });
         });
       state.messageDialog = true;
@@ -288,7 +270,6 @@ export default {
     };
 
     const handleCurrentChange = function (val) {
-      console.log("page", val);
       state.currentPage = val;
       store
         .dispatch("messages/getSendList", {
@@ -299,10 +280,8 @@ export default {
           size: 7,
         })
         .then(function (result) {
-          console.log("result", result);
           state.messageList = result.data.body.messages;
           state.msgcnt = result.data.body.pagingResponse.totalcount;
-          console.log("messageList", state.messageList + " " + state.msgcnt);
         });
     };
 

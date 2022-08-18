@@ -138,7 +138,6 @@ export default {
       },
     ];
     const upAnswer = function () {
-      console.log(percent.value);
       result[quiz[cnt.value].type] += 1;
       if (cnt.value != 11) {
         cnt.value++;
@@ -148,7 +147,6 @@ export default {
     };
 
     const downAnswer = function () {
-      console.log(percent.value);
       result[quiz[cnt.value].type] -= 1;
       if (cnt.value != 11) {
         cnt.value++;
@@ -181,8 +179,6 @@ export default {
       } else {
         mbti.value += "P";
       }
-
-      console.log("mbti : ", mbti.value);
       router.push({ name: "YourMBTIResult", params: { mbti: mbti.value } });
     };
     const goHome = function () {
