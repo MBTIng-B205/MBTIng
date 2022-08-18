@@ -233,7 +233,10 @@ export default {
       } else {
         form.memberinfo.nickname = form.nickname;
         form.memberinfo.gender = form.gender;
-        form.memberinfo.birth = form.birth.toISOString().slice(0, 10);
+        let dateOffset = new Date(
+          form.birth.getTime() - form.birth.getTimezoneOffset() * 60000
+        );
+        form.memberinfo.birth = dateOffset.toISOString().slice(0, 10);
         form.memberinfo.sido = form.sido;
         form.memberinfo.interests = form.interests;
         //form.memberinfo.nickname = form.nickname;

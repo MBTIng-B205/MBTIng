@@ -147,7 +147,7 @@ public class AppMemberInitData {
         List<Member> fl = new ArrayList<>();
         fl.add(f1);
         fl.add(f2);
-        fl.add(f3);
+//        fl.add(f3);
         fl.add(f4);
         fl.add(f5);
         fl.add(f6);
@@ -182,8 +182,8 @@ public class AppMemberInitData {
         messages.add(Message.builder().fromId(f8).toId(d1).readByTo(true).content("제영님 내일 저녁 7시에 뵈요").build());
         messages.add(Message.builder().fromId(f9).toId(d1).readByTo(true).content("안녕하세요 반갑습니다").build());
         messages.add(Message.builder().fromId(f2).toId(d1).content("제영님 카톡 친추해요").build());
-        messages.add(Message.builder().fromId(f3).toId(d1).content("송 투더 제 투더 영 ~ yeah").build());
         messages.add(Message.builder().fromId(f5).toId(d1).content("너 납치된거야").build());
+        messages.add(Message.builder().fromId(f3).toId(d1).content("송 투더 제 투더 영 ~ yeah").build());
         messages.add(Message.builder().fromId(f6).toId(d1).content("제영님 만나서 커피한잔 어떠세요").build());
 
         messages.add(Message.builder().fromId(d1).toId(f7).content("한밭대 앞에서 살고 있습니다").build());
