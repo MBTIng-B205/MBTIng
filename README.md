@@ -1,6 +1,6 @@
 # 💕 MBTIng
 
-<img src=".\exec\images\logo2.png" alt="logo2" style="zoom:80%;" />
+<img src="exec/images/logo2.png" alt="logo2" style="zoom:80%;" />
 
 
 
@@ -32,7 +32,7 @@
 
 ## 👨‍👨‍👧‍👧팀원소개
 
-<img src="C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20220818100003522.png" alt="image-20220818100003522" style="zoom:85%;" />
+![teamintro](./exec/images/teamintro.png)
 
 
 
@@ -46,7 +46,7 @@
 
 #### ✔회원가입
 
-<img src=".\exec\images\signup.gif" alt="signup" style="zoom:80%;" />
+<img src="./exec/images/signup.gif" alt="signup" style="zoom:80%;" />
 
 
 
@@ -60,7 +60,7 @@
 
 #### ✔피플(친구관리)
 
-<img src=".\exec\images\people.gif" alt="people" style="zoom:80%;" />
+<img src="./exec/images/people.gif" alt="people" style="zoom:80%;" />
 
 
 
@@ -68,15 +68,15 @@
 
 - **나의 이상형 MBTI테스트**
 
-<img src=".\exec\images\나의 이상형 MBTI 테스트.gif" alt="나의 이상형 MBTI 테스트" style="zoom:80%;" />
+<img src="./exec/images/나의 이상형 MBTI 테스트.gif" alt="나의 이상형 MBTI 테스트" style="zoom:80%;" />
 
 - **나의 MBTI 테스트**
 
-<img src=".\exec\images\나의 MBTI 테스트.gif" alt="나의 MBTI 테스트" style="zoom:80%;" />
+<img src="./exec/images/나의 MBTI 테스트.gif" alt="나의 MBTI 테스트" style="zoom:80%;" />
 
 - **MBTI 월드컵**
 
-<img src=".\exec\images\MBTI 월드컵.gif" alt="MBTI 월드컵" style="zoom:80%;" />
+<img src="./exec/images/MBTI 월드컵.gif" alt="MBTI 월드컵" style="zoom:80%;" />
 
 - **MBTI별 매칭성공률**
 
@@ -84,7 +84,7 @@
 
 ## 🌱 개발 환경
 
-<img src=".\exec\images\stack.png" alt="stack" style="zoom:80%;" />
+<img src="./exec/images/stack.png" alt="stack" style="zoom:80%;" />
 
 - [개발 환경 상세 문서](./exec/how-to-build-and-deploy.md)
 
