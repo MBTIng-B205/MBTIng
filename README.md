@@ -32,7 +32,7 @@
 
 ## 👨‍👨‍👧‍👧팀원소개
 
-![teamintro](./exec/images/teamintro.png)
+<img src="./exec/images/teamintro.png" alt="teamintro" style="zoom:80%;" />
 
 
 
@@ -68,15 +68,15 @@
 
 - **나의 이상형 MBTI테스트**
 
-![you-mbti-test](./exec/images/you-mbti-test.gif)
+<img src="./exec/images/you-mbti-test.gif" alt="you-mbti-test" style="zoom:80%;" />
 
 - **나의 MBTI 테스트**
 
-![my-mbti-test](./exec/images/my-mbti-test.gif)
+<img src="./exec/images/my-mbti-test.gif" alt="my-mbti-test" style="zoom:80%;" />
 
 - **MBTI 월드컵**
 
-![mbti-worldcup](./exec/images/mbti-worldcup.gif)
+<img src="./exec/images/mbti-worldcup.gif" alt="mbti-worldcup" style="zoom:80%;" />
 
 - **MBTI별 매칭성공률**
 
@@ -84,7 +84,7 @@
 
 ## 🌱 개발 환경
 
-<img src="./exec/images/stack.png" alt="stack" style="zoom:80%;" />
+<img src="./exec/images/stack.png" alt="stack" style="zoom: 80%;" />
 
 - [개발 환경 상세 문서](./exec/how-to-build-and-deploy.md)
 
@@ -110,7 +110,7 @@
 
 
 
-#### 1.0 (2022.08.18)
+#### v1.0 (2022.08.18)
 
 - 회원기능
   - 카카오톡 간편로그인
