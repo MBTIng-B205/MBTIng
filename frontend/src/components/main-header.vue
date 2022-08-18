@@ -422,6 +422,7 @@ export default {
       store
         .dispatch("accounts/profileUpload", state.image)
         .then(function (res) {
+          console.log(res.data.body);
           store.commit("accounts/SET_MEMBER_INFO", res.data.body.member);
           state.member.profileUrl = state.memberinfo.profileUrl;
         });
