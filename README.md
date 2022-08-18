@@ -68,15 +68,15 @@
 
 - **나의 이상형 MBTI테스트**
 
-<img src="./exec/images/나의 이상형 MBTI 테스트.gif" alt="나의 이상형 MBTI 테스트" style="zoom:80%;" />
+![you-mbti-test](./exec/images/you-mbti-test.gif)
 
 - **나의 MBTI 테스트**
 
-<img src="./exec/images/나의 MBTI 테스트.gif" alt="나의 MBTI 테스트" style="zoom:80%;" />
+![my-mbti-test](./exec/images/my-mbti-test.gif)
 
 - **MBTI 월드컵**
 
-<img src="./exec/images/MBTI 월드컵.gif" alt="MBTI 월드컵" style="zoom:80%;" />
+![mbti-worldcup](./exec/images/mbti-worldcup.gif)
 
 - **MBTI별 매칭성공률**
 
