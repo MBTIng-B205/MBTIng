@@ -58,7 +58,7 @@
 
 #### ✔소개팅룸
 
-![meeting-room](./exec/images/meeting-room.gif)
+<img src="./exec/images/meeting-room.gif" alt="meeting-room" style="zoom:80%;" />
 
 
 
@@ -84,7 +84,7 @@
 
 - **MBTI별 매칭성공률**
 
-![mbti-graph](./exec/images/mbti-graph.gif)
+<img src="./exec/images/mbti-graph.gif" alt="mbti-graph" style="zoom:80%;" />
 
 
 
