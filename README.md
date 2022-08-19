@@ -54,7 +54,11 @@
 
 <img src="./exec/images/meeting-matching.gif" alt="meeting-matching" style="zoom:80%;" />
 
+
+
 #### ✔소개팅룸
+
+![meeting-room](./exec/images/meeting-room.gif)
 
 
 
