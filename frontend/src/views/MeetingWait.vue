@@ -144,22 +144,14 @@ export default {
     };
 
     const connect = function () {
-      let testemail = Math.random().toString(36).substring(2, 12);
-      const member = {
-        email: testemail,
-        nickname: testemail,
-      };
-      store.commit("accounts/SET_MEMBER_INFO", member);
       const serverURL = process.env.VUE_APP_WS_SERVER_BASE_URL + "/ws/connect";
       let socket = new SockJS(serverURL);
       const stompClient = Stomp.over(socket);
       store.commit("meetings/SET_SOCKET", stompClient);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
       state.mtsocket.connect(
         {
-          email: `${testemail}`,
-          // accessToken: sessionStorage.getItem("access-token"),
-          // email: state.memberinfo.email,
+          accessToken: sessionStorage.getItem("access-token"),
+          email: state.memberinfo.email,
         },
         (frame) => {
           // 소켓 연결 성공
@@ -167,27 +159,27 @@ export default {
           console.log("소켓 연결 성공", frame);
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
-          // console.log(state.memberinfo.email);
           state.mtsocket.subscribe(
-            `/ws/sub/indi/${testemail}`,
-            // `/ws/sub/indi/${state.memberinfo.email}`,
+            `/ws/sub/indi/${state.memberinfo.email}`,
             (res) => {
               //prop
-              console.log("받은 메시지", res.body);
               const obj = JSON.parse(res.body);
-              console.log(obj);
               if (obj.command == "proposal") {
                 store.commit("meetings/SET_PROPOSAL", obj.data);
                 router.push({ path: "/meetingmatch" });
               }
               if (obj.command == "accept") {
-                alert("매칭이 성사됬습니다 블라인드 소개팅으로 들어갑니다");
+                store.commit("meetings/SET_ALERTCOMMAND", "proposalaccept");
+                store.commit("meetings/SET_ALERTDIALOG", true);
+                store.commit(
+                  "meetings/SET_ALERTMSG",
+                  "매칭이 성사됬습니다 블라인드 소개팅으로 들어갑니다"
+                );
+
                 store.commit("meetings/SET_TOKEN", obj.data.openviduToken);
                 store.commit("meetings/SET_PARTNER", obj.data.opponent);
-                console.log(obj.data.openviduToken);
-                console.log(obj.data.opponent);
                 meetingAudioStarted();
-                router.push({ path: "/room" });
+                //router.push({ path: "/room" });
               }
               if (obj.command == "opponentRefusal") {
                 alert("매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다");
@@ -198,8 +190,10 @@ export default {
                 router.push({ name: "MeetingWait" });
               }
               if (obj.command == "noVideoStage") {
-                alert("미팅이 종료 됬습니다.");
-                console.log("noVideoStage");
+                store.commit("meetings/SET_ALERTCOMMAND", "audiorefuse");
+                store.commit("meetings/SET_ALERTDIALOG", true);
+                store.commit("meetings/SET_ALERTMSG", "미팅이 종료 됬습니다.");
+
                 if (state.ovsocket != null) {
                   state.ovsocket.disconnect();
                 }
@@ -208,23 +202,41 @@ export default {
                   state.mtsocket.disconnect();
                 }
                 store.commit("meetings/SET_SOCKET", null);
-                router.push({ name: "HomeView" });
+                //router.push({ name: "HomeView" });
               }
               if (obj.command == "goVideoStage") {
-                alert("서로 그린 라이트를 눌러 화상으로 이동합니다");
+                store.commit("meetings/SET_ALERTCOMMAND", "audioaccept");
+                store.commit("meetings/SET_ALERTDIALOG", true);
+                store.commit(
+                  "meetings/SET_ALERTMSG",
+                  "서로 그린 라이트를 눌러 화상으로 이동합니다"
+                );
+
                 store.commit("meetings/SET_VIDEOFLAG", true);
               }
               if (obj.command == "opponentLeft") {
                 if (obj.data.status == "INPROGRESS") {
-                  alert("상대방이 떠났습니다. 다시 대기열에 돌입합니다");
+                  alert("매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다");
+                  /*
+                  store.commit("meetings/SET_ALERTCOMMAND", "proposalrefuse");
+                  store.commit("meetings/SET_ALERTDIALOG", true);
+                  store.commit(
+                    "meetings/SET_ALERTMSG",
+                    "매칭이 성사되지 못했습니다 다시 대기열로 들어갑니다"
+                  );*/
                   state.mtsocket.disconnect();
                   store.commit("meetings/SET_SOCKET", null);
                   router.push({ name: "MeetingWait" });
                 }
                 if (obj.data.status == "INROOM") {
-                  alert("상대방이 떠났습니다.");
+                  store.commit("meetings/SET_ALERTCOMMAND", "opponentleft");
+                  store.commit("meetings/SET_ALERTDIALOG", true);
+                  store.commit(
+                    "meetings/SET_ALERTMSG",
+                    "상대방이 떠났습니다 홈화면으로 이동합니다"
+                  );
+
                   store.commit("meetings/SET_VIDEOFLAG", false);
-                  console.log("INROOM");
                   if (state.ovsocket != null) {
                     state.ovsocket.disconnect();
                   }
@@ -233,37 +245,32 @@ export default {
                     state.mtsocket.disconnect();
                   }
                   store.commit("meetings/SET_SOCKET", null);
-                  router.push({ name: "HomeView" });
+                  //router.push({ name: "HomeView" });
                 }
               }
             },
             {
-              mbti: "ISTP",
-              gender: "MALE",
-              sido: "서울",
-              interests: [],
-              // gender: state.memberinfo.gender,
-              // sido: state.memberinfo.sido,
-              // interests: state.memberinfo.interests,
+              mbti: state.memberinfo.mbti,
+              gender: state.memberinfo.gender,
+              sido: state.memberinfo.sido,
+              interests: state.memberinfo.interests,
             }
           );
         },
         (error) => {
           // 소켓 연결 실패
           console.log("소켓 연결 실패", error);
-          alert("대기열에 진입에 실패했습니다.");
+          //alert("대기열에 진입에 실패했습니다.");
           store.commit("meetings/SET_SOCKET", null);
           router.push({ name: "HomeView" });
         }
       );
     };
     const meetingAudioStarted = function () {
-      console.log("proposalRefuse 실행");
       const msg = {
         command: "meetingAudioStarted",
         data: {},
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     return { loading, svg, Info, goHome, connect, meetingAudioStarted };

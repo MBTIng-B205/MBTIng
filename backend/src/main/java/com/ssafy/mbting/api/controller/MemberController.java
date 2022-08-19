@@ -43,7 +43,7 @@ public class MemberController {
     @Transactional
     public ResponseEntity<?> register(@RequestBody MemberRegisterRequest registerInfo) {
         Member member = memberService.getUserByEmail(registerInfo.getEmail());
-        if (member.getDeleted() == true) {
+        if (member != null && member.getDeleted() == true) {
             member.setNickname(registerInfo.getNickname());
             member.setGender(registerInfo.getGender());
             member.setBirth(registerInfo.getBirth());

@@ -1,6 +1,31 @@
 <template>
   <main-header />
   <!-- background -->
+  <div
+    style="
+      width: 550px;
+      position: absolute;
+      z-index: 2;
+      color: #00001;
+      left: 7%;
+      top: 18%;
+    "
+  >
+    <h2>MBTI를 통해서 마음이 통하는 친구를 만나보세요!</h2>
+
+    <h3 style="line-height: 2px; margin-left: 1rem; margin-top: 3px">
+      <span style="color: deeppink">♥</span>
+      하트버튼을 클릭하면 매칭이 시작됩니다.
+    </h3>
+    <h3 style="margin-left: 1rem">
+      <span style="color: deeppink">♥</span>
+      블라인드 소개팅 동안 상대방이 마음에 들면 그린라이트를 누르세요.
+    </h3>
+    <h3 style="line-height: 2px; margin-left: 1rem">
+      <span style="color: deeppink">♥</span>
+      화상소개팅으로 연결됩니다 : )
+    </h3>
+  </div>
   <div class="bg">
     <div class="bg0"></div>
     <img
@@ -52,6 +77,16 @@
       </el-card>
     </el-col>
   </el-row>
+  <el-dialog top="250px" v-model="state.homeDialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px"
+      >로그인을 먼저 진행해주세요. 로그인 페이지로 이동합니다</el-row
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="gologin">확인</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -71,18 +106,21 @@ export default {
     const store = useStore();
     const state = reactive({
       memberinfo: computed(() => store.getters["accounts/getMember"]),
+      homeDialog: false,
     });
-    console.log(state.memberinfo);
-    if (state.memberinfo != null) {
-      console.log(state.memberinfo.profileUrl);
-    }
+
     const meetingStart = function () {
       let jwt = null;
       jwt = sessionStorage.getItem("access-token");
       if (jwt != null) router.push({ name: "MeetingWait" });
-      else alert("로그인을 먼저 진행해주세요");
+      else state.homeDialog = true;
     };
-
+    const gologin = function () {
+      state.homeDialog = false;
+      window.location.replace(
+        `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.VUE_APP_KAKAO_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI}&response_type=code`
+      );
+    };
     const contents1 = [
       {
         thumb: require("@/assets/mbti001.png"),
@@ -107,6 +145,7 @@ export default {
     ];
     return {
       meetingStart,
+      gologin,
       mypageDialog,
       Avatar,
       Comment,
@@ -130,7 +169,7 @@ export default {
   margin: 200px 350px 200px 350px;
   cursor: pointer;
   position: absolute;
-  left: 25%;
+  left: 42%;
   top: -30%;
   z-index: 2;
 }
@@ -139,7 +178,7 @@ export default {
   width: 200px;
   margin: 200px 300px 200px 300px;
   position: absolute;
-  left: 25%;
+  left: 42%;
   top: -45%;
   z-index: 2;
 }
@@ -147,8 +186,8 @@ export default {
   height: 500px;
   width: 800px;
   position: absolute;
-  left: 25%;
-  bottom: -5%;
+  left: 42%;
+  bottom: -6%;
   z-index: 1;
 }
 .bg {
@@ -167,7 +206,7 @@ export default {
 .bg2 {
   height: 30px;
   width: 100%;
-  background-color: #e8e8e8;
+  background-color: white;
 }
 
 .el-row {

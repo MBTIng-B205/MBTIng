@@ -70,6 +70,15 @@
       </el-row>
     </el-card>
   </el-container>
+
+  <el-dialog top="250px" v-model="state.alertdialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.alertmsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="closedialog">확인</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -83,6 +92,9 @@ export default {
     const state = reactive({
       proposal: computed(() => store.getters["meetings/getProposal"]),
       mtsocket: computed(() => store.getters["meetings/getSocket"]),
+      alertdialog: computed(() => store.getters["meetings/getAlertdialog"]),
+      alertmsg: computed(() => store.getters["meetings/getAlertmsg"]),
+      alertcommand: computed(() => store.getters["meetings/getAlertcommand"]),
     });
     const mbtiInfo = {
       ENFP: "ENFP는 상대방의 이야기를 진지하게 들어주고 공감능력또한 뛰어납니다.",
@@ -94,7 +106,7 @@ export default {
       ESTP: "ESTP는 먼저 대화를 시도하고 상대방의 말을 재치있게 받아줍니다.",
       ESTJ: "ESTJ는 직설적인 화법을 구사해 간혹 오해를 받습니다.",
       INFP: "INFP는 일대일 대화를 선호하고 조용하게 이야기를 들어줍니다.",
-      INFJ: "INFP는 깊은 속마음을 잘 드러내지 않습니다.",
+      INFJ: "INFJ는 깊은 속마음을 잘 드러내지 않습니다.",
       INTP: "INTP는 충분히 생각한 후 대화를 시작합니다.",
       INTJ: "INTJ는 말이 없어보이만 질문을 받으면 이야기를 잘 이어나갑니다.",
       ISFP: "ISFP는 먼저 대화를 시작하기보다 상대방의 말을 들어주는 편입니다.",
@@ -103,22 +115,18 @@ export default {
       ISTJ: "ISTJ는 대화를 주도하기보다 조용하게 분위기를 지켜보는 스타일입니다.",
     };
     const proposalAccept = function () {
-      console.log("proposalAccept 실행");
       const msg = {
         command: "proposalResult",
         data: true,
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
 
     const proposalRefuse = function () {
-      console.log("proposalRefuse 실행");
       const msg = {
         command: "proposalResult",
         data: false,
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
       state.mtsocket.disconnect();
       store.commit("meetings/SET_SOCKET", null);
@@ -129,7 +137,29 @@ export default {
       state.mtsocket.disconnect();
       store.commit("meetings/SET_SOCKET", null);
     };
-    return { state, mbtiInfo, proposalAccept, proposalRefuse, goHome };
+    const closedialog = function () {
+      store.commit("meetings/SET_ALERTDIALOG", false);
+      store.commit("meetings/SET_ALERTMSG", null);
+      if (state.alertcommand == "proposalaccept") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        router.push({ path: "/room" });
+      }
+      /*else if (state.alertcommand == "proposalrefuse") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        router.push({ name: "MeetingWait" });
+      } else {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        router.push({ name: "MeetingWait" });
+      }*/
+    };
+    return {
+      state,
+      mbtiInfo,
+      proposalAccept,
+      proposalRefuse,
+      goHome,
+      closedialog,
+    };
   },
 };
 </script>

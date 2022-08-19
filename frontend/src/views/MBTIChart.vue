@@ -543,7 +543,7 @@ export default {
           "#53ace9",
           "#ff9edb",
         ],
-        data: [9, 5, 6, 11, 13, 2, 1, 15, 8, 4, 7, 12, 3, 10],
+        data: [9, 5, 6, 11, 13, 2, 1, 15, 8, 4, 7, 12, 3, 10, 14],
       },
       {
         label: "ESFP",
@@ -835,8 +835,6 @@ export default {
       first.value = dataList[mbti.value].labels[firstIndex];
       second.value = dataList[mbti.value].labels[secondIndex];
       third.value = dataList[mbti.value].labels[thirdIndex];
-
-      console.log(first.value + " " + second.value + " " + third.value);
     };
 
     const goHome = function () {

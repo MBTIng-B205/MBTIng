@@ -115,7 +115,7 @@
         <img
           v-else
           class="friendIcon"
-          @click="addFriend"
+          @click="confirmOpen('친구추가 하시겠습니까?')"
           src="@/assets/add-friend.png"
         />
         <img
@@ -211,6 +211,32 @@
       </div>
     </el-dialog>
   </el-container>
+  <el-dialog top="250px" v-model="state.alertDialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.alertMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="state.alertDialog = false"
+          >확인</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+
+  <el-dialog top="250px" v-model="state.confirmDialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.confirmMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="addFriend">확인</el-button>
+        <el-button
+          type="danger"
+          round
+          plain
+          @click="state.confirmDialog = false"
+          >취소</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -238,6 +264,10 @@ export default {
       selected: [],
       sendDialog: false,
       sendMsg: "",
+      alertDialog: false,
+      alertMsg: "",
+      confirmDialog: false,
+      confirmMsg: "",
     });
 
     const sirenDialog = ref(false);
@@ -253,20 +283,17 @@ export default {
           size: 8,
         })
         .then(function (result) {
-          console.log("result", result);
           state.messageList = result.data.body.messages;
           state.msgcnt = result.data.body.pagingResponse.totalcount;
-          console.log("messageList", state.messageList);
         });
     });
 
     const onSearch = function () {
       if (key.value == "") {
-        alert("검색키를 선택하세요");
+        alertOpen("검색키를 선택하세요");
       } else if (search.value == "") {
-        alert("검색어를 입력하세요");
+        alertOpen("검색어를 입력하세요");
       } else {
-        console.log("search", key.value + " " + search.value);
         state.searchFlag = true;
         store
           .dispatch("messages/getReceiveList", {
@@ -277,16 +304,13 @@ export default {
             size: 8,
           })
           .then(function (result) {
-            console.log("search-result", result);
             state.messageList = result.data.body.messages;
             state.msgcnt = result.data.body.pagingResponse.totalcount;
-            console.log("search-messageList", state.messageList);
           });
       }
     };
 
     const onSelect = function () {
-      console.log(selectAll.value);
       if (!selectAll.value) {
         state.selected = [];
         for (let index in state.messageList) {
@@ -298,14 +322,11 @@ export default {
     };
 
     const onRead = function () {
-      console.log("read", state.selected.value);
       store
         .dispatch("messages/readList", {
           list: state.selected,
         })
-        .then(function (result) {
-          console.log("result", result);
-
+        .then(function () {
           store
             .dispatch("messages/getReceiveList", {
               email: state.memberinfo.email,
@@ -315,24 +336,19 @@ export default {
               size: 8,
             })
             .then(function (result) {
-              console.log("result", result);
               state.messageList = result.data.body.messages;
               state.msgcnt = result.data.body.pagingResponse.totalcount;
-              console.log("read-messageList", state.messageList);
               state.selected = [];
             });
         });
     };
 
     const onDelete = function () {
-      console.log("delete", state.selected);
       store
         .dispatch("messages/deleteReceiveList", {
           list: state.selected,
         })
-        .then(function (result) {
-          console.log("result", result);
-
+        .then(function () {
           store
             .dispatch("messages/getReceiveList", {
               email: state.memberinfo.email,
@@ -342,24 +358,20 @@ export default {
               size: 8,
             })
             .then(function (result) {
-              console.log("result", result);
               state.messageList = result.data.body.messages;
               state.msgcnt = result.data.body.pagingResponse.totalcount;
               state.currentPage = 1;
-              console.log("delete-messageList", state.messageList);
             });
         })
         .catch(function (error) {
-          alert(error);
+          alertOpen(error);
         });
     };
 
     const onMsg = async function (i) {
-      console.log(i);
       await store
         .dispatch("messages/getMessage", { id: i.id, type: "to" })
         .then(function (result) {
-          console.log("result", result);
           state.message = result.data.body;
           store
             .dispatch("messages/getReceiveList", {
@@ -370,11 +382,9 @@ export default {
               size: 8,
             })
             .then(function (result) {
-              console.log("search-result", result);
               state.messageList = result.data.body.messages;
               state.msgcnt = result.data.body.pagingResponse.totalcount;
               state.friendFlag = state.message.tofriendflag;
-              console.log("search-messageList", state.messageList);
             });
         });
 
@@ -395,22 +405,18 @@ export default {
     };
 
     const clickSend = function () {
-      console.log("clickSend", state.sendMsg);
-
       if (state.sendMsg == "") {
-        alert("보낼 내용을 입력하세요!");
+        alertOpen("보낼 내용을 입력하세요!");
       } else {
         // 쪽지 보내기
-        console.log("sender");
         store
           .dispatch("messages/sendMsg", {
             senderId: state.memberinfo.email,
             receiverId: state.message.sender.email,
             content: state.sendMsg,
           })
-          .then(function (result) {
-            console.log("sendmsg", result);
-            alert("쪽지 전송 완료!");
+          .then(function () {
+            alertOpen("쪽지 전송 완료!");
           });
         sendClose();
       }
@@ -426,9 +432,8 @@ export default {
     };
 
     const clickSiren = function () {
-      console.log("신고", sirenMsg.value);
       if (sirenMsg.value == "") {
-        alert("신고 사유를 입력하세요!");
+        alertOpen("신고 사유를 입력하세요!");
       } else {
         store
           .dispatch("reports/registerReport", {
@@ -436,30 +441,26 @@ export default {
             to: state.message.sender.email,
             content: sirenMsg.value,
           })
-          .then(function (result) {
-            console.log("result-report", result);
-            alert("신고가 접수되었습니다.");
+          .then(function () {
+            alertOpen("신고가 접수되었습니다.");
           });
         sirenClose();
       }
     };
 
     const addFriend = function () {
-      if (confirm("친구추가 하시겠습니까?")) {
-        store
-          .dispatch("friends/addFriend", {
-            from: state.memberinfo.email,
-            to: state.message.sender.email,
-          })
-          .then(function (result) {
-            console.log("addResult", result);
-            state.friendFlag = true;
-          });
-      }
+      state.confirmDialog = false;
+      store
+        .dispatch("friends/addFriend", {
+          from: state.memberinfo.email,
+          to: state.message.sender.email,
+        })
+        .then(function () {
+          state.friendFlag = true;
+        });
     };
 
     const handleCurrentChange = function (val) {
-      console.log("page", val);
       state.currentPage = val;
       store
         .dispatch("messages/getReceiveList", {
@@ -470,11 +471,19 @@ export default {
           size: 8,
         })
         .then(function (result) {
-          console.log("result", result);
           state.messageList = result.data.body.messages;
           state.msgcnt = result.data.body.pagingResponse.totalcount;
-          console.log("messageList", state.messageList + " " + state.msgcnt);
         });
+    };
+
+    const confirmOpen = function (msg) {
+      state.confirmMsg = msg;
+      state.confirmDialog = true;
+    };
+
+    const alertOpen = function (msg) {
+      state.alertMsg = msg;
+      state.alertDialog = true;
     };
 
     return {
@@ -498,6 +507,8 @@ export default {
       clickSiren,
       addFriend,
       handleCurrentChange,
+      confirmOpen,
+      alertOpen,
     };
   },
 };

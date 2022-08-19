@@ -53,11 +53,13 @@
 <script>
 import { ArrowLeftBold, ArrowRightBold } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
-import { ref, computed } from "vue";
+import { useStore } from "vuex";
+import { ref, reactive, computed } from "vue";
 
 export default {
   setup() {
     const router = useRouter();
+    const store = useStore();
     const cnt = ref(0);
     const percent = computed(() => (100 / 12) * (cnt.value + 1));
     const result = [0, 0, 0, 0];
@@ -137,7 +139,6 @@ export default {
       },
     ];
     const upAnswer = function () {
-      console.log(percent.value);
       result[quiz[cnt.value].type] += 1;
       if (cnt.value != 11) {
         cnt.value++;
@@ -147,7 +148,6 @@ export default {
     };
 
     const downAnswer = function () {
-      console.log(percent.value);
       result[quiz[cnt.value].type] -= 1;
       if (cnt.value != 11) {
         cnt.value++;
@@ -155,6 +155,11 @@ export default {
         getMbti();
       }
     };
+
+    const form = reactive({
+      mbti: {},
+      memberinfo: computed(() => store.getters["accounts/getMember"]),
+    });
 
     const getMbti = function () {
       if (result[0] > 0) {
@@ -180,8 +185,9 @@ export default {
       } else {
         mbti.value += "P";
       }
-
-      console.log("mbti : ", mbti.value);
+      const str = mbti.value;
+      form.memberinfo.mbti = str;
+      store.commit("accounts/SET_MEMBER_INFO", form.memberinfo);
       router.push({ name: "MBTIResult", params: { mbti: mbti.value } });
     };
 

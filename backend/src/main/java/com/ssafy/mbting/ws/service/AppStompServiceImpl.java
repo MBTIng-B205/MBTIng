@@ -3,6 +3,7 @@ package com.ssafy.mbting.ws.service;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.ssafy.mbting.api.service.MemberService;
 import com.ssafy.mbting.common.util.JwtTokenUtil;
 import com.ssafy.mbting.ws.model.event.OrphanOccurEvent;
 import com.ssafy.mbting.ws.model.event.waiting.RequestToStartMatchingEvent;
@@ -28,6 +29,7 @@ public class AppStompServiceImpl implements AppStompService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final MemberService memberService;
     private final AppRepository appRepository;
     private final MeetingRoomService meetingRoomService;
     private final MeetingMatchService meetingMatchService;
@@ -37,15 +39,15 @@ public class AppStompServiceImpl implements AppStompService {
         String accessToken = connectHeader.getAccessToken();
         String email = connectHeader.getEmail();
 
-//        if (!identicalTokenAndEmail(accessToken, email)) {
-//            logger.info("\n\naccessToken 과 email 이 매치되지 않음\n");
-//            throw new RuntimeException("Unauthorized!");
-//        }
-//
-//        if (memberService.getUserByEmail(email) == null) {
-//            logger.info("\n\n해당 email 의 회원이 없음\n");
-//            throw new RuntimeException("No Member!");
-//        }
+        if (!identicalTokenAndEmail(accessToken, email)) {
+            logger.info("\n\naccessToken 과 email 이 매치되지 않음\n");
+            throw new RuntimeException("Unauthorized!");
+        }
+
+        if (memberService.getUserByEmail(email) == null) {
+            logger.info("\n\n해당 email 의 회원이 없음\n");
+            throw new RuntimeException("No Member!");
+        }
 
         if (appRepository.createSession(
                 sessionId,

@@ -33,10 +33,16 @@
       @click="login"
       src="@/assets/kakao_login.png"
       alt="login"
+      style="z-index: 3"
     />
   </div>
 
-  <el-dialog v-model="state.mypageDialog" @close="mypageClose">
+  <el-dialog
+    v-model="state.mypageDialog"
+    @close="mypageClose"
+    width="40%"
+    top="20px"
+  >
     <div style="text-align: center">
       <img class="profile" :src="state.memberinfo.profileUrl" />
       <table class="mypageTable">
@@ -79,7 +85,12 @@
     </div>
   </el-dialog>
 
-  <el-dialog v-model="state.mypageUpdateDialog" @close="mypageUpdateClose">
+  <el-dialog
+    v-model="state.mypageUpdateDialog"
+    @close="mypageUpdateClose"
+    top="0px"
+    width="40%"
+  >
     <div class="mypage" style="text-align: center">
       <el-row class="filebox">
         <img class="profile" :src="state.member.profileUrl" />
@@ -184,15 +195,50 @@
             </tr>
           </tbody></table
       ></el-form>
-      <el-footer>
-        <el-button @click.prevent="updateInfo" size="large" round
+      <el-footer style="height: 20px">
+        <el-button
+          @click.prevent="updateInfo"
+          size="large"
+          type="danger"
+          plain
+          round
           >수정</el-button
         >
-        <el-button @click="deleteMember" type="danger" size="large" round
+        <el-button
+          @click="state.confirmDialog = true"
+          type="danger"
+          size="large"
+          round
           >탈퇴</el-button
         >
       </el-footer>
     </div>
+  </el-dialog>
+
+  <el-dialog top="250px" v-model="state.alertDialogVisible" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.alertMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="state.alertDialogVisible = false"
+          >확인</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+  <el-dialog v-model="state.confirmDialog" width="30%" center top="250px">
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.confirmMsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="deleteMember">탈퇴</el-button>
+        <el-button
+          type="danger"
+          round
+          plain
+          @click="state.confirmDialog = false"
+          >취소</el-button
+        >
+      </span>
+    </template>
   </el-dialog>
 </template>
 
@@ -211,7 +257,6 @@ export default {
         store.commit("accounts/SET_MEMBER_INFO", res.data.body);
         state.memberinfo = computed(() => store.getters["accounts/getMember"]);
         changeMember();
-        console.log("table", state.member.nickname);
       });
     });
     const state = reactive({
@@ -229,6 +274,10 @@ export default {
         sido: "",
         interests: [],
       },
+      alertMsg: "",
+      alertDialogVisible: false,
+      confirmDialog: false,
+      confirmMsg: "회원 탈퇴 하시겠습니까?",
     });
     const option1 = [
       {
@@ -369,13 +418,11 @@ export default {
 
     const onFileSelected = function (event) {
       event.preventDefault();
-      console.log(event.target.files);
-      //console.log(uploadimage.value);
       state.image = event.target.files[0];
-      console.log("img", state.image);
       store
         .dispatch("accounts/profileUpload", state.image)
         .then(function (res) {
+          console.log(res.data);
           store.commit("accounts/SET_MEMBER_INFO", res.data.body.member);
           state.member.profileUrl = state.memberinfo.profileUrl;
         });
@@ -383,32 +430,32 @@ export default {
 
     const nameCheck = function () {
       const nickname = state.member.nickname;
-      console.log("이거는프로필 닉네임", nickname);
       if (nickname === state.memberinfo.nickname) {
-        alert("현재와 같은 닉네임입니다.");
+        alertDialog("현재와 같은 닉네임입니다.");
       } else {
         store
           .dispatch("accounts/getUserName", { nickname })
           .then(function (res) {
-            console.log("res", res);
             if (res.data.body === true) {
-              alert("사용가능한 닉네임 입니다.");
+              alertDialog("사용가능한 닉네임 입니다.");
             } else {
-              alert("중복 된 닉네임입니다.");
+              alertDialog("중복 된 닉네임입니다.");
             }
           });
       }
     };
+    const alertDialog = function (message) {
+      state.alertMsg = message;
+      state.alertDialogVisible = true;
+    };
     const goHome = function () {
       router.push({ name: "HomeView" });
     };
-    console.log(state.memberinfo);
     const goPeople = function () {
       router.push({ name: "friend" });
     };
     const goMyPage = function () {
       mypageOpen();
-      console.log("mypage", state.memberinfo);
     };
 
     const mypageOpen = function () {
@@ -428,7 +475,6 @@ export default {
         state.interests = "선택한 관심사가 없습니다.";
       }
       state.mypageDialog = true;
-      console.log("mypageOpen");
     };
 
     const mypageClose = function () {
@@ -436,13 +482,11 @@ export default {
     };
 
     const mypageUpdateOpen = function () {
-      console.log(state.mypageUpdateDialog);
       state.mypageDialog = false;
       state.mypageUpdateDialog = true;
     };
 
     const mypageUpdateClose = function () {
-      console.log("mypageUpdateClost", state.mypageUpdateDialog);
       changeMember();
       state.mypageUpdateDialog = false;
     };
@@ -456,9 +500,6 @@ export default {
       state.member.interests = state.memberinfo.interests;
     };
     const updateInfo = async function () {
-      console.log("updateInfo", state.member);
-      console.log("mbti", state.member.mbti);
-      console.log("check", state.memberinfo);
       await store
         .dispatch("accounts/updateMemberinfo", {
           mbti: state.member.mbti,
@@ -468,9 +509,7 @@ export default {
           sido: state.member.sido,
         })
         .then(function (result) {
-          console.log(result);
           store.commit("accounts/SET_MEMBER_INFO", result.data.body.member);
-          console.log("!!!!!", state.memberinfo);
         })
         .catch(function (err) {
           console.log(err);
@@ -480,22 +519,19 @@ export default {
 
     const deleteMember = function () {
       // 회원 탈퇴
-      if (confirm("회원 탈퇴 하시겠습니까?")) {
-        store
-          .dispatch("accounts/deleteMemberinfo")
-          .then(function (result) {
-            console.log(result);
-            sessionStorage.removeItem("access-token");
-            store.commit("accounts/SET_MEMBER_INFO", null);
-            console.log(store.state.member);
-            state.mypageUpdateDialog = false;
-            router.push({ name: "HomeView" });
-          })
-          .catch(function (err) {
-            console.log(err);
-          });
-        mypageUpdateClose();
-      }
+      store
+        .dispatch("accounts/deleteMemberinfo")
+        .then(function () {
+          sessionStorage.removeItem("access-token");
+          store.commit("accounts/SET_MEMBER_INFO", null);
+          state.mypageUpdateDialog = false;
+          router.push({ name: "HomeView" });
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+      mypageUpdateClose();
+      state.confirmDialog = false;
     };
 
     const login = () => {
@@ -528,6 +564,7 @@ export default {
       deleteMember,
       login,
       logout,
+      alertDialog,
       Avatar,
       Comment,
       Right,

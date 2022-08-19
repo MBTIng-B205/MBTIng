@@ -69,7 +69,6 @@ export default {
       } else {
         state.audio = true;
       }
-      console.log(state.audio);
       emit("audioOnOff", {
         audio: state.audio,
       });

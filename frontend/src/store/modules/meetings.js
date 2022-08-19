@@ -10,8 +10,24 @@ export const meetings = {
     chats: [],
     partner: null,
     videoflag: false,
+    alertdialog: false,
+    alertmsg: null,
+    alertcommand: null,
+    chataddflag: false,
   },
   mutations: {
+    SET_CHATADDFLAG: (state, chataddflag) => {
+      state.chataddflag = chataddflag;
+    },
+    SET_ALERTCOMMAND: (state, alertcommand) => {
+      state.alertcommand = alertcommand;
+    },
+    SET_ALERTMSG: (state, alertmsg) => {
+      state.alertmsg = alertmsg;
+    },
+    SET_ALERTDIALOG: (state, alertdialog) => {
+      state.alertdialog = alertdialog;
+    },
     SET_OVSOCKET: (state, ovsocket) => {
       state.ovsocket = ovsocket;
     },
@@ -28,9 +44,6 @@ export const meetings = {
       state.partner = partner;
     },
     SAVE_CHAT: (state, chats) => {
-      console.log(state);
-      console.log(chats.chats);
-
       state.chats = chats.chats;
     },
     SET_VIDEOFLAG: (state, videoflag) => {
@@ -38,6 +51,18 @@ export const meetings = {
     },
   },
   getters: {
+    getChataddflag(state) {
+      return state.chataddflag;
+    },
+    getAlertcommand(state) {
+      return state.alertcommand;
+    },
+    getAlertdialog(state) {
+      return state.alertdialog;
+    },
+    getAlertmsg(state) {
+      return state.alertmsg;
+    },
     getOvsocket(state) {
       return state.ovsocket;
     },
@@ -63,8 +88,6 @@ export const meetings = {
   // 체크 필요
   actions: {
     send({ state }, data) {
-      console.log("send 실행");
-      console.log(data);
       state.mtsocket.send(
         `/ws/msg/indi/${data.command}`,
         JSON.stringify(data.data),

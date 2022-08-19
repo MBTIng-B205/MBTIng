@@ -34,27 +34,27 @@
           @audioOnOff="audioOnOff"
         ></video-controller>
       </div>
-      <div v-if="state.videoflag">
-        <div
-          class="video1-wrapper"
-          style="
-            position: absolute;
-            left: 24%;
-            margin-top: 0;
-            margin-bottom: 0;
-            width: 840px;
-            height: 550px;
-          "
-        >
-          <user-video
-            class="uservideo-you"
-            v-for="sub in state.subscribers"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-            style="width: 100%; height: 100%; margin-top: 0; margin-bottom: 0"
-          />
-          <div>
+
+      <div
+        class="video1-wrapper"
+        style="
+          position: absolute;
+          left: 24%;
+          margin-top: 0;
+          margin-bottom: 0;
+          width: 840px;
+          height: 550px;
+        "
+      >
+        <user-video
+          class="uservideo-you"
+          v-for="sub in state.subscribers"
+          :key="sub.stream.connection.connectionId"
+          :stream-manager="sub"
+          @click="updateMainVideoStreamManager(sub)"
+          style="width: 100%; height: 100%; margin-top: 0; margin-bottom: 0"
+        />
+        <!-- <div>
             <span
               style="
                 font-size: 50px;
@@ -64,18 +64,43 @@
               "
               >{{ state.partner.mbti }}</span
             >
-          </div>
-        </div>
+          </div> -->
       </div>
-      <div v-else class="mbtiinfo">
-        <!-- <div class="mbtiinfo"></div> -->
-        <img
-          src="@/assets/meetingimg.png"
-          alt=""
-          style="width: 500px; height: 500px"
-        />
-        <div>
-          <span
+
+      <div>
+        <div
+          v-if="!state.videoflag"
+          style="
+            left: 20%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            width: 840px;
+            height: 550px;
+            background-color: rgb(250, 220, 225);
+            z-index: 1;
+            position: absolute;
+          "
+        ></div>
+        <div class="mbtiinfo" style="z-index: 2">
+          <!-- <div class="mbtiinfo"></div> -->
+          <img
+            v-if="!state.videoflag"
+            src="@/assets/meetingimg.png"
+            alt=""
+            style="width: 500px; height: 500px"
+          />
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              position: absolute;
+              top: 480px;
+              font-size: 20px;
+              width: 500px;
+            "
+          >
+            <!-- <span
+
             style="
               font-size: 50px;
               font-weight: bold;
@@ -84,7 +109,17 @@
               bottom: -30px;
             "
             >{{ state.partner.mbti }}</span
-          >
+          > -->
+
+            <div class="tag">#{{ state.partner.mbti }}</div>
+            <div
+              class="tag"
+              v-for="(interest, index) in state.partner.interests.slice(0, 3)"
+              :key="index"
+            >
+              #{{ interest }}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -140,6 +175,14 @@
       <el-button @click="sirenClose" size="large" round plain>취소</el-button>
     </div>
   </el-dialog>
+  <el-dialog top="250px" v-model="state.alertdialog" width="30%" center>
+    <el-row style="top: 12px; font-size: 16.5px">{{ state.alertmsg }}</el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="danger" round @click="closedialog">확인</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -191,7 +234,11 @@ export default {
       mySessionId: "SessionA",
       chatflag: false,
       videoflag: computed(() => store.getters["meetings/getVideoflag"]),
+      alertdialog: computed(() => store.getters["meetings/getAlertdialog"]),
+      alertmsg: computed(() => store.getters["meetings/getAlertmsg"]),
+      alertcommand: computed(() => store.getters["meetings/getAlertcommand"]),
     });
+
     onMounted(() => {
       joinSession();
     });
@@ -202,16 +249,13 @@ export default {
       store.commit("meetings/SET_OVSOCKET", state.session);
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
-        console.log(subscriber, "이거다");
         state.subscribers.push(subscriber);
-        console.log("streamCreated");
       });
 
       state.session.on("streamDestroyed", ({ stream }) => {
         const index = state.subscribers.indexOf(stream.streamManager, 0);
         if (index >= 0) {
           state.subscribers.splice(index, 1);
-          console.log("streamDestroyed");
         }
       });
 
@@ -256,7 +300,6 @@ export default {
     };
 
     const videoOnOff = ({ video }) => {
-      console.log("video");
       state.publisher.publishVideo(video);
     };
 
@@ -265,19 +308,18 @@ export default {
     //greenlight 2개 video cam on
     //send
     const audioOnOff = ({ audio }) => {
-      console.log("audio");
       state.publisher.publishAudio(audio);
     };
 
     const chatOnOff = ({ chatflag }) => {
       state.chatflag = chatflag;
+      if (chatflag == true) {
+        store.commit("meetings/SET_CHATADDFLAG", false);
+      }
     };
 
     const reportOnOff = ({ reportflag }) => {
-      console.log("여기왔니?");
-      console.log("reportflag" + reportflag);
       sirenDialog.value = reportflag;
-      console.log("sirenDialog" + sirenDialog.value);
     };
 
     const leaveSession = () => {
@@ -380,9 +422,7 @@ export default {
           to: [],
           type: "public-chat",
         })
-        .then(() => {
-          console.log(messageData);
-        })
+        .then(() => {})
         .catch((error) => {
           console.log(error);
         });
@@ -401,54 +441,57 @@ export default {
     };
 
     const clickSiren = function () {
-      console.log("신고", sirenMsg.value);
       if (sirenMsg.value == "") {
-        alert("신고 사유를 입력하세요!");
+        store.commit("meetings/SET_ALERTCOMMAND", "reportnull");
+        store.commit("meetings/SET_ALERTDIALOG", true);
+        store.commit("meetings/SET_ALERTMSG", "신고 사유를 입력하세요!");
+        //alert("신고 사유를 입력하세요!");
       } else {
-        console.log("addFriend 실행");
         const msg = {
           command: "createReport",
           data: {
-            from_id: "rlwls1101@hanmail.net",
+            from_id: state.memberinfo.email,
             to_id: state.partner.email,
             content: sirenMsg.value,
           },
         };
-        console.log(msg);
         store.dispatch("meetings/send", msg);
-        /*
-        store
-          .dispatch("reports/registerReport", {
-            from: "rlwls1101@hanmail.net",
-            to: state.partner.email,
-            content: sirenMsg.value,
-          })
-          .then(function (result) {
-            console.log("result-report", result);
-            alert("신고가 접수되었습니다.");
-          });*/
+
         sirenClose();
       }
     };
     const goHome = function () {
       router.push({ name: "HomeView" });
-      console.log(state.mtsocket);
       store.commit("meetings/SET_VIDEOFLAG", false);
       if (state.mtsocket != null) {
         state.mtsocket.disconnect();
       }
       store.commit("meetings/SET_SOCKET", null);
-      console.log(state.mtsocket);
-      console.log(state.session);
       if (state.session != null) {
         state.session.disconnect();
       }
       store.commit("meetings/SET_OVSOCKET", null);
     };
-
+    const closedialog = function () {
+      store.commit("meetings/SET_ALERTDIALOG", false);
+      store.commit("meetings/SET_ALERTMSG", null);
+      if (state.alertcommand == "audiorefuse") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        router.push({ name: "HomeView" });
+      } else if (state.alertcommand == "audioaccept") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        // router.push({ name: "MeetingWait" });
+      } else if (state.alertcommand == "opponentleft") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+        router.push({ name: "HomeView" });
+      } else if (state.alertcommand == "reportnull") {
+        store.commit("meetings/SET_ALERTCOMMAND", null);
+      }
+    };
     return {
       state,
       chat,
+      closedialog,
       joinSession,
       leaveSession,
       reportOnOff,
@@ -478,6 +521,12 @@ export default {
 </script>
 
 <style scoped>
+.tag {
+  border-radius: 20px;
+  background-color: azure;
+  margin-right: 10px;
+  padding: 7px;
+}
 .el-container {
   display: flex;
   justify-content: center;
@@ -521,5 +570,11 @@ export default {
   margin-right: auto;
   align-self: flex-start;
   border-radius: 20px;
+}
+.tag {
+  border-radius: 20px;
+  background-color: azure;
+  margin-right: 10px;
+  padding: 7px;
 }
 </style>

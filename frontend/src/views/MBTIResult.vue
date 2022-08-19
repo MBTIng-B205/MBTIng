@@ -47,7 +47,7 @@ export default {
   setup() {
     const router = useRouter();
     const goMBTISetting = function () {
-      router.push({ name: "MBTISetting" });
+      router.push({ name: "ProfileSetting" });
     };
     return { goMBTISetting };
   },

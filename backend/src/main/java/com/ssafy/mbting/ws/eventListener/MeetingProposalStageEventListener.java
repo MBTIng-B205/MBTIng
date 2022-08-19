@@ -1,7 +1,9 @@
 package com.ssafy.mbting.ws.eventListener;
 
 import com.ssafy.mbting.api.response.MemberResponse;
+import com.ssafy.mbting.api.service.InterestService;
 import com.ssafy.mbting.api.service.MemberService;
+import com.ssafy.mbting.db.entity.InterestMember;
 import com.ssafy.mbting.db.entity.Member;
 import com.ssafy.mbting.ws.model.event.proposal.ProposalBothAcceptedEvent;
 import com.ssafy.mbting.ws.model.event.proposal.ProposalResultArriveEvent;
@@ -10,6 +12,7 @@ import com.ssafy.mbting.ws.model.stompMessageBody.sub.BaseMessageBody;
 import com.ssafy.mbting.ws.model.stompMessageBody.sub.MeetingRoom;
 import com.ssafy.mbting.ws.model.vo.IndividualDestination;
 import com.ssafy.mbting.ws.model.vo.StompUser;
+import com.ssafy.mbting.ws.repository.AppRepository;
 import com.ssafy.mbting.ws.service.AppStompService;
 import com.ssafy.mbting.ws.service.MeetingRoomService;
 import com.ssafy.mbting.ws.service.WaitingMeetingService;
@@ -22,7 +25,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
 import java.time.Clock;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Component
@@ -36,6 +43,7 @@ public class MeetingProposalStageEventListener {
     private final WaitingMeetingService waitingMeetingService;
     private final MeetingRoomService meetingRoomService;
     private final MemberService memberService;
+    private final AppRepository appRepository;
 
     @Async
     @EventListener
@@ -110,10 +118,20 @@ public class MeetingProposalStageEventListener {
                 , stompUsers[1].getEmail()
                 , stompUsers[0].getEmail());
 
-        // Todo: 하드코딩 되어 있음!!!
+//        // Todo: 하드코딩 되어 있음!!!
+//        Member[] opponents = new Member[]{
+//                memberService.getUserByEmail("wp29dud@naver.com"),
+//                memberService.getUserByEmail("rlwls1101@hanmail.net")};
+
         Member[] opponents = new Member[]{
-                memberService.getUserByEmail("wp29dud@naver.com"),
-                memberService.getUserByEmail("rlwls1101@hanmail.net")};
+                memberService.getUserByEmail(stompUsers[1].getEmail()),
+                memberService.getUserByEmail(stompUsers[0].getEmail())};
+        // 세션 0번으로 찾은 아뒤
+        StompUser stompUser1 = appRepository.findStompUserBySessionId(sessionIds[0]).orElseThrow(() -> new RuntimeException("Session Not Found!"));
+        // 세션 1번으로 찾은 아뒤
+        StompUser stompUser0 = appRepository.findStompUserBySessionId(sessionIds[1]).orElseThrow(() -> new RuntimeException("Session Not Found!"));
+
+        ArrayList[] interests = new ArrayList[]{(ArrayList) stompUser0.getMeetingUser().getInterests(), (ArrayList) stompUser1.getMeetingUser().getInterests()};
 
         IntStream.range(0, 2).forEach(i -> simpMessagingTemplate.convertAndSend(
                 IndividualDestination.of(stompUsers[i].getEmail()).toString(),
@@ -121,7 +139,15 @@ public class MeetingProposalStageEventListener {
                         .command("accept")
                         .data(MeetingRoom.builder()
                                 .openviduToken(openviduTokens[i])
-                                .opponent(MemberResponse.of(opponents[i]))
+                                .opponent(MemberResponse.builder()
+                                        .interests(interests[i])
+                                        .mbti(opponents[i].getMbti())
+                                        .nickname(opponents[i].getNickname())
+                                        .gender(opponents[i].getGender())
+                                        .sido(opponents[i].getSido())
+                                        .email(opponents[i].getEmail())
+                                        .birth(opponents[i].getBirth())
+                                        .build())
                                 .build())
                         .build()));
     }

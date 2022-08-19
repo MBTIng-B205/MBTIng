@@ -151,6 +151,15 @@
         size="large"
         round
       />
+      <div class="msgaddflagsvg" v-if="state.chataddflag">
+        <svg
+          height="12"
+          width="12"
+          style="position: absolute; bottom: 78px; right: 33px"
+        >
+          <circle cx="6" cy="6" r="5" style="fill: red; stroke: red" />
+        </svg>
+      </div>
     </div>
   </div>
 </template>
@@ -182,10 +191,10 @@ export default {
       videoflag: computed(() => store.getters["meetings/getVideoflag"]),
       ovsocket: computed(() => store.getters["meetings/getOvsocket"]),
       mtsocket: computed(() => store.getters["meetings/getSocket"]),
+      chataddflag: computed(() => store.getters["meetings/getChataddflag"]),
     });
-
     state.time = new Date();
-    state.time.setSeconds(state.time.getSeconds() + 10); // 10 minutes timer
+    state.time.setSeconds(state.time.getSeconds() + 600); // 10 minutes timer
     state.timer = useTimer(state.time);
     state.timer.start();
     const restartFive = () => {
@@ -197,7 +206,6 @@ export default {
 
     const chatOnOff = () => {
       state.chatflag = !state.chatflag;
-      console.log(state.chatflag);
 
       emit("chatOnOff", {
         chatflag: state.chatflag,
@@ -205,11 +213,18 @@ export default {
     };
     const stopWatchEffect = watchEffect(() => {
       if (state.timer.isRunning == false) {
-        console.log("타이머 다됨 !!!!!!!!!!!!!!!!!!!!!!!!");
         if (state.mtsocket != null) {
           timeout();
         }
         goHome();
+      }
+    });
+
+    const checkaddchat = watchEffect(() => {
+      if (state.chataddflag) {
+        if (state.chatflag) {
+          store.commit("meetings/SET_CHATADDFLAG", false);
+        }
       }
     });
     const greenWatchEffect = watchEffect(() => {
@@ -219,56 +234,46 @@ export default {
     });
     const reportOnOff = () => {
       state.reportflag = !state.reportflag;
-      console.log(state.reportflag);
 
       emit("reportOnOff", {
         reportflag: state.reportflag,
       });
     };
     const greenlight = function () {
-      console.log("GREEN 실행");
       const msg = {
         command: "meetingAudioStageResult",
         data: { result: "GREEN" },
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     const redlight = function () {
-      console.log("RED 실행");
       const msg = {
         command: "meetingAudioStageResult",
         data: { result: "RED" },
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
     const timeout = function () {
-      console.log("TIMEOUT 실행");
       const msg = {
         command: "meetingAudioStageResult",
         data: { result: "TIMEOUT" },
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
     };
 
     const addFriend = function () {
-      console.log("Friend 실행");
       const msg = {
         command: "addFriend",
         data: {
-          fromEmail: "rlwls1101@hanmail.net",
-          toEmail: "wp29dud@naver.com",
+          fromEmail: state.memberinfo.email,
+          toEmail: state.partner.email,
           addOrRemove: !state.friendflag,
         },
       };
-      console.log(msg);
       store.dispatch("meetings/send", msg);
       state.friendflag = !state.friendflag;
     };
     const goHome = function () {
-      console.log(state.mtsocket);
       store.commit("meetings/SET_VIDEOFLAG", false);
       if (state.mtsocket != null) {
         state.mtsocket.disconnect();
@@ -284,6 +289,7 @@ export default {
     return {
       state,
       goHome,
+      checkaddchat,
       greenWatchEffect,
       stopWatchEffect,
       timeout,

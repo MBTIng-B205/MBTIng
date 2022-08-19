@@ -30,7 +30,6 @@ export default {
 
     const getConnectionData = () => {
       const { connection } = props.streamManager.stream;
-      // console.log(connection, "<---------------");
       return JSON.parse(connection.data);
     };
     return {

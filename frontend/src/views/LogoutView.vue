@@ -11,7 +11,6 @@ export default {
     const router = useRouter();
     sessionStorage.removeItem("access-token");
     store.commit("accounts/SET_MEMBER_INFO", null);
-    console.log(store.state.member);
 
     router.push({ path: "/" });
   },
